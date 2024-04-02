@@ -15,7 +15,7 @@ dashboard = st.sidebar.selectbox("select analysis",["Prompting","NSE"])
 
 if dashboard=="Prompting":
     st.title("Your Data Analysis Dashboard")
-    choice = st.selectbox("Select a default files",["Titanic",,"Country","Upload my csv"])
+    choice = st.selectbox("Select a default files",["Titanic","Country","Upload my csv"])
     if choice =="Titanic":
         url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"
         download = requests.get(url).content

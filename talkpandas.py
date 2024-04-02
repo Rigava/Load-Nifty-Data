@@ -15,11 +15,15 @@ dashboard = st.sidebar.selectbox("select analysis",["Prompting","NSE"])
 
 if dashboard=="Prompting":
     st.title("Your Data Analysis Dashboard")
-    choice = st.selectbox("Select a default files",["Titanic","Upload my csv"])
+    choice = st.selectbox("Select a default files",["Titanic",,"Country","Upload my csv"])
     if choice =="Titanic":
         url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"
         download = requests.get(url).content
-        df = pd.read_csv(io.StringIO(download.decode('utf-8')))        
+        df = pd.read_csv(io.StringIO(download.decode('utf-8')))      
+    if choice =="Country":
+        url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/WorldDBTables/CountryTable.csv"
+        download = requests.get(url).content
+        df = pd.read_csv(io.StringIO(download.decode('utf-8')))            
     else:
         upload_csv = st.file_uploader("Upload a csv file for analysis", type =['csv'])
         df = pd.read_csv(upload_csv)

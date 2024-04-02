@@ -61,7 +61,7 @@ dashboard = st.sidebar.selectbox("select analysis",["Pattern","Squeeze","Breakou
 
 #the below file settings is for plotting the chart only
 # file = r'stock_dfs_updated\{}.csv'.format(symbol)
-url = https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/tree/main/stock_dfs_updated/ITC.csv
+url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/tree/main/stock_dfs_updated/{}.csv".format(symbol)
 download = requests.get(url).content
 chart_df = pd.read_csv(io.StringIO(download.decode('utf-8')))
 df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]

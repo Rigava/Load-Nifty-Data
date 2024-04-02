@@ -1,6 +1,8 @@
 import os
 import streamlit as st
 import pandas as pd
+import io
+import requests
 
 from pandasai import SmartDataframe
 from pandasai.llm import GooglePalm
@@ -13,12 +15,19 @@ dashboard = st.sidebar.selectbox("select analysis",["Prompting","NSE"])
 
 if dashboard=="Prompting":
     st.title("Your Data Analysis Dashboard")
-
-    upload_csv = st.file_uploader("Upload a csv file for analysis", type =['csv'])
-    if upload_csv is not None:
+    choice = st.selectbox("Select a default files",["Titanic","Upload my csv"])
+    if choice =="Titanic":
+        url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/titanic.csv"
+        download = requests.get(url).content
+        df = pd.read_csv(io.StringIO(download.decode('utf-8')))        
+    else:
+        upload_csv = st.file_uploader("Upload a csv file for analysis", type =['csv'])
         df = pd.read_csv(upload_csv)
+    # upload_csv = st.file_uploader("Upload a csv file for analysis", type =['csv'])
+    if df is not None:
+        # df = pd.read_csv(upload_csv)
         sdf = SmartDataframe(df,config={"llm":llm})
-        # st.write (sdf.head(3))
+        st.dataframe(df.tail(3))
 
         prompt = st.text_area("Enter your query")
         if st.button("Generate"):

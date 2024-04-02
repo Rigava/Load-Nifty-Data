@@ -1,3 +1,4 @@
 plotly
 unidecode
-ta-lib
+# ta-lib
+requests

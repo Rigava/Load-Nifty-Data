@@ -5,7 +5,7 @@ import pandas as pd
 from pandasai import SmartDataframe
 from pandasai.llm import GooglePalm
 
-GOOGLE_API_KEY = "AIzaSyAKEaaM7fWIErN3VbikjP_T5m0UfhBy5iE"
+GOOGLE_API_KEY = st.secrets.API_KEY
 
 llm = GooglePalm(api_key=GOOGLE_API_KEY)
 

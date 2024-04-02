@@ -1,51 +1,52 @@
 import streamlit as st
 import requests
 import os
-import sys
-import subprocess
+# import sys
+# import subprocess
 
-# check if the library folder already exists, to avoid building everytime you load the pahe
-if not os.path.isdir("/tmp/ta-lib"):
+# # check if the library folder already exists, to avoid building everytime you load the pahe
+# if not os.path.isdir("/tmp/ta-lib"):
 
-    # Download ta-lib to disk
-    with open("/tmp/ta-lib-0.4.0-src.tar.gz", "wb") as file:
-        response = requests.get(
-            "http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz"
-        )
-        file.write(response.content)
-    # get our current dir, to configure it back again. Just house keeping
-    default_cwd = os.getcwd()
-    os.chdir("/tmp")
-    # untar
-    os.system("tar -zxvf ta-lib-0.4.0-src.tar.gz")
-    os.chdir("/tmp/ta-lib")
-    os.system("ls -la /app/equity/")
-    # build
-    os.system("./configure --prefix=/home/appuser")
-    os.system("make")
-    # install
-    os.system("make install")
-    # back to the cwd
-    os.chdir(default_cwd)
-    sys.stdout.flush()
+#     # Download ta-lib to disk
+#     with open("/tmp/ta-lib-0.4.0-src.tar.gz", "wb") as file:
+#         response = requests.get(
+#             "http://prdownloads.sourceforge.net/ta-lib/ta-lib-0.4.0-src.tar.gz"
+#         )
+#         file.write(response.content)
+#     # get our current dir, to configure it back again. Just house keeping
+#     default_cwd = os.getcwd()
+#     os.chdir("/tmp")
+#     # untar
+#     os.system("tar -zxvf ta-lib-0.4.0-src.tar.gz")
+#     os.chdir("/tmp/ta-lib")
+#     os.system("ls -la /app/equity/")
+#     # build
+#     os.system("./configure --prefix=/home/appuser")
+#     os.system("make")
+#     # install
+#     os.system("make install")
+#     # back to the cwd
+#     os.chdir(default_cwd)
+#     sys.stdout.flush()
 
-# add the library to our current environment
-from ctypes import *
+# # add the library to our current environment
+# from ctypes import *
 
-lib = CDLL("/home/appuser/lib/libta_lib.so.0.0.0")
-# import library
-try:
-    import talib_bin
-except ImportError:
-    subprocess.check_call([sys.executable, "-m", "pip", "install", "--global-option=build_ext", "--global-option=-L/home/appuser/lib/", "--global-option=-I/home/appuser/include/", "ta-lib-bin"])
-finally:
-    import talib_bin
+# lib = CDLL("/home/appuser/lib/libta_lib.so.0.0.0")
+# # import library
+# try:
+#     import talib_bin
+# except ImportError:
+#     subprocess.check_call([sys.executable, "-m", "pip", "install", "--global-option=build_ext", "--global-option=-L/home/appuser/lib/", "--global-option=-I/home/appuser/include/", "ta-lib-bin"])
+# finally:
+#     import talib_bin
 
 import pandas as pd
 import plotly.graph_objects as go
 import pickle
 from unidecode import unidecode
 from patterns import candlestick_patterns
+import requests
 
 
 st.title('NIFTY STOCK DASHBOARD')
@@ -58,8 +59,9 @@ st.write(f"This is the chart of {symbol}")
 dashboard = st.sidebar.selectbox("select analysis",["Pattern","Squeeze","Breakouts"])
 
 #the below file settings is for plotting the chart only
-file = r'stock_dfs_updated\{}.csv'.format(symbol)
-chart_df = pd.read_csv(file)
+# file = r'stock_dfs_updated\{}.csv'.format(symbol)
+url = r"https://github.com/Rigava/Load-Nifty-Data/tree/main/stock_dfs_updated/{}".format(symbol)
+chart_df = pd.read_csv(url)
 df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
 df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
 fig = go.Figure(data=[go.Candlestick(x=df['Date'],
@@ -71,31 +73,31 @@ fig.update_xaxes(type='category')
 fig.update_layout(height=800)
 st.plotly_chart(fig,use_container_width=True)
 
-if dashboard == "Pattern": 
+# if dashboard == "Pattern": 
     
-    pattern = st.sidebar.selectbox('Select candlestick', candlestick_patterns)
-    st.write("Your option is", pattern)
-    for files in os.listdir('stock_dfs_updated'):
-        #selecting the relevant columns
-        data = pd.read_csv('stock_dfs_updated/{}'.format(files))
-        df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
-        df = df.drop_duplicates(subset=['Date'],keep='first')
-        df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
+#     pattern = st.sidebar.selectbox('Select candlestick', candlestick_patterns)
+#     st.write("Your option is", pattern)
+#     for files in os.listdir('stock_dfs_updated'):
+#         #selecting the relevant columns
+#         data = pd.read_csv('stock_dfs_updated/{}'.format(files))
+#         df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
+#         df = df.drop_duplicates(subset=['Date'],keep='first')
+#         df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
         
-        cols = df.select_dtypes(exclude=['float']).columns
-        df['Date']=pd.to_datetime(df['Date'])
-        for col in cols:
-            if col == 'Date':
-                pass
-            else:
-                df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)
-        pattern_function=getattr(talib,pattern)
-        result = pattern_function(df['Open'], df['High'], df['Low'], df['Close'])
-        last= result.tail(1).values[0]
-        if last != 0:
-            st.write("{} pattern was triggered in stock {}".format(pattern,files))
-        else:
-            pass
+#         cols = df.select_dtypes(exclude=['float']).columns
+#         df['Date']=pd.to_datetime(df['Date'])
+#         for col in cols:
+#             if col == 'Date':
+#                 pass
+#             else:
+#                 df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)
+#         pattern_function=getattr(talib,pattern)
+#         result = pattern_function(df['Open'], df['High'], df['Low'], df['Close'])
+#         last= result.tail(1).values[0]
+#         if last != 0:
+#             st.write("{} pattern was triggered in stock {}".format(pattern,files))
+#         else:
+#             pass
 #below setting is for identifying the breakouts based on squeezing and consolidation/Breakout functions
 if dashboard == "Squeeze":
     squeeze=[]

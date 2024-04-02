@@ -4,3 +4,4 @@ unidecode
 requests
 pandasai
 google-generativeai
+pyyaml

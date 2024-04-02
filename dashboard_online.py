@@ -35,11 +35,11 @@ from ctypes import *
 lib = CDLL("/home/appuser/lib/libta_lib.so.0.0.0")
 # import library
 try:
-    import talib
+    import talib-bin
 except ImportError:
     subprocess.check_call([sys.executable, "-m", "pip", "install", "--global-option=build_ext", "--global-option=-L/home/appuser/lib/", "--global-option=-I/home/appuser/include/", "ta-lib-bin"])
 finally:
-    import talib
+    import talib-bin
 
 import pandas as pd
 import plotly.graph_objects as go

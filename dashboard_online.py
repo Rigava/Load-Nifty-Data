@@ -58,12 +58,12 @@ ticker_choice = tickers
 symbol = st.sidebar.selectbox("Select a stock",ticker_choice)
 st.write(f"This is the chart of {symbol}")
 dashboard = st.sidebar.selectbox("select analysis",["Pattern","Squeeze","Breakouts"])
-
 #the below file settings is for plotting the chart only
 # file = r'stock_dfs_updated\{}.csv'.format(symbol)
-url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/tree/main/stock_dfs_updated/{}.csv".format(symbol)
+url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(symbol)
 download = requests.get(url).content
 chart_df = pd.read_csv(io.StringIO(download.decode('utf-8')))
+print(chart_df.head())
 df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
 df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
 fig = go.Figure(data=[go.Candlestick(x=df['Date'],

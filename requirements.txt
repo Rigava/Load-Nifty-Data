@@ -1,0 +1,3 @@
+plotly
+unidecode
+ta-lib

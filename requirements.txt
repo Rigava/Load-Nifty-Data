@@ -5,3 +5,4 @@ requests
 pandasai
 google-generativeai
 pyyaml
+pandas_ta

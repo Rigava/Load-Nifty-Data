@@ -2,3 +2,5 @@ plotly
 unidecode
 # ta-lib
 requests
+pandasai
+google-generativeai

@@ -1,0 +1,3706 @@
+2024-04-02 20:40:15 [INFO] Question: how many stocks are there
+
+2024-04-02 20:40:15 [INFO] Running PandasAI with google-palm LLM...
+2024-04-02 20:40:15 [INFO] Prompt ID: 85940e9e-1018-4827-a801-9f1365b853a7
+2024-04-02 20:40:15 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-04-02 20:40:15 [INFO] Executing Step 0: ValidatePipelineInput
+2024-04-02 20:40:15 [INFO] Executing Step 1: CacheLookup
+2024-04-02 20:40:15 [INFO] Executing Step 2: PromptGeneration
+2024-04-02 20:40:15 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 62100
+  columns: 16
+  schema:
+    fields:
+    - name: INSTRUMENT
+      type: object
+      samples:
+      - OPTIDX
+      - FUTIDX
+      - FUTSTK
+    - name: SYMBOL
+      type: object
+      samples:
+      - INDIGO
+      - BEL
+      - HDFCBANK
+    - name: EXPIRY_DT
+      type: object
+      samples:
+      - 29-Nov-2022
+      - 24-Jun-2027
+      - 27-Jun-2024
+    - name: STRIKE_PR
+      type: float64
+      samples:
+      - 342.5
+      - 16700.0
+      - 85.5
+    - name: OPTION_TYP
+      type: object
+      samples:
+      - XX
+      - CE
+      - PE
+    - name: OPEN
+      type: float64
+      samples:
+      - 662.95
+      - 119.0
+      - 577.7
+    - name: HIGH
+      type: float64
+      samples:
+      - 1618.0
+      - 12.25
+      - 202.95
+    - name: LOW
+      type: float64
+      samples:
+      - 150.05
+      - 324.8
+      - 5.15
+    - name: CLOSE
+      type: float64
+      samples:
+      - 239.5
+      - 962.75
+      - 5204.05
+    - name: SETTLE_PR
+      type: float64
+      samples:
+      - 63.75
+      - 1601.9
+      - 528.7
+    - name: CONTRACTS
+      type: int64
+      samples:
+      - 498
+      - 4167
+      - 5008
+    - name: VAL_INLAKH
+      type: float64
+      samples:
+      - 546.97
+      - 375.9
+      - 62.89
+    - name: OPEN_INT
+      type: int64
+      samples:
+      - 1610000
+      - 585000
+      - 19050
+    - name: CHG_IN_OI
+      type: int64
+      samples:
+      - -51000
+      - 98750
+      - 130500
+    - name: TIMESTAMP
+      type: object
+      samples:
+      - 14-OCT-2022
+      - 14-OCT-2022
+      - 14-OCT-2022
+    - name: 'Unnamed: 15'
+      type: float64
+      samples:
+      - .nan
+      - .nan
+      - .nan
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ how many stocks are there
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-04-02 20:40:15 [INFO] Executing Step 3: CodeGenerator
+2024-04-02 20:40:18 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 62100
+  columns: 16
+  schema:
+    fields:
+    - name: INSTRUMENT
+      type: object
+      samples:
+      - OPTIDX
+      - FUTIDX
+      - FUTSTK
+    - name: SYMBOL
+      type: object
+      samples:
+      - INDIGO
+      - BEL
+      - HDFCBANK
+    - name: EXPIRY_DT
+      type: object
+      samples:
+      - 29-Nov-2022
+      - 24-Jun-2027
+      - 27-Jun-2024
+    - name: STRIKE_PR
+      type: float64
+      samples:
+      - 342.5
+      - 16700.0
+      - 85.5
+    - name: OPTION_TYP
+      type: object
+      samples:
+      - XX
+      - CE
+      - PE
+    - name: OPEN
+      type: float64
+      samples:
+      - 662.95
+      - 119.0
+      - 577.7
+    - name: HIGH
+      type: float64
+      samples:
+      - 1618.0
+      - 12.25
+      - 202.95
+    - name: LOW
+      type: float64
+      samples:
+      - 150.05
+      - 324.8
+      - 5.15
+    - name: CLOSE
+      type: float64
+      samples:
+      - 239.5
+      - 962.75
+      - 5204.05
+    - name: SETTLE_PR
+      type: float64
+      samples:
+      - 63.75
+      - 1601.9
+      - 528.7
+    - name: CONTRACTS
+      type: int64
+      samples:
+      - 498
+      - 4167
+      - 5008
+    - name: VAL_INLAKH
+      type: float64
+      samples:
+      - 546.97
+      - 375.9
+      - 62.89
+    - name: OPEN_INT
+      type: int64
+      samples:
+      - 1610000
+      - 585000
+      - 19050
+    - name: CHG_IN_OI
+      type: int64
+      samples:
+      - -51000
+      - 98750
+      - 130500
+    - name: TIMESTAMP
+      type: object
+      samples:
+      - 14-OCT-2022
+      - 14-OCT-2022
+      - 14-OCT-2022
+    - name: 'Unnamed: 15'
+      type: float64
+      samples:
+      - .nan
+      - .nan
+      - .nan
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ how many stocks are there
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+            
+2024-04-02 20:40:18 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+result = { "type": "number", "value": len(dfs) }
+            ```
+            
+2024-04-02 20:40:18 [INFO] Executing Step 4: CachePopulation
+2024-04-02 20:40:18 [INFO] Executing Step 5: CodeCleaning
+2024-04-02 20:40:18 [INFO] 
+Code running:
+```
+result = {'type': 'number', 'value': len(dfs)}
+        ```
+2024-04-02 20:40:18 [INFO] Executing Step 6: CodeExecution
+2024-04-02 20:40:18 [INFO] Executing Step 7: ResultValidation
+2024-04-02 20:40:18 [INFO] Answer: {'type': 'number', 'value': 1}
+2024-04-02 20:40:18 [INFO] Executing Step 8: ResultParsing
+2024-04-02 20:41:50 [INFO] Question: what was the maximum price
+2024-04-02 20:41:50 [INFO] Running PandasAI with google-palm LLM...
+2024-04-02 20:41:50 [INFO] Prompt ID: eb149b5c-9528-4ca1-92be-f37639df2af1
+2024-04-02 20:41:50 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-04-02 20:41:50 [INFO] Executing Step 0: ValidatePipelineInput
+2024-04-02 20:41:50 [INFO] Executing Step 1: CacheLookup
+2024-04-02 20:41:50 [INFO] Executing Step 2: PromptGeneration
+2024-04-02 20:41:50 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 309
+  columns: 16
+  schema:
+    fields:
+    - name: 'Unnamed: 0'
+      type: int64
+      samples:
+      - 118
+      - 238
+      - 218
+    - name: Symbol
+      type: object
+      samples:
+      - ADANIENT
+      - ADANIENT
+      - ADANIENT
+    - name: Series
+      type: object
+      samples:
+      - EQ
+      - EQ
+      - EQ
+    - name: Date
+      type: object
+      samples:
+      - 19-Apr-2023
+      - 06-Jun-2023
+      - 11-Sep-2023
+    - name: PrevClose
+      type: object
+      samples:
+      - 1,802.95
+      - 2,362.70
+      - 2,397.25
+    - name: OpenPrice
+      type: object
+      samples:
+      - 2,880.70
+      - 1,892.00
+      - 2,494.05
+    - name: HighPrice
+      type: object
+      samples:
+      - 2,550.00
+      - 3,477.35
+      - 2,626.60
+    - name: LowPrice
+      type: object
+      samples:
+      - 2,654.10
+      - 2,373.05
+      - 3,440.95
+    - name: LastPrice
+      type: object
+      samples:
+      - 3,059.00
+      - 3,439.50
+      - 2,846.00
+    - name: ClosePrice
+      type: object
+      samples:
+      - 2,614.95
+      - 3,436.35
+      - 2,414.80
+    - name: AveragePrice
+      type: object
+      samples:
+      - 2,399.00
+      - 3,834.29
+      - 1,840.31
+    - name: TotalTradedQuantity
+      type: object
+      samples:
+      - 59,69,594
+      - 40,21,773
+      - 97,86,919
+    - name: TurnoverInRs
+      type: object
+      samples:
+      - 6,64,79,05,451.95
+      - 3,73,87,87,276.00
+      - 6,03,18,49,312.75
+    - name: No.ofTrades
+      type: object
+      samples:
+      - 1,70,861
+      - 1,40,194
+      - 89,046
+    - name: DeliverableQty
+      type: object
+      samples:
+      - 37,69,217
+      - 4,54,788
+      - 2,25,215
+    - name: '%DlyQttoTradedQty'
+      type: object
+      samples:
+      - '16.45'
+      - '19.21'
+      - '27.85'
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ what was the maximum price
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-04-02 20:41:50 [INFO] Executing Step 3: CodeGenerator
+2024-04-02 20:41:53 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 309
+  columns: 16
+  schema:
+    fields:
+    - name: 'Unnamed: 0'
+      type: int64
+      samples:
+      - 118
+      - 238
+      - 218
+    - name: Symbol
+      type: object
+      samples:
+      - ADANIENT
+      - ADANIENT
+      - ADANIENT
+    - name: Series
+      type: object
+      samples:
+      - EQ
+      - EQ
+      - EQ
+    - name: Date
+      type: object
+      samples:
+      - 19-Apr-2023
+      - 06-Jun-2023
+      - 11-Sep-2023
+    - name: PrevClose
+      type: object
+      samples:
+      - 1,802.95
+      - 2,362.70
+      - 2,397.25
+    - name: OpenPrice
+      type: object
+      samples:
+      - 2,880.70
+      - 1,892.00
+      - 2,494.05
+    - name: HighPrice
+      type: object
+      samples:
+      - 2,550.00
+      - 3,477.35
+      - 2,626.60
+    - name: LowPrice
+      type: object
+      samples:
+      - 2,654.10
+      - 2,373.05
+      - 3,440.95
+    - name: LastPrice
+      type: object
+      samples:
+      - 3,059.00
+      - 3,439.50
+      - 2,846.00
+    - name: ClosePrice
+      type: object
+      samples:
+      - 2,614.95
+      - 3,436.35
+      - 2,414.80
+    - name: AveragePrice
+      type: object
+      samples:
+      - 2,399.00
+      - 3,834.29
+      - 1,840.31
+    - name: TotalTradedQuantity
+      type: object
+      samples:
+      - 59,69,594
+      - 40,21,773
+      - 97,86,919
+    - name: TurnoverInRs
+      type: object
+      samples:
+      - 6,64,79,05,451.95
+      - 3,73,87,87,276.00
+      - 6,03,18,49,312.75
+    - name: No.ofTrades
+      type: object
+      samples:
+      - 1,70,861
+      - 1,40,194
+      - 89,046
+    - name: DeliverableQty
+      type: object
+      samples:
+      - 37,69,217
+      - 4,54,788
+      - 2,25,215
+    - name: '%DlyQttoTradedQty'
+      type: object
+      samples:
+      - '16.45'
+      - '19.21'
+      - '27.85'
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ what was the maximum price
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+            
+2024-04-02 20:41:53 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+result = { "type": "number", "value": dfs[0]["HighPrice"].max() }
+            ```
+            
+2024-04-02 20:41:53 [INFO] Executing Step 4: CachePopulation
+2024-04-02 20:41:53 [INFO] Executing Step 5: CodeCleaning
+2024-04-02 20:41:53 [INFO] 
+Code running:
+```
+result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+        ```
+2024-04-02 20:41:53 [INFO] Executing Step 6: CodeExecution
+2024-04-02 20:41:53 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type number
+
+2024-04-02 20:41:53 [WARNING] Failed to execute code retrying with a correction framework [retry number: 1]
+2024-04-02 20:41:53 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-04-02 20:41:53 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-04-02 20:41:53 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 309
+  columns: 16
+  schema:
+    fields:
+    - name: 'Unnamed: 0'
+      type: int64
+      samples:
+      - 118
+      - 238
+      - 218
+    - name: Symbol
+      type: object
+      samples:
+      - ADANIENT
+      - ADANIENT
+      - ADANIENT
+    - name: Series
+      type: object
+      samples:
+      - EQ
+      - EQ
+      - EQ
+    - name: Date
+      type: object
+      samples:
+      - 19-Apr-2023
+      - 06-Jun-2023
+      - 11-Sep-2023
+    - name: PrevClose
+      type: object
+      samples:
+      - 1,802.95
+      - 2,362.70
+      - 2,397.25
+    - name: OpenPrice
+      type: object
+      samples:
+      - 2,880.70
+      - 1,892.00
+      - 2,494.05
+    - name: HighPrice
+      type: object
+      samples:
+      - 2,550.00
+      - 3,477.35
+      - 2,626.60
+    - name: LowPrice
+      type: object
+      samples:
+      - 2,654.10
+      - 2,373.05
+      - 3,440.95
+    - name: LastPrice
+      type: object
+      samples:
+      - 3,059.00
+      - 3,439.50
+      - 2,846.00
+    - name: ClosePrice
+      type: object
+      samples:
+      - 2,614.95
+      - 3,436.35
+      - 2,414.80
+    - name: AveragePrice
+      type: object
+      samples:
+      - 2,399.00
+      - 3,834.29
+      - 1,840.31
+    - name: TotalTradedQuantity
+      type: object
+      samples:
+      - 59,69,594
+      - 40,21,773
+      - 97,86,919
+    - name: TurnoverInRs
+      type: object
+      samples:
+      - 6,64,79,05,451.95
+      - 3,73,87,87,276.00
+      - 6,03,18,49,312.75
+    - name: No.ofTrades
+      type: object
+      samples:
+      - 1,70,861
+      - 1,40,194
+      - 89,046
+    - name: DeliverableQty
+      type: object
+      samples:
+      - 37,69,217
+      - 4,54,788
+      - 2,25,215
+    - name: '%DlyQttoTradedQty'
+      type: object
+      samples:
+      - '16.45'
+      - '19.21'
+      - '27.85'
+
+
+The user asked the following question:
+### QUERY
+ what was the maximum price
+
+You generated this python code:
+result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type number
+
+
+Fix the python code above and return the new python code:
+2024-04-02 20:41:53 [INFO] Executing Step 1: CodeGenerator
+2024-04-02 20:41:54 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 309
+  columns: 16
+  schema:
+    fields:
+    - name: 'Unnamed: 0'
+      type: int64
+      samples:
+      - 118
+      - 238
+      - 218
+    - name: Symbol
+      type: object
+      samples:
+      - ADANIENT
+      - ADANIENT
+      - ADANIENT
+    - name: Series
+      type: object
+      samples:
+      - EQ
+      - EQ
+      - EQ
+    - name: Date
+      type: object
+      samples:
+      - 19-Apr-2023
+      - 06-Jun-2023
+      - 11-Sep-2023
+    - name: PrevClose
+      type: object
+      samples:
+      - 1,802.95
+      - 2,362.70
+      - 2,397.25
+    - name: OpenPrice
+      type: object
+      samples:
+      - 2,880.70
+      - 1,892.00
+      - 2,494.05
+    - name: HighPrice
+      type: object
+      samples:
+      - 2,550.00
+      - 3,477.35
+      - 2,626.60
+    - name: LowPrice
+      type: object
+      samples:
+      - 2,654.10
+      - 2,373.05
+      - 3,440.95
+    - name: LastPrice
+      type: object
+      samples:
+      - 3,059.00
+      - 3,439.50
+      - 2,846.00
+    - name: ClosePrice
+      type: object
+      samples:
+      - 2,614.95
+      - 3,436.35
+      - 2,414.80
+    - name: AveragePrice
+      type: object
+      samples:
+      - 2,399.00
+      - 3,834.29
+      - 1,840.31
+    - name: TotalTradedQuantity
+      type: object
+      samples:
+      - 59,69,594
+      - 40,21,773
+      - 97,86,919
+    - name: TurnoverInRs
+      type: object
+      samples:
+      - 6,64,79,05,451.95
+      - 3,73,87,87,276.00
+      - 6,03,18,49,312.75
+    - name: No.ofTrades
+      type: object
+      samples:
+      - 1,70,861
+      - 1,40,194
+      - 89,046
+    - name: DeliverableQty
+      type: object
+      samples:
+      - 37,69,217
+      - 4,54,788
+      - 2,25,215
+    - name: '%DlyQttoTradedQty'
+      type: object
+      samples:
+      - '16.45'
+      - '19.21'
+      - '27.85'
+
+
+The user asked the following question:
+### QUERY
+ what was the maximum price
+
+You generated this python code:
+result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type number
+
+
+Fix the python code above and return the new python code:
+            
+2024-04-02 20:41:54 [INFO] Code generated:
+            ```
+            result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+            ```
+            
+2024-04-02 20:41:54 [INFO] Executing Step 2: CodeCleaning
+2024-04-02 20:41:54 [INFO] 
+Code running:
+```
+result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+        ```
+2024-04-02 20:41:54 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type number
+
+2024-04-02 20:41:54 [WARNING] Failed to execute code retrying with a correction framework [retry number: 2]
+2024-04-02 20:41:54 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-04-02 20:41:54 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-04-02 20:41:54 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 309
+  columns: 16
+  schema:
+    fields:
+    - name: 'Unnamed: 0'
+      type: int64
+      samples:
+      - 118
+      - 238
+      - 218
+    - name: Symbol
+      type: object
+      samples:
+      - ADANIENT
+      - ADANIENT
+      - ADANIENT
+    - name: Series
+      type: object
+      samples:
+      - EQ
+      - EQ
+      - EQ
+    - name: Date
+      type: object
+      samples:
+      - 19-Apr-2023
+      - 06-Jun-2023
+      - 11-Sep-2023
+    - name: PrevClose
+      type: object
+      samples:
+      - 1,802.95
+      - 2,362.70
+      - 2,397.25
+    - name: OpenPrice
+      type: object
+      samples:
+      - 2,880.70
+      - 1,892.00
+      - 2,494.05
+    - name: HighPrice
+      type: object
+      samples:
+      - 2,550.00
+      - 3,477.35
+      - 2,626.60
+    - name: LowPrice
+      type: object
+      samples:
+      - 2,654.10
+      - 2,373.05
+      - 3,440.95
+    - name: LastPrice
+      type: object
+      samples:
+      - 3,059.00
+      - 3,439.50
+      - 2,846.00
+    - name: ClosePrice
+      type: object
+      samples:
+      - 2,614.95
+      - 3,436.35
+      - 2,414.80
+    - name: AveragePrice
+      type: object
+      samples:
+      - 2,399.00
+      - 3,834.29
+      - 1,840.31
+    - name: TotalTradedQuantity
+      type: object
+      samples:
+      - 59,69,594
+      - 40,21,773
+      - 97,86,919
+    - name: TurnoverInRs
+      type: object
+      samples:
+      - 6,64,79,05,451.95
+      - 3,73,87,87,276.00
+      - 6,03,18,49,312.75
+    - name: No.ofTrades
+      type: object
+      samples:
+      - 1,70,861
+      - 1,40,194
+      - 89,046
+    - name: DeliverableQty
+      type: object
+      samples:
+      - 37,69,217
+      - 4,54,788
+      - 2,25,215
+    - name: '%DlyQttoTradedQty'
+      type: object
+      samples:
+      - '16.45'
+      - '19.21'
+      - '27.85'
+
+
+The user asked the following question:
+### QUERY
+ what was the maximum price
+
+You generated this python code:
+result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type number
+
+
+Fix the python code above and return the new python code:
+2024-04-02 20:41:54 [INFO] Executing Step 1: CodeGenerator
+2024-04-02 20:41:55 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 309
+  columns: 16
+  schema:
+    fields:
+    - name: 'Unnamed: 0'
+      type: int64
+      samples:
+      - 118
+      - 238
+      - 218
+    - name: Symbol
+      type: object
+      samples:
+      - ADANIENT
+      - ADANIENT
+      - ADANIENT
+    - name: Series
+      type: object
+      samples:
+      - EQ
+      - EQ
+      - EQ
+    - name: Date
+      type: object
+      samples:
+      - 19-Apr-2023
+      - 06-Jun-2023
+      - 11-Sep-2023
+    - name: PrevClose
+      type: object
+      samples:
+      - 1,802.95
+      - 2,362.70
+      - 2,397.25
+    - name: OpenPrice
+      type: object
+      samples:
+      - 2,880.70
+      - 1,892.00
+      - 2,494.05
+    - name: HighPrice
+      type: object
+      samples:
+      - 2,550.00
+      - 3,477.35
+      - 2,626.60
+    - name: LowPrice
+      type: object
+      samples:
+      - 2,654.10
+      - 2,373.05
+      - 3,440.95
+    - name: LastPrice
+      type: object
+      samples:
+      - 3,059.00
+      - 3,439.50
+      - 2,846.00
+    - name: ClosePrice
+      type: object
+      samples:
+      - 2,614.95
+      - 3,436.35
+      - 2,414.80
+    - name: AveragePrice
+      type: object
+      samples:
+      - 2,399.00
+      - 3,834.29
+      - 1,840.31
+    - name: TotalTradedQuantity
+      type: object
+      samples:
+      - 59,69,594
+      - 40,21,773
+      - 97,86,919
+    - name: TurnoverInRs
+      type: object
+      samples:
+      - 6,64,79,05,451.95
+      - 3,73,87,87,276.00
+      - 6,03,18,49,312.75
+    - name: No.ofTrades
+      type: object
+      samples:
+      - 1,70,861
+      - 1,40,194
+      - 89,046
+    - name: DeliverableQty
+      type: object
+      samples:
+      - 37,69,217
+      - 4,54,788
+      - 2,25,215
+    - name: '%DlyQttoTradedQty'
+      type: object
+      samples:
+      - '16.45'
+      - '19.21'
+      - '27.85'
+
+
+The user asked the following question:
+### QUERY
+ what was the maximum price
+
+You generated this python code:
+result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type number
+
+
+Fix the python code above and return the new python code:
+            
+2024-04-02 20:41:55 [INFO] Code generated:
+            ```
+            result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+            ```
+            
+2024-04-02 20:41:55 [INFO] Executing Step 2: CodeCleaning
+2024-04-02 20:41:55 [INFO] 
+Code running:
+```
+result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+        ```
+2024-04-02 20:41:55 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type number
+
+2024-04-02 20:41:55 [WARNING] Failed to execute code retrying with a correction framework [retry number: 3]
+2024-04-02 20:41:55 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-04-02 20:41:55 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-04-02 20:41:55 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 309
+  columns: 16
+  schema:
+    fields:
+    - name: 'Unnamed: 0'
+      type: int64
+      samples:
+      - 118
+      - 238
+      - 218
+    - name: Symbol
+      type: object
+      samples:
+      - ADANIENT
+      - ADANIENT
+      - ADANIENT
+    - name: Series
+      type: object
+      samples:
+      - EQ
+      - EQ
+      - EQ
+    - name: Date
+      type: object
+      samples:
+      - 19-Apr-2023
+      - 06-Jun-2023
+      - 11-Sep-2023
+    - name: PrevClose
+      type: object
+      samples:
+      - 1,802.95
+      - 2,362.70
+      - 2,397.25
+    - name: OpenPrice
+      type: object
+      samples:
+      - 2,880.70
+      - 1,892.00
+      - 2,494.05
+    - name: HighPrice
+      type: object
+      samples:
+      - 2,550.00
+      - 3,477.35
+      - 2,626.60
+    - name: LowPrice
+      type: object
+      samples:
+      - 2,654.10
+      - 2,373.05
+      - 3,440.95
+    - name: LastPrice
+      type: object
+      samples:
+      - 3,059.00
+      - 3,439.50
+      - 2,846.00
+    - name: ClosePrice
+      type: object
+      samples:
+      - 2,614.95
+      - 3,436.35
+      - 2,414.80
+    - name: AveragePrice
+      type: object
+      samples:
+      - 2,399.00
+      - 3,834.29
+      - 1,840.31
+    - name: TotalTradedQuantity
+      type: object
+      samples:
+      - 59,69,594
+      - 40,21,773
+      - 97,86,919
+    - name: TurnoverInRs
+      type: object
+      samples:
+      - 6,64,79,05,451.95
+      - 3,73,87,87,276.00
+      - 6,03,18,49,312.75
+    - name: No.ofTrades
+      type: object
+      samples:
+      - 1,70,861
+      - 1,40,194
+      - 89,046
+    - name: DeliverableQty
+      type: object
+      samples:
+      - 37,69,217
+      - 4,54,788
+      - 2,25,215
+    - name: '%DlyQttoTradedQty'
+      type: object
+      samples:
+      - '16.45'
+      - '19.21'
+      - '27.85'
+
+
+The user asked the following question:
+### QUERY
+ what was the maximum price
+
+You generated this python code:
+result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type number
+
+
+Fix the python code above and return the new python code:
+2024-04-02 20:41:55 [INFO] Executing Step 1: CodeGenerator
+2024-04-02 20:41:56 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 309
+  columns: 16
+  schema:
+    fields:
+    - name: 'Unnamed: 0'
+      type: int64
+      samples:
+      - 118
+      - 238
+      - 218
+    - name: Symbol
+      type: object
+      samples:
+      - ADANIENT
+      - ADANIENT
+      - ADANIENT
+    - name: Series
+      type: object
+      samples:
+      - EQ
+      - EQ
+      - EQ
+    - name: Date
+      type: object
+      samples:
+      - 19-Apr-2023
+      - 06-Jun-2023
+      - 11-Sep-2023
+    - name: PrevClose
+      type: object
+      samples:
+      - 1,802.95
+      - 2,362.70
+      - 2,397.25
+    - name: OpenPrice
+      type: object
+      samples:
+      - 2,880.70
+      - 1,892.00
+      - 2,494.05
+    - name: HighPrice
+      type: object
+      samples:
+      - 2,550.00
+      - 3,477.35
+      - 2,626.60
+    - name: LowPrice
+      type: object
+      samples:
+      - 2,654.10
+      - 2,373.05
+      - 3,440.95
+    - name: LastPrice
+      type: object
+      samples:
+      - 3,059.00
+      - 3,439.50
+      - 2,846.00
+    - name: ClosePrice
+      type: object
+      samples:
+      - 2,614.95
+      - 3,436.35
+      - 2,414.80
+    - name: AveragePrice
+      type: object
+      samples:
+      - 2,399.00
+      - 3,834.29
+      - 1,840.31
+    - name: TotalTradedQuantity
+      type: object
+      samples:
+      - 59,69,594
+      - 40,21,773
+      - 97,86,919
+    - name: TurnoverInRs
+      type: object
+      samples:
+      - 6,64,79,05,451.95
+      - 3,73,87,87,276.00
+      - 6,03,18,49,312.75
+    - name: No.ofTrades
+      type: object
+      samples:
+      - 1,70,861
+      - 1,40,194
+      - 89,046
+    - name: DeliverableQty
+      type: object
+      samples:
+      - 37,69,217
+      - 4,54,788
+      - 2,25,215
+    - name: '%DlyQttoTradedQty'
+      type: object
+      samples:
+      - '16.45'
+      - '19.21'
+      - '27.85'
+
+
+The user asked the following question:
+### QUERY
+ what was the maximum price
+
+You generated this python code:
+result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type number
+
+
+Fix the python code above and return the new python code:
+            
+2024-04-02 20:41:56 [INFO] Code generated:
+            ```
+            result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+            ```
+            
+2024-04-02 20:41:56 [INFO] Executing Step 2: CodeCleaning
+2024-04-02 20:41:56 [INFO] 
+Code running:
+```
+result = {'type': 'number', 'value': dfs[0]['HighPrice'].max()}
+        ```
+2024-04-02 20:41:56 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type number
+
+2024-04-02 20:41:56 [ERROR] Pipeline failed on step 6: Value must match with type number
+2024-04-02 20:42:58 [INFO] Question: what is the current price of yes bank
+
+2024-04-02 20:42:58 [INFO] Running PandasAI with google-palm LLM...
+2024-04-02 20:42:58 [INFO] Prompt ID: 4c3306d1-9151-4676-83d3-dbeacdd4d525
+2024-04-02 20:42:58 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-04-02 20:42:58 [INFO] Executing Step 0: ValidatePipelineInput
+2024-04-02 20:42:58 [INFO] Executing Step 1: CacheLookup
+2024-04-02 20:42:58 [INFO] Executing Step 2: PromptGeneration
+2024-04-02 20:42:58 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2021-04-05'
+      - '2020-02-19'
+      - '2019-08-29'
+    - name: Open
+      type: float64
+      samples:
+      - 41.9
+      - 92.15
+      - 37.9
+    - name: High
+      type: float64
+      samples:
+      - 16.9
+      - 24.15
+      - 31.7
+    - name: Low
+      type: float64
+      samples:
+      - 14.3
+      - 13.2
+      - 14.15
+    - name: Close
+      type: float64
+      samples:
+      - 26.25
+      - 26.85
+      - 94.75
+    - name: Volume
+      type: float64
+      samples:
+      - 80727091.0
+      - 276756159.0
+      - 67070257.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ what is the current price of yes bank
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-04-02 20:42:58 [INFO] Executing Step 3: CodeGenerator
+2024-04-02 20:43:00 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2021-04-05'
+      - '2020-02-19'
+      - '2019-08-29'
+    - name: Open
+      type: float64
+      samples:
+      - 41.9
+      - 92.15
+      - 37.9
+    - name: High
+      type: float64
+      samples:
+      - 16.9
+      - 24.15
+      - 31.7
+    - name: Low
+      type: float64
+      samples:
+      - 14.3
+      - 13.2
+      - 14.15
+    - name: Close
+      type: float64
+      samples:
+      - 26.25
+      - 26.85
+      - 94.75
+    - name: Volume
+      type: float64
+      samples:
+      - 80727091.0
+      - 276756159.0
+      - 67070257.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ what is the current price of yes bank
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+            
+2024-04-02 20:43:00 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+result = { "type": "number", "value": dfs[0].iloc[-1]["Close"] }
+            ```
+            
+2024-04-02 20:43:00 [INFO] Executing Step 4: CachePopulation
+2024-04-02 20:43:00 [INFO] Executing Step 5: CodeCleaning
+2024-04-02 20:43:00 [INFO] 
+Code running:
+```
+result = {'type': 'number', 'value': dfs[0].iloc[-1]['Close']}
+        ```
+2024-04-02 20:43:00 [INFO] Executing Step 6: CodeExecution
+2024-04-02 20:43:00 [INFO] Executing Step 7: ResultValidation
+2024-04-02 20:43:00 [INFO] Answer: {'type': 'number', 'value': 23.2}
+2024-04-02 20:43:00 [INFO] Executing Step 8: ResultParsing
+2024-04-02 20:43:37 [INFO] Question: which date yes bank increased the most
+
+2024-04-02 20:43:37 [INFO] Running PandasAI with google-palm LLM...
+2024-04-02 20:43:37 [INFO] Prompt ID: 420f2c69-6dd5-4b3c-8223-071a29469fd8
+2024-04-02 20:43:37 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-04-02 20:43:37 [INFO] Executing Step 0: ValidatePipelineInput
+2024-04-02 20:43:37 [INFO] Executing Step 1: CacheLookup
+2024-04-02 20:43:37 [INFO] Executing Step 2: PromptGeneration
+2024-04-02 20:43:37 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2021-11-10'
+      - '2024-02-23'
+      - '2022-07-27'
+    - name: Open
+      type: float64
+      samples:
+      - 17.85
+      - 42.3
+      - 65.0
+    - name: High
+      type: float64
+      samples:
+      - 33.3
+      - 27.35
+      - 36.5
+    - name: Low
+      type: float64
+      samples:
+      - 18.7
+      - 16.2
+      - 91.5
+    - name: Close
+      type: float64
+      samples:
+      - 20.45
+      - 28.2
+      - 27.0
+    - name: Volume
+      type: float64
+      samples:
+      - 19466396.0
+      - 36945483.0
+      - 48443836.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ which date yes bank increased the most
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-04-02 20:43:37 [INFO] Executing Step 3: CodeGenerator
+2024-04-02 20:43:40 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2021-11-10'
+      - '2024-02-23'
+      - '2022-07-27'
+    - name: Open
+      type: float64
+      samples:
+      - 17.85
+      - 42.3
+      - 65.0
+    - name: High
+      type: float64
+      samples:
+      - 33.3
+      - 27.35
+      - 36.5
+    - name: Low
+      type: float64
+      samples:
+      - 18.7
+      - 16.2
+      - 91.5
+    - name: Close
+      type: float64
+      samples:
+      - 20.45
+      - 28.2
+      - 27.0
+    - name: Volume
+      type: float64
+      samples:
+      - 19466396.0
+      - 36945483.0
+      - 48443836.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ which date yes bank increased the most
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+            
+2024-04-02 20:43:40 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+result = { "type": "string", "value": f"The highest increase in Yes Bank stock price was on {dfs[0].Date[dfs[0].Close.idxmax()]}." }
+            ```
+            
+2024-04-02 20:43:40 [INFO] Executing Step 4: CachePopulation
+2024-04-02 20:43:40 [INFO] Executing Step 5: CodeCleaning
+2024-04-02 20:43:40 [INFO] 
+Code running:
+```
+result = {'type': 'string', 'value': f'The highest increase in Yes Bank stock price was on {dfs[0].Date[dfs[0].Close.idxmax()]}.'}
+        ```
+2024-04-02 20:43:40 [INFO] Executing Step 6: CodeExecution
+2024-04-02 20:43:40 [INFO] Executing Step 7: ResultValidation
+2024-04-02 20:43:40 [INFO] Answer: {'type': 'string', 'value': 'The highest increase in Yes Bank stock price was on 2019-06-04.'}
+2024-04-02 20:43:40 [INFO] Executing Step 8: ResultParsing
+2024-04-02 20:44:00 [INFO] Question: which date yes bank increased the most, also mention the price increase from
+
+2024-04-02 20:44:00 [INFO] Running PandasAI with google-palm LLM...
+2024-04-02 20:44:00 [INFO] Prompt ID: 48eb574f-7d09-43b2-9ed3-561a31ff81f2
+2024-04-02 20:44:00 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-04-02 20:44:00 [INFO] Executing Step 0: ValidatePipelineInput
+2024-04-02 20:44:00 [INFO] Executing Step 1: CacheLookup
+2024-04-02 20:44:00 [INFO] Executing Step 2: PromptGeneration
+2024-04-02 20:44:00 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2022-02-16'
+      - '2022-06-24'
+      - '2020-09-11'
+    - name: Open
+      type: float64
+      samples:
+      - 15.4
+      - 32.45
+      - 18.3
+    - name: High
+      type: float64
+      samples:
+      - 12.1
+      - 52.9
+      - 18.2
+    - name: Low
+      type: float64
+      samples:
+      - 29.8
+      - 20.6
+      - 18.15
+    - name: Close
+      type: float64
+      samples:
+      - 21.95
+      - 16.55
+      - 16.6
+    - name: Volume
+      type: float64
+      samples:
+      - 277799302.0
+      - 165385637.0
+      - 332730618.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ which date yes bank increased the most, also mention the price increase from
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-04-02 20:44:00 [INFO] Executing Step 3: CodeGenerator
+2024-04-02 20:44:02 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2022-02-16'
+      - '2022-06-24'
+      - '2020-09-11'
+    - name: Open
+      type: float64
+      samples:
+      - 15.4
+      - 32.45
+      - 18.3
+    - name: High
+      type: float64
+      samples:
+      - 12.1
+      - 52.9
+      - 18.2
+    - name: Low
+      type: float64
+      samples:
+      - 29.8
+      - 20.6
+      - 18.15
+    - name: Close
+      type: float64
+      samples:
+      - 21.95
+      - 16.55
+      - 16.6
+    - name: Volume
+      type: float64
+      samples:
+      - 277799302.0
+      - 165385637.0
+      - 332730618.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ which date yes bank increased the most, also mention the price increase from
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+            
+2024-04-02 20:44:02 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+result = { "type": "string", "value": f"Yes Bank increased the most on {dfs[0].loc[dfs[0]['Close'].idxmax()]['Date']}, with a price increase of {dfs[0].loc[dfs[0]['Close'].idxmax()]['Close'] - dfs[0].loc[dfs[0]['Close'].idxmin()]['Close']}" }
+            ```
+            
+2024-04-02 20:44:02 [INFO] Executing Step 4: CachePopulation
+2024-04-02 20:44:02 [INFO] Executing Step 5: CodeCleaning
+2024-04-02 20:44:02 [INFO] 
+Code running:
+```
+result = {'type': 'string', 'value': f"Yes Bank increased the most on {dfs[0].loc[dfs[0]['Close'].idxmax()]['Date']}, with a price increase of {dfs[0].loc[dfs[0]['Close'].idxmax()]['Close'] - dfs[0].loc[dfs[0]['Close'].idxmin()]['Close']}"}
+        ```
+2024-04-02 20:44:02 [INFO] Executing Step 6: CodeExecution
+2024-04-02 20:44:02 [INFO] Executing Step 7: ResultValidation
+2024-04-02 20:44:02 [INFO] Answer: {'type': 'string', 'value': 'Yes Bank increased the most on 2019-06-04, with a price increase of 142.0'}
+2024-04-02 20:44:02 [INFO] Executing Step 8: ResultParsing
+2024-04-02 20:44:56 [INFO] Question: draw the yes bank price movement
+
+2024-04-02 20:44:56 [INFO] Running PandasAI with google-palm LLM...
+2024-04-02 20:44:56 [INFO] Prompt ID: eca1ffcd-86f3-44f5-875b-0ebb7e235be0
+2024-04-02 20:44:56 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-04-02 20:44:56 [INFO] Executing Step 0: ValidatePipelineInput
+2024-04-02 20:44:56 [INFO] Executing Step 1: CacheLookup
+2024-04-02 20:44:56 [INFO] Executing Step 2: PromptGeneration
+2024-04-02 20:44:56 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2023-03-14'
+      - '2022-01-21'
+      - '2021-01-19'
+    - name: Open
+      type: float64
+      samples:
+      - 89.0
+      - 89.25
+      - 12.05
+    - name: High
+      type: float64
+      samples:
+      - 40.1
+      - 64.0
+      - 49.75
+    - name: Low
+      type: float64
+      samples:
+      - 20.8
+      - 14.3
+      - 20.7
+    - name: Close
+      type: float64
+      samples:
+      - 59.25
+      - 54.1
+      - 14.1
+    - name: Volume
+      type: float64
+      samples:
+      - 79664287.0
+      - 31868264.0
+      - 300341296.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ draw the yes bank price movement
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-04-02 20:44:56 [INFO] Executing Step 3: CodeGenerator
+2024-04-02 20:44:59 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2023-03-14'
+      - '2022-01-21'
+      - '2021-01-19'
+    - name: Open
+      type: float64
+      samples:
+      - 89.0
+      - 89.25
+      - 12.05
+    - name: High
+      type: float64
+      samples:
+      - 40.1
+      - 64.0
+      - 49.75
+    - name: Low
+      type: float64
+      samples:
+      - 20.8
+      - 14.3
+      - 20.7
+    - name: Close
+      type: float64
+      samples:
+      - 59.25
+      - 54.1
+      - 14.1
+    - name: Volume
+      type: float64
+      samples:
+      - 79664287.0
+      - 31868264.0
+      - 300341296.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ draw the yes bank price movement
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+            
+2024-04-02 20:44:59 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Write code here
+
+df = dfs[0]
+
+# Plot the chart
+plt.plot(df['Date'], df['Close'])
+plt.title('Yes Bank Price Movement')
+plt.xlabel('Date')
+plt.ylabel('Close Price')
+plt.savefig('temp_chart.png')
+
+# Declare result var
+result = {
+    "type": "plot",
+    "value": "temp_chart.png"
+}
+            ```
+            
+2024-04-02 20:44:59 [INFO] Executing Step 4: CachePopulation
+2024-04-02 20:44:59 [INFO] Executing Step 5: CodeCleaning
+2024-04-02 20:44:59 [INFO] Saving charts to D:\backtest_ursell\load_nifty_data\exports\charts\temp_chart.png
+2024-04-02 20:44:59 [INFO] 
+Code running:
+```
+df = dfs[0]
+plt.plot(df['Date'], df['Close'])
+plt.title('Yes Bank Price Movement')
+plt.xlabel('Date')
+plt.ylabel('Close Price')
+plt.savefig('D:/backtest_ursell/load_nifty_data/exports/charts/temp_chart.png')
+result = {'type': 'plot', 'value': 'D:/backtest_ursell/load_nifty_data/exports/charts/temp_chart.png'}
+        ```
+2024-04-02 20:44:59 [INFO] Executing Step 6: CodeExecution
+2024-04-02 20:44:59 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2024-04-02 20:44:59 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2024-04-02 20:45:01 [INFO] Executing Step 7: ResultValidation
+2024-04-02 20:45:01 [INFO] Answer: {'type': 'plot', 'value': 'D:/backtest_ursell/load_nifty_data/exports/charts/temp_chart.png'}
+2024-04-02 20:45:01 [INFO] Executing Step 8: ResultParsing
+2024-04-02 20:46:27 [INFO] Question: draw the yes bank price movement for last 5 month
+
+2024-04-02 20:46:27 [INFO] Running PandasAI with google-palm LLM...
+2024-04-02 20:46:27 [INFO] Prompt ID: 72d71049-33c7-48fb-867d-daf0d2e9a35e
+2024-04-02 20:46:27 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-04-02 20:46:27 [INFO] Executing Step 0: ValidatePipelineInput
+2024-04-02 20:46:27 [INFO] Executing Step 1: CacheLookup
+2024-04-02 20:46:27 [INFO] Executing Step 2: PromptGeneration
+2024-04-02 20:46:27 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2022-05-17'
+      - '2021-06-29'
+      - '2020-08-25'
+    - name: Open
+      type: float64
+      samples:
+      - 46.6
+      - 25.05
+      - 66.4
+    - name: High
+      type: float64
+      samples:
+      - 45.0
+      - 13.7
+      - 17.5
+    - name: Low
+      type: float64
+      samples:
+      - 20.0
+      - 35.05
+      - 46.3
+    - name: Close
+      type: float64
+      samples:
+      - 15.8
+      - 16.75
+      - 47.6
+    - name: Volume
+      type: float64
+      samples:
+      - 63502734.0
+      - 81186413.0
+      - 221530509.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ draw the yes bank price movement for last 5 month
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-04-02 20:46:27 [INFO] Executing Step 3: CodeGenerator
+2024-04-02 20:46:30 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2022-05-17'
+      - '2021-06-29'
+      - '2020-08-25'
+    - name: Open
+      type: float64
+      samples:
+      - 46.6
+      - 25.05
+      - 66.4
+    - name: High
+      type: float64
+      samples:
+      - 45.0
+      - 13.7
+      - 17.5
+    - name: Low
+      type: float64
+      samples:
+      - 20.0
+      - 35.05
+      - 46.3
+    - name: Close
+      type: float64
+      samples:
+      - 15.8
+      - 16.75
+      - 47.6
+    - name: Volume
+      type: float64
+      samples:
+      - 63502734.0
+      - 81186413.0
+      - 221530509.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ draw the yes bank price movement for last 5 month
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+            
+2024-04-02 20:46:30 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Write code here
+
+df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+
+result = {
+    "type": "plot",
+    "value": plt.plot(df['Date'], df['Close'])
+}
+            ```
+            
+2024-04-02 20:46:30 [INFO] Executing Step 4: CachePopulation
+2024-04-02 20:46:30 [INFO] Executing Step 5: CodeCleaning
+2024-04-02 20:46:30 [INFO] 
+Code running:
+```
+df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+        ```
+2024-04-02 20:46:30 [INFO] Executing Step 6: CodeExecution
+2024-04-02 20:46:30 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Symbol'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(input, code_context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 170, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\frame.py", line 3807, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Symbol'
+
+2024-04-02 20:46:30 [WARNING] Failed to execute code retrying with a correction framework [retry number: 1]
+2024-04-02 20:46:30 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-04-02 20:46:30 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-04-02 20:46:30 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2022-05-17'
+      - '2021-06-29'
+      - '2020-08-25'
+    - name: Open
+      type: float64
+      samples:
+      - 46.6
+      - 25.05
+      - 66.4
+    - name: High
+      type: float64
+      samples:
+      - 45.0
+      - 13.7
+      - 17.5
+    - name: Low
+      type: float64
+      samples:
+      - 20.0
+      - 35.05
+      - 46.3
+    - name: Close
+      type: float64
+      samples:
+      - 15.8
+      - 16.75
+      - 47.6
+    - name: Volume
+      type: float64
+      samples:
+      - 63502734.0
+      - 81186413.0
+      - 221530509.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement for last 5 month
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Symbol'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(input, code_context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 170, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\frame.py", line 3807, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Symbol'
+
+
+Fix the python code above and return the new python code:
+2024-04-02 20:46:30 [INFO] Executing Step 1: CodeGenerator
+2024-04-02 20:46:32 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2022-05-17'
+      - '2021-06-29'
+      - '2020-08-25'
+    - name: Open
+      type: float64
+      samples:
+      - 46.6
+      - 25.05
+      - 66.4
+    - name: High
+      type: float64
+      samples:
+      - 45.0
+      - 13.7
+      - 17.5
+    - name: Low
+      type: float64
+      samples:
+      - 20.0
+      - 35.05
+      - 46.3
+    - name: Close
+      type: float64
+      samples:
+      - 15.8
+      - 16.75
+      - 47.6
+    - name: Volume
+      type: float64
+      samples:
+      - 63502734.0
+      - 81186413.0
+      - 221530509.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement for last 5 month
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Symbol'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(input, code_context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 170, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\frame.py", line 3807, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Symbol'
+
+
+Fix the python code above and return the new python code:
+            
+2024-04-02 20:46:32 [INFO] Code generated:
+            ```
+            df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+            ```
+            
+2024-04-02 20:46:32 [INFO] Executing Step 2: CodeCleaning
+2024-04-02 20:46:32 [INFO] 
+Code running:
+```
+df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+        ```
+2024-04-02 20:46:32 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Symbol'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(input, code_context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 170, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\frame.py", line 3807, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Symbol'
+
+2024-04-02 20:46:32 [WARNING] Failed to execute code retrying with a correction framework [retry number: 2]
+2024-04-02 20:46:32 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-04-02 20:46:32 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-04-02 20:46:32 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2022-05-17'
+      - '2021-06-29'
+      - '2020-08-25'
+    - name: Open
+      type: float64
+      samples:
+      - 46.6
+      - 25.05
+      - 66.4
+    - name: High
+      type: float64
+      samples:
+      - 45.0
+      - 13.7
+      - 17.5
+    - name: Low
+      type: float64
+      samples:
+      - 20.0
+      - 35.05
+      - 46.3
+    - name: Close
+      type: float64
+      samples:
+      - 15.8
+      - 16.75
+      - 47.6
+    - name: Volume
+      type: float64
+      samples:
+      - 63502734.0
+      - 81186413.0
+      - 221530509.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement for last 5 month
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Symbol'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(input, code_context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 170, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\frame.py", line 3807, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Symbol'
+
+
+Fix the python code above and return the new python code:
+2024-04-02 20:46:32 [INFO] Executing Step 1: CodeGenerator
+2024-04-02 20:46:34 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2022-05-17'
+      - '2021-06-29'
+      - '2020-08-25'
+    - name: Open
+      type: float64
+      samples:
+      - 46.6
+      - 25.05
+      - 66.4
+    - name: High
+      type: float64
+      samples:
+      - 45.0
+      - 13.7
+      - 17.5
+    - name: Low
+      type: float64
+      samples:
+      - 20.0
+      - 35.05
+      - 46.3
+    - name: Close
+      type: float64
+      samples:
+      - 15.8
+      - 16.75
+      - 47.6
+    - name: Volume
+      type: float64
+      samples:
+      - 63502734.0
+      - 81186413.0
+      - 221530509.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement for last 5 month
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Symbol'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(input, code_context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 170, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\frame.py", line 3807, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Symbol'
+
+
+Fix the python code above and return the new python code:
+            
+2024-04-02 20:46:34 [INFO] Code generated:
+            ```
+            df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+            ```
+            
+2024-04-02 20:46:34 [INFO] Executing Step 2: CodeCleaning
+2024-04-02 20:46:34 [INFO] 
+Code running:
+```
+df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+        ```
+2024-04-02 20:46:34 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Symbol'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(input, code_context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 170, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\frame.py", line 3807, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Symbol'
+
+2024-04-02 20:46:34 [WARNING] Failed to execute code retrying with a correction framework [retry number: 3]
+2024-04-02 20:46:34 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-04-02 20:46:34 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-04-02 20:46:34 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2022-05-17'
+      - '2021-06-29'
+      - '2020-08-25'
+    - name: Open
+      type: float64
+      samples:
+      - 46.6
+      - 25.05
+      - 66.4
+    - name: High
+      type: float64
+      samples:
+      - 45.0
+      - 13.7
+      - 17.5
+    - name: Low
+      type: float64
+      samples:
+      - 20.0
+      - 35.05
+      - 46.3
+    - name: Close
+      type: float64
+      samples:
+      - 15.8
+      - 16.75
+      - 47.6
+    - name: Volume
+      type: float64
+      samples:
+      - 63502734.0
+      - 81186413.0
+      - 221530509.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement for last 5 month
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Symbol'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(input, code_context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 170, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\frame.py", line 3807, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Symbol'
+
+
+Fix the python code above and return the new python code:
+2024-04-02 20:46:34 [INFO] Executing Step 1: CodeGenerator
+2024-04-02 20:46:35 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2022-05-17'
+      - '2021-06-29'
+      - '2020-08-25'
+    - name: Open
+      type: float64
+      samples:
+      - 46.6
+      - 25.05
+      - 66.4
+    - name: High
+      type: float64
+      samples:
+      - 45.0
+      - 13.7
+      - 17.5
+    - name: Low
+      type: float64
+      samples:
+      - 20.0
+      - 35.05
+      - 46.3
+    - name: Close
+      type: float64
+      samples:
+      - 15.8
+      - 16.75
+      - 47.6
+    - name: Volume
+      type: float64
+      samples:
+      - 63502734.0
+      - 81186413.0
+      - 221530509.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement for last 5 month
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Symbol'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(input, code_context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 170, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\frame.py", line 3807, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Symbol'
+
+
+Fix the python code above and return the new python code:
+            
+2024-04-02 20:46:35 [INFO] Code generated:
+            ```
+            df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+            ```
+            
+2024-04-02 20:46:35 [INFO] Executing Step 2: CodeCleaning
+2024-04-02 20:46:35 [INFO] 
+Code running:
+```
+df = dfs[0]
+df = df[df['Symbol'] == 'YESBANK']
+df = df[df['Date'] >= '2022-01-01']
+df = df[df['Date'] <= '2022-05-31']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+        ```
+2024-04-02 20:46:35 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3802, in get_loc
+    return self._engine.get_loc(casted_key)
+           ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "pandas\_libs\index.pyx", line 138, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\index.pyx", line 165, in pandas._libs.index.IndexEngine.get_loc
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5745, in pandas._libs.hashtable.PyObjectHashTable.get_item
+  File "pandas\_libs\hashtable_class_helper.pxi", line 5753, in pandas._libs.hashtable.PyObjectHashTable.get_item
+KeyError: 'Symbol'
+
+The above exception was the direct cause of the following exception:
+
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 85, in execute
+    result = self.execute_code(input, code_context)
+             ^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 170, in execute_code
+    exec(code, environment)
+  File "<string>", line 2, in <module>
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\frame.py", line 3807, in __getitem__
+    indexer = self.columns.get_loc(key)
+              ^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandas\core\indexes\base.py", line 3804, in get_loc
+    raise KeyError(key) from err
+KeyError: 'Symbol'
+
+2024-04-02 20:46:35 [ERROR] Pipeline failed on step 6: 'Symbol'
+2024-04-02 20:47:15 [INFO] Question: draw the yes bank price movement from 2023
+
+2024-04-02 20:47:15 [INFO] Running PandasAI with google-palm LLM...
+2024-04-02 20:47:15 [INFO] Prompt ID: d59e7156-d593-4bb6-b7d0-e63cc04108ee
+2024-04-02 20:47:15 [INFO] Executing Pipeline: GenerateChatPipeline
+2024-04-02 20:47:15 [INFO] Executing Step 0: ValidatePipelineInput
+2024-04-02 20:47:16 [INFO] Executing Step 1: CacheLookup
+2024-04-02 20:47:16 [INFO] Executing Step 2: PromptGeneration
+2024-04-02 20:47:16 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2020-02-03'
+      - '2020-03-06'
+      - '2022-08-29'
+    - name: Open
+      type: float64
+      samples:
+      - 51.0
+      - 109.5
+      - 11.25
+    - name: High
+      type: float64
+      samples:
+      - 17.45
+      - 54.3
+      - 49.75
+    - name: Low
+      type: float64
+      samples:
+      - 44.95
+      - 34.45
+      - 12.1
+    - name: Close
+      type: float64
+      samples:
+      - 68.55
+      - 19.85
+      - 17.5
+    - name: Volume
+      type: float64
+      samples:
+      - 60702978.0
+      - 102986230.0
+      - 23447394.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ draw the yes bank price movement from 2023
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+2024-04-02 20:47:16 [INFO] Executing Step 3: CodeGenerator
+2024-04-02 20:47:18 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2020-02-03'
+      - '2020-03-06'
+      - '2022-08-29'
+    - name: Open
+      type: float64
+      samples:
+      - 51.0
+      - 109.5
+      - 11.25
+    - name: High
+      type: float64
+      samples:
+      - 17.45
+      - 54.3
+      - 49.75
+    - name: Low
+      type: float64
+      samples:
+      - 44.95
+      - 34.45
+      - 12.1
+    - name: Close
+      type: float64
+      samples:
+      - 68.55
+      - 19.85
+      - 17.5
+    - name: Volume
+      type: float64
+      samples:
+      - 60702978.0
+      - 102986230.0
+      - 23447394.0
+
+
+
+
+Update this initial code:
+```python
+# TODO: import the required dependencies
+import pandas as pd
+
+# Write code here
+
+# Declare result var: 
+type (possible values "string", "number", "dataframe", "plot"). Examples: { "type": "string", "value": f"The highest salary is {highest_salary}." } or { "type": "number", "value": 125 } or { "type": "dataframe", "value": pd.DataFrame({...}) } or { "type": "plot", "value": "temp_chart.png" }
+
+```
+
+
+
+### QUERY
+ draw the yes bank price movement from 2023
+
+
+Variable `dfs: list[pd.DataFrame]` is already declared.
+
+At the end, declare "result" variable as a dictionary of type and value.
+
+If you are asked to plot a chart, use "matplotlib" for charts, save as png.
+
+
+Generate python code and return full updated code:
+            
+2024-04-02 20:47:18 [INFO] Code generated:
+            ```
+            # TODO: import the required dependencies
+import pandas as pd
+import matplotlib.pyplot as plt
+
+# Write code here
+
+df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+
+result = {
+    "type": "plot",
+    "value": plt.plot(df['Date'], df['Close'])
+}
+            ```
+            
+2024-04-02 20:47:18 [INFO] Executing Step 4: CachePopulation
+2024-04-02 20:47:18 [INFO] Executing Step 5: CodeCleaning
+2024-04-02 20:47:18 [INFO] 
+Code running:
+```
+df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+        ```
+2024-04-02 20:47:18 [INFO] Executing Step 6: CodeExecution
+2024-04-02 20:47:18 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2024-04-02 20:47:18 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2024-04-02 20:47:18 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type plot
+
+2024-04-02 20:47:18 [WARNING] Failed to execute code retrying with a correction framework [retry number: 1]
+2024-04-02 20:47:18 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-04-02 20:47:18 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-04-02 20:47:18 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2020-02-03'
+      - '2020-03-06'
+      - '2022-08-29'
+    - name: Open
+      type: float64
+      samples:
+      - 51.0
+      - 109.5
+      - 11.25
+    - name: High
+      type: float64
+      samples:
+      - 17.45
+      - 54.3
+      - 49.75
+    - name: Low
+      type: float64
+      samples:
+      - 44.95
+      - 34.45
+      - 12.1
+    - name: Close
+      type: float64
+      samples:
+      - 68.55
+      - 19.85
+      - 17.5
+    - name: Volume
+      type: float64
+      samples:
+      - 60702978.0
+      - 102986230.0
+      - 23447394.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement from 2023
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type plot
+
+
+Fix the python code above and return the new python code:
+2024-04-02 20:47:18 [INFO] Executing Step 1: CodeGenerator
+2024-04-02 20:47:19 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2020-02-03'
+      - '2020-03-06'
+      - '2022-08-29'
+    - name: Open
+      type: float64
+      samples:
+      - 51.0
+      - 109.5
+      - 11.25
+    - name: High
+      type: float64
+      samples:
+      - 17.45
+      - 54.3
+      - 49.75
+    - name: Low
+      type: float64
+      samples:
+      - 44.95
+      - 34.45
+      - 12.1
+    - name: Close
+      type: float64
+      samples:
+      - 68.55
+      - 19.85
+      - 17.5
+    - name: Volume
+      type: float64
+      samples:
+      - 60702978.0
+      - 102986230.0
+      - 23447394.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement from 2023
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type plot
+
+
+Fix the python code above and return the new python code:
+            
+2024-04-02 20:47:19 [INFO] Code generated:
+            ```
+            df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+            ```
+            
+2024-04-02 20:47:19 [INFO] Executing Step 2: CodeCleaning
+2024-04-02 20:47:19 [INFO] 
+Code running:
+```
+df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+        ```
+2024-04-02 20:47:19 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2024-04-02 20:47:19 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2024-04-02 20:47:19 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type plot
+
+2024-04-02 20:47:19 [WARNING] Failed to execute code retrying with a correction framework [retry number: 2]
+2024-04-02 20:47:19 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-04-02 20:47:19 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-04-02 20:47:19 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2020-02-03'
+      - '2020-03-06'
+      - '2022-08-29'
+    - name: Open
+      type: float64
+      samples:
+      - 51.0
+      - 109.5
+      - 11.25
+    - name: High
+      type: float64
+      samples:
+      - 17.45
+      - 54.3
+      - 49.75
+    - name: Low
+      type: float64
+      samples:
+      - 44.95
+      - 34.45
+      - 12.1
+    - name: Close
+      type: float64
+      samples:
+      - 68.55
+      - 19.85
+      - 17.5
+    - name: Volume
+      type: float64
+      samples:
+      - 60702978.0
+      - 102986230.0
+      - 23447394.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement from 2023
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type plot
+
+
+Fix the python code above and return the new python code:
+2024-04-02 20:47:19 [INFO] Executing Step 1: CodeGenerator
+2024-04-02 20:47:20 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2020-02-03'
+      - '2020-03-06'
+      - '2022-08-29'
+    - name: Open
+      type: float64
+      samples:
+      - 51.0
+      - 109.5
+      - 11.25
+    - name: High
+      type: float64
+      samples:
+      - 17.45
+      - 54.3
+      - 49.75
+    - name: Low
+      type: float64
+      samples:
+      - 44.95
+      - 34.45
+      - 12.1
+    - name: Close
+      type: float64
+      samples:
+      - 68.55
+      - 19.85
+      - 17.5
+    - name: Volume
+      type: float64
+      samples:
+      - 60702978.0
+      - 102986230.0
+      - 23447394.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement from 2023
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type plot
+
+
+Fix the python code above and return the new python code:
+            
+2024-04-02 20:47:20 [INFO] Code generated:
+            ```
+            df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+            ```
+            
+2024-04-02 20:47:20 [INFO] Executing Step 2: CodeCleaning
+2024-04-02 20:47:20 [INFO] 
+Code running:
+```
+df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+        ```
+2024-04-02 20:47:20 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2024-04-02 20:47:20 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2024-04-02 20:47:20 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type plot
+
+2024-04-02 20:47:20 [WARNING] Failed to execute code retrying with a correction framework [retry number: 3]
+2024-04-02 20:47:20 [INFO] Executing Pipeline: ErrorCorrectionPipeline
+2024-04-02 20:47:20 [INFO] Executing Step 0: ErrorPromptGeneration
+2024-04-02 20:47:20 [INFO] Using prompt: dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2020-02-03'
+      - '2020-03-06'
+      - '2022-08-29'
+    - name: Open
+      type: float64
+      samples:
+      - 51.0
+      - 109.5
+      - 11.25
+    - name: High
+      type: float64
+      samples:
+      - 17.45
+      - 54.3
+      - 49.75
+    - name: Low
+      type: float64
+      samples:
+      - 44.95
+      - 34.45
+      - 12.1
+    - name: Close
+      type: float64
+      samples:
+      - 68.55
+      - 19.85
+      - 17.5
+    - name: Volume
+      type: float64
+      samples:
+      - 60702978.0
+      - 102986230.0
+      - 23447394.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement from 2023
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type plot
+
+
+Fix the python code above and return the new python code:
+2024-04-02 20:47:20 [INFO] Executing Step 1: CodeGenerator
+2024-04-02 20:47:22 [INFO] Prompt used:
+            
+dfs[0]:
+  name: null
+  description: null
+  type: pd.DataFrame
+  rows: 1198
+  columns: 6
+  schema:
+    fields:
+    - name: Date
+      type: object
+      samples:
+      - '2020-02-03'
+      - '2020-03-06'
+      - '2022-08-29'
+    - name: Open
+      type: float64
+      samples:
+      - 51.0
+      - 109.5
+      - 11.25
+    - name: High
+      type: float64
+      samples:
+      - 17.45
+      - 54.3
+      - 49.75
+    - name: Low
+      type: float64
+      samples:
+      - 44.95
+      - 34.45
+      - 12.1
+    - name: Close
+      type: float64
+      samples:
+      - 68.55
+      - 19.85
+      - 17.5
+    - name: Volume
+      type: float64
+      samples:
+      - 60702978.0
+      - 102986230.0
+      - 23447394.0
+
+
+The user asked the following question:
+### QUERY
+ draw the yes bank price movement from 2023
+
+
+You generated this python code:
+df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+
+It fails with the following error:
+Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type plot
+
+
+Fix the python code above and return the new python code:
+            
+2024-04-02 20:47:22 [INFO] Code generated:
+            ```
+            df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+            ```
+            
+2024-04-02 20:47:22 [INFO] Executing Step 2: CodeCleaning
+2024-04-02 20:47:22 [INFO] 
+Code running:
+```
+df = dfs[0]
+df = df[df['Date'] >= '2023-01-01']
+result = {'type': 'plot', 'value': plt.plot(df['Date'], df['Close'])}
+        ```
+2024-04-02 20:47:22 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2024-04-02 20:47:22 [INFO] Using categorical units to plot a list of strings that are all parsable as floats or dates. If these strings should be plotted as numbers, cast to the appropriate data type before plotting.
+2024-04-02 20:47:22 [ERROR] Failed with error: Traceback (most recent call last):
+  File "D:\backtest_ursell\venv\Lib\site-packages\pandasai\pipelines\chat\code_execution.py", line 98, in execute
+    raise InvalidOutputValueMismatch(
+pandasai.exceptions.InvalidOutputValueMismatch: Value must match with type plot
+
+2024-04-02 20:47:22 [ERROR] Pipeline failed on step 6: Value must match with type plot

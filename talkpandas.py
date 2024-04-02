@@ -9,22 +9,99 @@ GOOGLE_API_KEY = "AIzaSyAKEaaM7fWIErN3VbikjP_T5m0UfhBy5iE"
 
 llm = GooglePalm(api_key=GOOGLE_API_KEY)
 
-st.title("Your Data Analysis Dashboard")
+dashboard = st.sidebar.selectbox("select analysis",["Prompting","NSE"])
 
-upload_csv = st.file_uploader("Upload a csv file for analysis", type =['csv'])
-if upload_csv is not None:
-    df = pd.read_csv(upload_csv)
-    sdf = SmartDataframe(df,config={"llm":llm})
-    # st.write (sdf.head(3))
+if dashboard=="Prompting":
+    st.title("Your Data Analysis Dashboard")
 
-    prompt = st.text_area("Enter your query")
-    if st.button("Generate"):
-        if prompt:
-            with st.spinner("Generating response..."):
-                response = sdf.chat(prompt)
-                st.success(response)
+    upload_csv = st.file_uploader("Upload a csv file for analysis", type =['csv'])
+    if upload_csv is not None:
+        df = pd.read_csv(upload_csv)
+        sdf = SmartDataframe(df,config={"llm":llm})
+        # st.write (sdf.head(3))
 
-                st.set_option('deprecation.showPyplotGlobalUse', False)
-                st.pyplot()
-        else:
-            st.warning("Please enter another query")
+        prompt = st.text_area("Enter your query")
+        if st.button("Generate"):
+            if prompt:
+                with st.spinner("Generating response..."):
+                    response = sdf.chat(prompt)
+                    st.success(response)
+
+                    st.set_option('deprecation.showPyplotGlobalUse', False)
+                    st.pyplot()
+            else:
+                st.warning("Please enter another query")
+
+import requests
+from datetime import datetime
+import matplotlib.pyplot as plt
+from urllib.parse import quote
+import pandas_ta as ta
+import pickle
+
+with open("nifty50tickers.pickle",'rb') as f:
+    tickers=pickle.load(f)
+if dashboard=="NSE":
+    st.title("Your NSE stock dashboard")
+    # symbol_list = ["RELIANCE", "SBIN","TCS","INFY","HDFC","ITC","ASIANPAINT","AXISBANK","ADANIPORTS","BAJAJFINSV"]
+    symbol = st.sidebar.selectbox("Select stock symbol", tickers)
+    encoded_symbol=quote(symbol)
+
+    st.title(symbol+" Stocks Price Update")
+
+    # symbol = st.text_input("Enter stock symbol (e.g., SBIN, RELIANCE)")
+
+    if symbol:
+
+        try:
+            stock_url='https://www.nseindia.com/api/historical/cm/equity?symbol={}'.format(encoded_symbol)
+            headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36' ,
+            "accept-encoding": "gzip, deflate, br", "accept-language": "en-US,en;q=0.9"}
+            r = requests.get(stock_url, headers=headers).json()
+            data_values=[data for data in r['data']]
+            stock_data=pd.DataFrame(data_values)
+            latest_price = stock_data['CH_CLOSING_PRICE'].iloc[-1]
+            st.success(f"The latest price is: {latest_price}")
+            # Plotting historical price movement
+            st.subheader("Historical Price Movement")
+            plt.figure(figsize=(10, 6))
+            plt.plot(stock_data.index, stock_data['CH_CLOSING_PRICE'])
+            plt.xlabel('Date')
+            plt.ylabel('Price')
+            plt.title('Price Movement')
+            plt.xticks(rotation=45)
+            st.pyplot(plt)
+            st.dataframe(stock_data)
+
+            # Export data as CSV
+            st.subheader("Export Data")
+            if st.button("Export as CSV"):
+                st.write("Exporting stock data as CSV...")
+                stock_data.to_csv(f"{symbol}_data.csv", index=False)
+                st.success("Stock data exported successfully!")     
+            #Fetch the recommendation
+            # User input for strategy parameters
+            fast_period = st.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
+            slow_period = st.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
+            rsi_period = st.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
+            if len(stock_data) > 0:
+                # Calculate crossover, MACD, and RSI indicators
+                stock_data["MA_fast"] = ta.sma(stock_data["CH_CLOSING_PRICE"], timeperiod=fast_period)
+                stock_data["MA_slow"] = ta.sma(stock_data["CH_CLOSING_PRICE"], timeperiod=slow_period)
+                stock_data["MACD"] = ta.macd(stock_data["CH_CLOSING_PRICE"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
+                stock_data["RSI"] = ta.rsi(stock_data["CH_CLOSING_PRICE"], timeperiod=rsi_period)
+
+                # Determine buy or sell recommendation based on strategy
+                if stock_data["MA_fast"].iloc[-1] > stock_data["MA_slow"].iloc[-1] and stock_data["MACD"].iloc[-1] > 0 and stock_data["RSI"].iloc[-1] < 30:
+                    recommendation = "Buy"
+                elif stock_data["MA_fast"].iloc[-1] < stock_data["MA_slow"].iloc[-1] and stock_data["MACD"].iloc[-1] < 0 and stock_data["RSI"].iloc[-1] > 70:
+                    recommendation = "Sell"
+                else:
+                    recommendation = "Hold"
+
+                # Display stock data and recommendation
+                st.subheader("Recommendation")
+                st.write(f"The recommendation for {symbol} is: {recommendation}")       
+        except Exception as e:
+            st.error("Error occurred while fetching stock data.")
+            st.error(e)

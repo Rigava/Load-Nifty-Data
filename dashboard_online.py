@@ -1,6 +1,7 @@
 import streamlit as st
 import requests
 import os
+import io
 # import sys
 # import subprocess
 
@@ -60,7 +61,7 @@ dashboard = st.sidebar.selectbox("select analysis",["Pattern","Squeeze","Breakou
 
 #the below file settings is for plotting the chart only
 # file = r'stock_dfs_updated\{}.csv'.format(symbol)
-url = r"https://github.com/Rigava/Load-Nifty-Data/tree/main/stock_dfs_updated/{}".format(symbol)
+url = r"https://github.com/Rigava/Load-Nifty-Data/tree/main/stock_dfs_updated/{}.csv".format(symbol)
 chart_df = pd.read_csv(url)
 df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
 df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)

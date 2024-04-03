@@ -69,7 +69,11 @@ if dashboard=="NSE":
     if symbol:
 
         try:
-            data = capital_market.price_volume_and_deliverable_position_data(symbol="ITC",period='1M')
+            # data = capital_market.price_volume_and_deliverable_position_data(symbol="ITC",period='1M')
+            data_info='equity_list'
+            data = getattr(capital_market,data_info)()
+            st.write("before datatype",data.dtypes)
+            st.write(data)
             # from_date='01-01-2023', to_date='01-04-2024'
             # stock_url='https://www.nseindia.com/api/historical/cm/equity?symbol={}'.format(encoded_symbol)
             # headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36' ,
@@ -77,11 +81,11 @@ if dashboard=="NSE":
             # r = requests.get(stock_url, headers=headers).json()
             # data_values=[data for data in r['data']]
             # df=pd.DataFrame(data_values)
-            st.write(data)
+            
             df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
             df = df.drop_duplicates(subset=['Date'],keep='first')
             df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-            st.write("before datatype",df.dtypes)
+            
             st.write(df)
             cols = df.select_dtypes(exclude=['float']).columns
             st.write("cols which are not float",cols)

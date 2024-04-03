@@ -82,6 +82,7 @@ if dashboard=="NSE":
             df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
             
             cols = df.select_dtypes(exclude=['float']).columns
+            print("cols which are not float",cols)
             df['Date']=pd.to_datetime(df['Date'])
             for col in cols:
                 if col == 'Date':

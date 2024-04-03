@@ -80,7 +80,8 @@ if dashboard=="NSE":
             df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
             df = df.drop_duplicates(subset=['Date'],keep='first')
             df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-            
+            st.write("before datatype",df.dtypes)
+            st.write(df)
             cols = df.select_dtypes(exclude=['float']).columns
             st.write("cols which are not float",cols)
             df['Date']=pd.to_datetime(df['Date'])
@@ -90,7 +91,7 @@ if dashboard=="NSE":
                 else:
                     df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)
             df.set_index('Date',inplace=True)
-            st.write("final data types",df.dtype)
+            st.write("final data types",df.dtypes)
             latest_price = df['Close'].iloc[-1]
             st.success(f"The latest price is: {latest_price}")
             # Plotting historical price movement

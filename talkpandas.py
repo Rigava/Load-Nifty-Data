@@ -51,6 +51,8 @@ import matplotlib.pyplot as plt
 from urllib.parse import quote
 import pandas_ta as ta
 import pickle
+from nselib import capital_market
+from unidecode import unidecode
 
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
@@ -67,24 +69,38 @@ if dashboard=="NSE":
     if symbol:
 
         try:
-            stock_url='https://www.nseindia.com/api/historical/cm/equity?symbol={}'.format(encoded_symbol)
-            headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36' ,
-            "accept-encoding": "gzip, deflate, br", "accept-language": "en-US,en;q=0.9"}
-            r = requests.get(stock_url, headers=headers).json()
-            data_values=[data for data in r['data']]
-            stock_data=pd.DataFrame(data_values)
-            latest_price = stock_data['CH_CLOSING_PRICE'].iloc[-1]
+            data = capital_market.price_volume_and_deliverable_position_data(
+                symbol=symbol, from_date='01-01-2020', to_date='01-04-2024')
+            # stock_url='https://www.nseindia.com/api/historical/cm/equity?symbol={}'.format(encoded_symbol)
+            # headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36' ,
+            # "accept-encoding": "gzip, deflate, br", "accept-language": "en-US,en;q=0.9"}
+            # r = requests.get(stock_url, headers=headers).json()
+            # data_values=[data for data in r['data']]
+            # stock_data=pd.DataFrame(data_values)
+            df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
+            df = df.drop_duplicates(subset=['Date'],keep='first')
+            df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
+            
+            cols = df.select_dtypes(exclude=['float']).columns
+            df['Date']=pd.to_datetime(df['Date'])
+            for col in cols:
+                if col == 'Date':
+                    pass
+                else:
+                    df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)
+            df.set_index('Date',inplace=True)
+            latest_price = df['Close'].iloc[-1]
             st.success(f"The latest price is: {latest_price}")
             # Plotting historical price movement
             st.subheader("Historical Price Movement")
             plt.figure(figsize=(10, 6))
-            plt.plot(stock_data.index, stock_data['CH_CLOSING_PRICE'])
+            plt.plot(df.index, df['Close'])
             plt.xlabel('Date')
             plt.ylabel('Price')
             plt.title('Price Movement')
             plt.xticks(rotation=45)
             st.pyplot(plt)
-            st.dataframe(stock_data)
+            st.dataframe(df)
 
             # Export data as CSV
             st.subheader("Export Data")

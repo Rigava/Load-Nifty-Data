@@ -70,13 +70,13 @@ if dashboard=="NSE":
 
         try:
             data = capital_market.price_volume_and_deliverable_position_data(
-                symbol=symbol, from_date='01-01-2020', to_date='01-04-2024')
+                symbol=symbol, from_date='01-01-2023', to_date='01-04-2024')
             # stock_url='https://www.nseindia.com/api/historical/cm/equity?symbol={}'.format(encoded_symbol)
             # headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36' ,
             # "accept-encoding": "gzip, deflate, br", "accept-language": "en-US,en;q=0.9"}
             # r = requests.get(stock_url, headers=headers).json()
             # data_values=[data for data in r['data']]
-            # stock_data=pd.DataFrame(data_values)
+            # df=pd.DataFrame(data_values)
             df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
             df = df.drop_duplicates(subset=['Date'],keep='first')
             df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
@@ -106,24 +106,24 @@ if dashboard=="NSE":
             st.subheader("Export Data")
             if st.button("Export as CSV"):
                 st.write("Exporting stock data as CSV...")
-                stock_data.to_csv(f"{symbol}_data.csv", index=False)
+                df.to_csv(f"{symbol}_data.csv", index=False)
                 st.success("Stock data exported successfully!")     
             #Fetch the recommendation
             # User input for strategy parameters
             fast_period = st.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
             slow_period = st.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
             rsi_period = st.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
-            if len(stock_data) > 0:
+            if len(df) > 0:
                 # Calculate crossover, MACD, and RSI indicators
-                stock_data["MA_fast"] = ta.sma(stock_data["CH_CLOSING_PRICE"], timeperiod=fast_period)
-                stock_data["MA_slow"] = ta.sma(stock_data["CH_CLOSING_PRICE"], timeperiod=slow_period)
-                stock_data["MACD"] = ta.macd(stock_data["CH_CLOSING_PRICE"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
-                stock_data["RSI"] = ta.rsi(stock_data["CH_CLOSING_PRICE"], timeperiod=rsi_period)
+                df["MA_fast"] = ta.sma(df["Close"], timeperiod=fast_period)
+                df["MA_slow"] = ta.sma(df["Close"], timeperiod=slow_period)
+                df["MACD"] = ta.macd(df["Close"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
+                df["RSI"] = ta.rsi(df["Close"], timeperiod=rsi_period)
 
                 # Determine buy or sell recommendation based on strategy
-                if stock_data["MA_fast"].iloc[-1] > stock_data["MA_slow"].iloc[-1] and stock_data["MACD"].iloc[-1] > 0 and stock_data["RSI"].iloc[-1] < 30:
+                if df["MA_fast"].iloc[-1] > df["MA_slow"].iloc[-1] and df["MACD"].iloc[-1] > 0 and df["RSI"].iloc[-1] < 30:
                     recommendation = "Buy"
-                elif stock_data["MA_fast"].iloc[-1] < stock_data["MA_slow"].iloc[-1] and stock_data["MACD"].iloc[-1] < 0 and stock_data["RSI"].iloc[-1] > 70:
+                elif df["MA_fast"].iloc[-1] < df["MA_slow"].iloc[-1] and df["MACD"].iloc[-1] < 0 and df["RSI"].iloc[-1] > 70:
                     recommendation = "Sell"
                 else:
                     recommendation = "Hold"

@@ -77,6 +77,7 @@ if dashboard=="NSE":
             # r = requests.get(stock_url, headers=headers).json()
             # data_values=[data for data in r['data']]
             # df=pd.DataFrame(data_values)
+            st.dataframe(data)
             df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
             df = df.drop_duplicates(subset=['Date'],keep='first')
             df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)

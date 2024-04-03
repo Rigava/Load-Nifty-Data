@@ -70,7 +70,8 @@ if dashboard=="NSE":
 
         try:
             data = capital_market.price_volume_and_deliverable_position_data(
-                symbol="TCS", from_date='01-01-2023', to_date='01-04-2024')
+                symbol="ITC",period='1M')
+            # from_date='01-01-2023', to_date='01-04-2024'
             # stock_url='https://www.nseindia.com/api/historical/cm/equity?symbol={}'.format(encoded_symbol)
             # headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36' ,
             # "accept-encoding": "gzip, deflate, br", "accept-language": "en-US,en;q=0.9"}

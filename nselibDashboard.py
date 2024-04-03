@@ -25,7 +25,7 @@ if dashboard=="NSE Equity":
     if symbol:
 
         try:
-            data = capital_market.price_volume_and_deliverable_position_data(symbol="ITC",period='1M')
+            data = capital_market.price_volume_and_deliverable_position_data(symbol=symbol,period='1M')
             # data_info='equity_list'
             # data = getattr(capital_market,data_info)()
             st.write("before datatype",data.dtypes)

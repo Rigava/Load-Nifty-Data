@@ -7,6 +7,7 @@ import pickle
 from nselib import capital_market
 from unidecode import unidecode
 import streamlit as st
+import pandas as pd
 
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
@@ -65,37 +66,37 @@ if dashboard=="NSE Equity":
             st.pyplot(plt)
             
 
-            # Export data as CSV
-            st.subheader("Export Data")
-            if st.button("Export as CSV"):
-                st.write("Exporting stock data as CSV...")
-                df.to_csv(f"{symbol}_data.csv", index=False)
-                st.success("Stock data exported successfully!")     
-            #Fetch the recommendation
-            # User input for strategy parameters
-            fast_period = st.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
-            slow_period = st.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
-            rsi_period = st.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
-            if len(df) > 0:
-                # Calculate crossover, MACD, and RSI indicators
-                df["MA_fast"] = ta.sma(df["Close"], timeperiod=fast_period)
-                df["MA_slow"] = ta.sma(df["Close"], timeperiod=slow_period)
-                # df["MACD"],_,_ = ta.macd(df["Close"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
-                df["RSI"] = ta.rsi(df["Close"], timeperiod=rsi_period)
+            # # Export data as CSV
+            # st.subheader("Export Data")
+            # if st.button("Export as CSV"):
+            #     st.write("Exporting stock data as CSV...")
+            #     df.to_csv(f"{symbol}_data.csv", index=False)
+            #     st.success("Stock data exported successfully!")     
+            # #Fetch the recommendation
+            # # User input for strategy parameters
+            # fast_period = st.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
+            # slow_period = st.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
+            # rsi_period = st.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
+            # if len(df) > 0:
+            #     # Calculate crossover, MACD, and RSI indicators
+            #     df["MA_fast"] = ta.sma(df["Close"], timeperiod=fast_period)
+            #     df["MA_slow"] = ta.sma(df["Close"], timeperiod=slow_period)
+            #     # df["MACD"],_,_ = ta.macd(df["Close"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
+            #     df["RSI"] = ta.rsi(df["Close"], timeperiod=rsi_period)
 
-                # Determine buy or sell recommendation based on strategy
-                if df["MA_fast"].iloc[-1] > df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] < 45:
-                    # and df["MACD"].iloc[-1] > 0
-                    recommendation = "Buy"
-                elif df["MA_fast"].iloc[-1] < df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] > 70:
-                    # and df["MACD"].iloc[-1] < 0
-                    recommendation = "Sell"
-                else:
-                    recommendation = "Hold"
-                st.dataframe(df.tail(5))
-                # Display stock data and recommendation
-                st.subheader("Recommendation")
-                st.write(f"The recommendation for {symbol} is: {recommendation}")       
+            #     # Determine buy or sell recommendation based on strategy
+            #     if df["MA_fast"].iloc[-1] > df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] < 45:
+            #         # and df["MACD"].iloc[-1] > 0
+            #         recommendation = "Buy"
+            #     elif df["MA_fast"].iloc[-1] < df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] > 70:
+            #         # and df["MACD"].iloc[-1] < 0
+            #         recommendation = "Sell"
+            #     else:
+            #         recommendation = "Hold"
+            #     st.dataframe(df.tail(5))
+            #     # Display stock data and recommendation
+            #     st.subheader("Recommendation")
+            #     st.write(f"The recommendation for {symbol} is: {recommendation}")       
         except Exception as e:
             st.error("Error occurred while fetching stock data.")
             st.error(e)

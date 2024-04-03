@@ -100,7 +100,7 @@ if dashboard=="NSE":
             plt.title('Price Movement')
             plt.xticks(rotation=45)
             st.pyplot(plt)
-            st.dataframe(df)
+            
 
             # Export data as CSV
             st.subheader("Export Data")
@@ -117,17 +117,19 @@ if dashboard=="NSE":
                 # Calculate crossover, MACD, and RSI indicators
                 df["MA_fast"] = ta.sma(df["Close"], timeperiod=fast_period)
                 df["MA_slow"] = ta.sma(df["Close"], timeperiod=slow_period)
-                df["MACD"] = ta.macd(df["Close"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
+                # df["MACD"],_,_ = ta.macd(df["Close"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
                 df["RSI"] = ta.rsi(df["Close"], timeperiod=rsi_period)
 
                 # Determine buy or sell recommendation based on strategy
-                if df["MA_fast"].iloc[-1] > df["MA_slow"].iloc[-1] and df["MACD"].iloc[-1] > 0 and df["RSI"].iloc[-1] < 30:
+                if df["MA_fast"].iloc[-1] > df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] < 45:
+                    # and df["MACD"].iloc[-1] > 0
                     recommendation = "Buy"
-                elif df["MA_fast"].iloc[-1] < df["MA_slow"].iloc[-1] and df["MACD"].iloc[-1] < 0 and df["RSI"].iloc[-1] > 70:
+                elif df["MA_fast"].iloc[-1] < df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] > 70:
+                    # and df["MACD"].iloc[-1] < 0
                     recommendation = "Sell"
                 else:
                     recommendation = "Hold"
-
+                st.dataframe(df.tail(5))
                 # Display stock data and recommendation
                 st.subheader("Recommendation")
                 st.write(f"The recommendation for {symbol} is: {recommendation}")       

@@ -174,9 +174,12 @@ if dashboard == "Breakouts":
 import pandas_ta as ta 
 if dashboard == "Crossovers":
     # User input for strategy parameters
-    fast_period = st.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
-    slow_period = st.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
-    rsi_period = st.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
+    # fast_period = st.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
+    # slow_period = st.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
+    # rsi_period = st.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
+    Buy = []
+    Sell = []
+    Hold = []
     for files in tickers:
         url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
         download = requests.get(url).content
@@ -199,5 +202,21 @@ if dashboard == "Crossovers":
             df["MA_fast"] = ta.sma(df["Close"], 12).round(1)
             df["MA_slow"] = ta.sma(df["Close"], 26).round(1)
             # df["MACD"],_,_ = ta.macd(df["Close"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
-            df["RSI"] = ta.rsi(df["Close"], 14)
-        st.write(df.tail(5))
+            df["RSI"] = ta.rsi(df["Close"], 14).round(1)
+            st.write(files)
+            st.dataframe(df.tail(5))
+            # Determine buy or sell recommendation based on strategy
+            if df["MA_fast"].iloc[-1] > df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] < 30:
+                # and df["MACD"].iloc[-1] > 0
+                Buy.append(files)
+            elif df["MA_fast"].iloc[-1] < df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] > 70:
+                # and df["MACD"].iloc[-1] < 0
+                Sell.append(files)
+            else:
+                Hold.append(files)
+            
+            # Display stock data and recommendation
+    st.write("List of stock recommended for Buy",Buy)
+    st.write("List of stock recommended for sell",Sell)
+    st.write("List of stock trying to break down",breakdown)
+   

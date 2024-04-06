@@ -196,8 +196,8 @@ if dashboard == "Crossovers":
                 df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)        
         if len(df) > 0:
             # Calculate crossover, MACD, and RSI indicators
-            df["MA_fast"] = ta.sma(df["Close"], 12)
-            df["MA_slow"] = ta.sma(df["Close"], 26)
+            df["MA_fast"] = ta.sma(df["Close"], 12).round(1)
+            df["MA_slow"] = ta.sma(df["Close"], 26).round(1)
             # df["MACD"],_,_ = ta.macd(df["Close"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
             df["RSI"] = ta.rsi(df["Close"], 14)
         st.write(df.tail(5))

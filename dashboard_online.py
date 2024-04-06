@@ -174,8 +174,8 @@ if dashboard == "Breakouts":
 import pandas_ta as ta 
 if dashboard == "Crossovers":
     # User input for strategy parameters
-    fast = st.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
-    slow = st.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
+    fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
+    slow = st.sidebar.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
     rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
     rsi_low = st.sidebar.slider("RSI low", min_value=1, max_value=100, value=30, step=1)
     rsi_high = st.sidebar.slider("RSI high", min_value=1, max_value=100, value=70, step=1)
@@ -221,6 +221,6 @@ if dashboard == "Crossovers":
     
     st.write("List of stock recommended for Buy",Buy)
     st.write("List of stock recommended for Sell",Sell)
-    st.write(df.tail(5))
+    st.write(files,df.tail(5))
 
    

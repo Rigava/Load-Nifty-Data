@@ -50,6 +50,7 @@ from patterns import candlestick_patterns
 import requests
 from datetime import datetime
 import matplotlib.pyplot as plt
+import json
 # from urllib.parse import quote
 
 st.title('NIFTY 50 STOCK DASHBOARD')

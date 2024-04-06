@@ -176,7 +176,9 @@ if dashboard == "Crossovers":
     # User input for strategy parameters
     fast = st.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
     slow = st.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
-    rsi_period = st.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
+    rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
+    rsi_low = st.sidebar.slider("RSI low", min_value=1, max_value=100, value=30, step=1)
+    rsi_high = st.sidebar.slider("RSI high", min_value=1, max_value=100, value=70, step=1)
     Buy = []
     Sell = []
     Hold = []
@@ -206,18 +208,19 @@ if dashboard == "Crossovers":
             # st.write(files)
             # st.dataframe(df.tail(5))
             # Determine buy or sell recommendation based on strategy
-            if df["MA_fast"].iloc[-1] > df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] < 30:
+            if df["MA_fast"].iloc[-1] > df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] < rsi_low:
                 # and df["MACD"].iloc[-1] > 0
                 Buy.append(files)
-            elif df["MA_fast"].iloc[-1] < df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] > 70:
+            elif df["MA_fast"].iloc[-1] < df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] > rsi_high:
                 # and df["MACD"].iloc[-1] < 0
                 Sell.append(files)
             else:
                 Hold.append(files)
             
     # Display stock data and recommendation
-    st.write(df)
+    
     st.write("List of stock recommended for Buy",Buy)
-    st.write("List of stock recommended for sell",Sell)
+    st.write("List of stock recommended for Sell",Sell)
+    st.write(df.tail(5))
 
    

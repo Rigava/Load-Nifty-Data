@@ -48,15 +48,53 @@ import pickle
 from unidecode import unidecode
 from patterns import candlestick_patterns
 import requests
-
+from datetime import datetime
+import matplotlib.pyplot as plt
+# from urllib.parse import quote
 
 st.title('NIFTY 50 STOCK DASHBOARD')
 
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Squeeze","Breakouts","Crossovers"])
+dashboard = st.sidebar.selectbox("select analysis",["Scanner","Squeeze","Breakouts","Crossovers"])
 
+if dashboard == "Scanner":
+    # symbol_list = ["RELIANCE", "SBIN","TCS","INFY","HDFC","ITC","ASIANPAINT","AXISBANK","ADANIPORTS","BAJAJFINSV"]
+    symbol = st.sidebar.selectbox("Select stock symbol", tickers)
+    # encoded_symbol=quote(symbol)
+
+    st.title(symbol+" Stocks Price Update")
+    if symbol:
+
+        try:
+            stock_url='https://www.nseindia.com/api/historical/cm/equity?symbol={}'.format(symbol)
+            headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36' ,
+            "accept-encoding": "gzip, deflate, br", "accept-language": "en-US,en;q=0.9"}
+            r = requests.get(stock_url, headers=headers).json()
+            data_values=[data for data in r['data']]
+            stock_data=pd.DataFrame(data_values)
+            latest_price = stock_data['CH_CLOSING_PRICE'].iloc[-1]
+            st.success(f"The latest price is: {latest_price}")
+            # Plotting historical price movement
+            st.subheader("Historical Price Movement")
+            plt.figure(figsize=(10, 6))
+            plt.plot(stock_data.index, stock_data['CH_CLOSING_PRICE'])
+            plt.xlabel('Date')
+            plt.ylabel('Price')
+            plt.title('Price Movement')
+            plt.xticks(rotation=45)
+            st.pyplot(plt)
+            st.dataframe(stock_data)
+            # Export data as CSV
+            st.subheader("Export Data")
+            if st.button("Export as CSV"):
+                st.write("Exporting stock data as CSV...")
+                df.to_csv(f"{symbol}_data.csv", index=False)
+                st.success("Stock data exported successfully!")    
+        except Exception as e:
+            st.error("Error occurred while fetching stock data.")
+            st.error(e)
 #below setting is for identifying the breakouts based on squeezing and consolidation/Breakout functions
 if dashboard == "Squeeze":
     squeeze=[]
@@ -202,7 +240,7 @@ if dashboard == "Crossovers":
     st.write("List of stock recommended for Buy",Buy)
     st.write("List of stock recommended for Sell",Sell)
     # st.write(files,df.tail(5))
-    
+
 #the below file settings is for plotting the chart only
 ticker_choice = tickers
 symbol = st.sidebar.selectbox("Select a stock",ticker_choice)

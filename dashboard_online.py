@@ -1,6 +1,5 @@
 import streamlit as st
 import requests
-import os
 import io
 # import sys
 # import subprocess
@@ -71,6 +70,8 @@ if dashboard == "Data":
             latest_price = stock_data['Close'].iloc[-1]
             print(stock_data,latest_price)
             st.success(f"The latest price is: {latest_price}")
+            stock_data["RSI"] = ta.rsi(stock_data["Close"], lentgh =14).round(1)
+            stock_data["ADX"] = stock_data.ta.adx()
             # Plotting historical price movement
             st.subheader("Historical Price Movement in Line chart")
             plt.figure(figsize=(10, 6))

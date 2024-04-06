@@ -50,6 +50,7 @@ import requests
 from datetime import datetime
 import matplotlib.pyplot as plt
 import yfinance
+import pandas_ta as ta
 # from urllib.parse import quote
 
 st.title('NIFTY 50 STOCK DASHBOARD')
@@ -69,9 +70,11 @@ if dashboard == "Data":
             stock_data = yfinance.Ticker(ticker).history(period="1y")
             latest_price = stock_data['Close'].iloc[-1]
             print(stock_data,latest_price)
-            st.success(f"The latest price is: {latest_price}")
+            
             stock_data["RSI"] = ta.rsi(stock_data["Close"], lentgh =14).round(1)
-            stock_data["ADX"] = stock_data.ta.adx()
+            stock_data["ADX"] = stock_data.ta.adx()/round(1)
+            latest_rsi = stock_data['RSI'].iloc[-1]
+            st.success(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
             # Plotting historical price movement
             st.subheader("Historical Price Movement in Line chart")
             plt.figure(figsize=(10, 6))
@@ -81,7 +84,7 @@ if dashboard == "Data":
             plt.title('Price Movement')
             plt.xticks(rotation=45)
             st.pyplot(plt)
-            st.dataframe(stock_data)
+            st.dataframe(stock_data.tail(10))
             # Export data as CSV
             st.subheader("Export Data")
             if st.button("Export as CSV"):

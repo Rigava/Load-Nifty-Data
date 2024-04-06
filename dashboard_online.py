@@ -267,16 +267,19 @@ if dashboard == "Strategy":
     buy_price = 0
     cumulative_profit = 0
     trades_df = pd.DataFrame(columns=['Date', 'Price', 'Action'])
+    #Parameter settings by user
+    lower_bound=st.sidebar.slider("RSI low", min_value=1, max_value=100, value=30, step=1)
+    upper_bound=st.sidebar.slider("RSI high", min_value=1, max_value=100, value=70, step=1)
     # Iterate over the data
     for i in range(1, len(df)):
-        if df['RSI'][i - 1] < 30 and df['RSI'][i] > 30 :
+        if df['RSI'][i - 1] < lower_bound and df['RSI'][i] > lower_bound :
             # Buy signal
             if position is None:
                 position = 'buy'
                 buy_price = df['Close'][i]
                 trades_df = trades_df.append({'Date': df.index[i], 'Price': buy_price, 'Action': 'Buy'}, ignore_index=True)
     #             print("Buy at:", buy_price)
-        elif df['RSI'][i - 1] > 70 and df['RSI'][i] < 70:
+        elif df['RSI'][i - 1] > upper_bound and df['RSI'][i] < upper_bound:
             # Sell signal
             if position == 'buy':
                 sell_price = df['Close'][i]
@@ -292,6 +295,7 @@ if dashboard == "Strategy":
     winning_ratio = winning_trades / total_trades if total_trades > 0 else 0
     # Print metrics
     st.write("Cumulative Profit:", cumulative_profit)
+    st.write("Total Trades:", total_trades)
     st.write("Winning Ratio:", winning_ratio)
     # Plotting the trades
     fig = go.Figure(data=[go.Scatter(x=df.index, y=df['Close'], name='Close'),
@@ -301,13 +305,14 @@ if dashboard == "Strategy":
                                     name='Trades')])
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)
+    st.write(trades_df)
 
 
 ## CANDLE VIEW FOR ALL DASHBOARD
 #Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis
 ticker_choice = tickers
 candle_symbol = st.sidebar.selectbox("Select a stock to view in candle stick format",ticker_choice)
-st.write(f"This is the candle stick chart of {candle_symbol}")
+st.write(f"Below is the candle stick chart of {candle_symbol}")
 url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(candle_symbol)
 download = requests.get(url).content
 chart_df = pd.read_csv(io.StringIO(download.decode('utf-8')))

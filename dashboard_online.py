@@ -50,31 +50,12 @@ from patterns import candlestick_patterns
 import requests
 
 
-st.title('NIFTY STOCK DASHBOARD')
+st.title('NIFTY 50 STOCK DASHBOARD')
 
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-ticker_choice = tickers
-symbol = st.sidebar.selectbox("Select a stock",ticker_choice)
-st.write(f"This is the chart of {symbol}")
 dashboard = st.sidebar.selectbox("select analysis",["Squeeze","Breakouts","Crossovers"])
-#the below file settings is for plotting the chart only
-url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(symbol)
-download = requests.get(url).content
-chart_df = pd.read_csv(io.StringIO(download.decode('utf-8')))
-print(chart_df.head())
-df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
-df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-fig = go.Figure(data=[go.Candlestick(x=df['Date'],
-                open=df['Open'],
-                high=df['High'],
-                low=df['Low'],
-                close=df['Close'])])
-fig.update_xaxes(type='category')
-fig.update_layout(height=800)
-st.plotly_chart(fig,use_container_width=True)
-
 
 #below setting is for identifying the breakouts based on squeezing and consolidation/Breakout functions
 if dashboard == "Squeeze":
@@ -218,9 +199,26 @@ if dashboard == "Crossovers":
                 Hold.append(files)
             
     # Display stock data and recommendation
-    
     st.write("List of stock recommended for Buy",Buy)
     st.write("List of stock recommended for Sell",Sell)
-    st.write(files,df.tail(5))
-
+    # st.write(files,df.tail(5))
+    
+#the below file settings is for plotting the chart only
+ticker_choice = tickers
+symbol = st.sidebar.selectbox("Select a stock",ticker_choice)
+st.write(f"This is the chart of {symbol}")
+url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(symbol)
+download = requests.get(url).content
+chart_df = pd.read_csv(io.StringIO(download.decode('utf-8')))
+print(chart_df.head())
+df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
+df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
+fig = go.Figure(data=[go.Candlestick(x=df['Date'],
+                open=df['Open'],
+                high=df['High'],
+                low=df['Low'],
+                close=df['Close'])])
+fig.update_xaxes(type='category')
+fig.update_layout(height=800)
+st.plotly_chart(fig,use_container_width=True)
    

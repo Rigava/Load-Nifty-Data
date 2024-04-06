@@ -66,7 +66,6 @@ if dashboard == "Scanner":
 
     st.title(symbol+" Stocks Price Update")
     if symbol:
-
         try:
             stock_url='https://www.nseindia.com/api/historical/cm/equity?symbol={}'.format(symbol)
             headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36' ,
@@ -90,7 +89,7 @@ if dashboard == "Scanner":
             st.subheader("Export Data")
             if st.button("Export as CSV"):
                 st.write("Exporting stock data as CSV...")
-                df.to_csv(f"{symbol}_data.csv", index=False)
+                stock_data.to_csv(f"{symbol}_data.csv", index=False)
                 st.success("Stock data exported successfully!")    
         except Exception as e:
             st.error("Error occurred while fetching stock data.")

@@ -218,5 +218,5 @@ if dashboard == "Crossovers":
             # Display stock data and recommendation
     st.write("List of stock recommended for Buy",Buy)
     st.write("List of stock recommended for sell",Sell)
-    st.write("List of stock trying to break down",breakdown)
+
    

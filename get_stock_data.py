@@ -33,7 +33,7 @@ def get_data(reload_nifty=False):
     print(ticker)
     if not os.path.exists('stock_dfs_updated/{}.csv'.format(ticker)):
       data = capital_market.price_volume_and_deliverable_position_data(
-    symbol=ticker, from_date='01-01-2023', to_date='01-04-2024')
+    symbol=ticker, from_date='01-01-2023', to_date='05-04-2024')
       data.to_csv('stock_dfs_updated/{}.csv'.format(ticker))
     else:
       print('Already have'.format(ticker))

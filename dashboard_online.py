@@ -69,8 +69,8 @@ if dashboard == "Scanner":
     if symbol:
         try:
             stock_url=f'https://www.nseindia.com/api/historical/cm/equity?symbol=ITC'
-            headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/83.0.4103.116 Safari/537.36' ,
-            "accept-encoding": "gzip, deflate, br", "accept-language": "en-US,en;q=0.9"}
+            headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
+            "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "en-US,en;q=0.9"}
             r = requests.get(stock_url, headers=headers).json()
             print(r)
             data_values=[data for data in r['data']]

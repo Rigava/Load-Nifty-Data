@@ -50,7 +50,7 @@ from patterns import candlestick_patterns
 import requests
 from datetime import datetime
 import matplotlib.pyplot as plt
-import json
+import yfinance
 # from urllib.parse import quote
 
 st.title('NIFTY 50 STOCK DASHBOARD')
@@ -68,14 +68,8 @@ if dashboard == "Scanner":
     st.title(symbol+" Stocks Price Update")
     if symbol:
         try:
-            stock_url=f'https://www.nseindia.com/api/historical/cm/equity?symbol=ITC'
-            headers= {'User-Agent': 'Mozilla/5.0 (Windows NT 10.0; Win64; x64) AppleWebKit/537.36 (KHTML, like Gecko) Chrome/122.0.0.0 Safari/537.36',
-            "accept-encoding": "gzip, deflate, br, zstd", "accept-language": "en-US,en;q=0.9"}
-            r = requests.get(stock_url, headers=headers).json()
-            print(r)
-            data_values=[data for data in r['data']]
-            stock_data=pd.DataFrame(data_values)
-            latest_price = stock_data['CH_CLOSING_PRICE'].iloc[-1]
+            stock_data = yfinance.Ticker("INFY.NS").history(period="1y")
+            latest_price = stock_data['Close'].iloc[-1]
             print(stock_data,latest_price)
             st.success(f"The latest price is: {latest_price}")
             # Plotting historical price movement

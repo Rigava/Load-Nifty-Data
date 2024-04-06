@@ -139,6 +139,7 @@ def is_breakdown(data):
         if last_close < recent_candles['Close'].min():
             return True
     return False
+
 if dashboard == "Breakouts":
     consolidation = []
     breakup=[]
@@ -176,10 +177,27 @@ if dashboard == "Crossovers":
     fast_period = st.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
     slow_period = st.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
     rsi_period = st.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
-    if len(df) > 0:
-        # Calculate crossover, MACD, and RSI indicators
-        df["MA_fast"] = ta.sma(df["Close"], timeperiod=fast_period)
-        df["MA_slow"] = ta.sma(df["Close"], timeperiod=slow_period)
-        # df["MACD"],_,_ = ta.macd(df["Close"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
-        df["RSI"] = ta.rsi(df["Close"], timeperiod=rsi_period)
-    st.write(df)
+    for files in tickers:
+        url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
+        download = requests.get(url).content
+        data = pd.read_csv(io.StringIO(download.decode('utf-8')))
+        
+        #selecting the relevant columns
+        df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
+        df = df.drop_duplicates(subset=['Date'],keep='first')
+        df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
+        
+        cols = df.select_dtypes(exclude=['float']).columns
+        df['Date']=pd.to_datetime(df['Date'])
+        for col in cols:
+            if col == 'Date':
+                pass
+            else:
+                df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)        
+        if len(df) > 0:
+            # Calculate crossover, MACD, and RSI indicators
+            df["MA_fast"] = ta.sma(df["Close"], timeperiod=fast_period)
+            df["MA_slow"] = ta.sma(df["Close"], timeperiod=slow_period)
+            # df["MACD"],_,_ = ta.macd(df["Close"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
+            df["RSI"] = ta.rsi(df["Close"], timeperiod=rsi_period)
+        st.write(df)

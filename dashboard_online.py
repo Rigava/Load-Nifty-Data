@@ -200,4 +200,4 @@ if dashboard == "Crossovers":
             df["MA_slow"] = ta.sma(df["Close"], 26)
             # df["MACD"],_,_ = ta.macd(df["Close"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
             df["RSI"] = ta.rsi(df["Close"], 14)
-        st.write(df.tail)
+        st.write(df.tail(5))

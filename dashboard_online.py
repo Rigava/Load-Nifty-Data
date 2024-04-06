@@ -51,15 +51,15 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import yfinance
 import pandas_ta as ta
-# from urllib.parse import quote
 
 st.title('NIFTY 50 STOCK DASHBOARD')
 
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossovers"])
+dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossovers","Strategy"])
 
+## Dashboard 0
 if dashboard == "Data":
     # symbol_list = ["RELIANCE", "SBIN","TCS","INFY","HDFC","ITC","ASIANPAINT","AXISBANK","ADANIPORTS","BAJAJFINSV"]
     symbol = st.sidebar.selectbox("Select stock to pull data", tickers)
@@ -68,7 +68,7 @@ if dashboard == "Data":
         try:
             ticker = symbol+'.NS'
             stock_data = yfinance.Ticker(ticker).history(period="1y")
-            latest_price = stock_data['Close'].iloc[-1]
+            latest_price = stock_data['Close'].iloc[-1].round(1)
             print(stock_data,latest_price)
             
             stock_data["RSI"] = ta.rsi(stock_data["Close"], lentgh =14).round(1)
@@ -94,6 +94,8 @@ if dashboard == "Data":
         except Exception as e:
             st.error("Error occurred while fetching stock data.")
             st.error(e)
+
+## Dashboard 1 SQUEEZE
 #below setting is for identifying the breakouts based on squeezing and consolidation/Breakout functions
 if dashboard == "Squeeze":
     squeeze=[]
@@ -131,7 +133,7 @@ if dashboard == "Squeeze":
         if df.iloc[-3]['squeeze_on'] and not df.iloc[-1]['squeeze_on']:
             squeeze.append(files)
     st.write("List of stock coming out of squeeze phase",squeeze)
-
+## Dashboard 2 Functions
 def is_consolidating(data):
     recent_candles = data[-15:]
     max_close = recent_candles['Close'].max()
@@ -157,7 +159,7 @@ def is_breakdown(data):
         if last_close < recent_candles['Close'].min():
             return True
     return False
-
+## Dashboard 2 BREAKOUTS
 if dashboard == "Breakouts":
     consolidation = []
     breakup=[]
@@ -166,12 +168,10 @@ if dashboard == "Breakouts":
         url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
         download = requests.get(url).content
         data = pd.read_csv(io.StringIO(download.decode('utf-8')))
-        
         #selecting the relevant columns
         df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
         df = df.drop_duplicates(subset=['Date'],keep='first')
         df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-        
         cols = df.select_dtypes(exclude=['float']).columns
         df['Date']=pd.to_datetime(df['Date'])
         for col in cols:
@@ -188,8 +188,7 @@ if dashboard == "Breakouts":
     st.write("List of stock in consolidation",consolidation)
     st.write("List of stock trying to break up",breakup)
     st.write("List of stock trying to break down",breakdown)
-
-import pandas_ta as ta 
+## Dashboard 3 CROSSOVERS
 if dashboard == "Crossovers":
     # User input for strategy parameters
     fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
@@ -203,13 +202,11 @@ if dashboard == "Crossovers":
     for files in tickers:
         url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
         download = requests.get(url).content
-        data = pd.read_csv(io.StringIO(download.decode('utf-8')))
-        
+        data = pd.read_csv(io.StringIO(download.decode('utf-8')))   
         #selecting the relevant columns
         df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
         df = df.drop_duplicates(subset=['Date'],keep='first')
         df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-        
         cols = df.select_dtypes(exclude=['float']).columns
         df['Date']=pd.to_datetime(df['Date'])
         for col in cols:
@@ -233,8 +230,7 @@ if dashboard == "Crossovers":
                 # and df["MACD"].iloc[-1] < 0
                 Sell.append(files)
             else:
-                Hold.append(files)
-            
+                Hold.append(files)            
     # Display stock data and recommendation
     st.write("List of stock recommended for Buy",Buy)
     st.write("List of stock recommended for Sell",Sell)
@@ -254,11 +250,65 @@ if dashboard == "Crossovers":
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)
 
-#the below file settings is for plotting the candle stick chart
+## Dashboard 4 STRATEGY----BUY ABOVE RSI 30 AND SELL BELOW 70
+if dashboard == "Strategy":
+    ticker_choice = tickers
+    symbol = st.selectbox("Select a stock for the strategy",ticker_choice)
+    # Download historical data
+    ticker = symbol+'.NS'
+    df = yfinance.Ticker(ticker).history(period="1y")
+    # df = yf.download('RELIANCE.NS', start="2021-01-01", end="2023-06-09")
+    # Calculate RSI
+    df['RSI'] = ta.rsi(df['Close'],length=14)
+    # Calculate SMA 200
+    df['ma'] = ta.sma(df['Close'], length=10)
+    # Initialize variables and DataFrame
+    position = None
+    buy_price = 0
+    cumulative_profit = 0
+    trades_df = pd.DataFrame(columns=['Date', 'Price', 'Action'])
+    # Iterate over the data
+    for i in range(1, len(df)):
+        if df['RSI'][i - 1] < 30 and df['RSI'][i] > 30 :
+            # Buy signal
+            if position is None:
+                position = 'buy'
+                buy_price = df['Close'][i]
+                trades_df = trades_df.append({'Date': df.index[i], 'Price': buy_price, 'Action': 'Buy'}, ignore_index=True)
+    #             print("Buy at:", buy_price)
+        elif df['RSI'][i - 1] > 70 and df['RSI'][i] < 70:
+            # Sell signal
+            if position == 'buy':
+                sell_price = df['Close'][i]
+                profit = sell_price - buy_price
+                cumulative_profit += profit
+                trades_df = trades_df.append({'Date': df.index[i], 'Price': sell_price, 'Action': 'Sell'}, ignore_index=True)
+                position = None
+    #             print("Sell at:", sell_price)
+    #             print("Profit:", profit)
+    # Calculate metrics
+    winning_trades = len(trades_df[trades_df['Price'] > buy_price])
+    total_trades = len(trades_df)
+    winning_ratio = winning_trades / total_trades if total_trades > 0 else 0
+    # Print metrics
+    st.write("Cumulative Profit:", cumulative_profit)
+    st.write("Winning Ratio:", winning_ratio)
+    # Plotting the trades
+    fig = go.Figure(data=[go.Scatter(x=df.index, y=df['Close'], name='Close'),
+                        go.Scatter(x=trades_df['Date'], y=trades_df['Price'], mode='markers',
+                                    marker=dict(color=trades_df['Action'].map({'Buy': 'green', 'Sell': 'red'}),
+                                                size=8),
+                                    name='Trades')])
+    fig.update_layout(height=800)
+    st.plotly_chart(fig,use_container_width=True)
+
+
+## CANDLE VIEW FOR ALL DASHBOARD
+#Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis
 ticker_choice = tickers
-symbol = st.sidebar.selectbox("Select a stock to view in candle stick format",ticker_choice)
-st.write(f"This is the candle stick chart of {symbol}")
-url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(symbol)
+candle_symbol = st.sidebar.selectbox("Select a stock to view in candle stick format",ticker_choice)
+st.write(f"This is the candle stick chart of {candle_symbol}")
+url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(candle_symbol)
 download = requests.get(url).content
 chart_df = pd.read_csv(io.StringIO(download.decode('utf-8')))
 print(chart_df.head())

@@ -58,9 +58,9 @@ st.title('NIFTY 50 STOCK DASHBOARD')
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Scanner","Squeeze","Breakouts","Crossovers"])
+dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossovers"])
 
-if dashboard == "Scanner":
+if dashboard == "Data":
     # symbol_list = ["RELIANCE", "SBIN","TCS","INFY","HDFC","ITC","ASIANPAINT","AXISBANK","ADANIPORTS","BAJAJFINSV"]
     symbol = st.sidebar.selectbox("Select stock symbol", tickers)
     # encoded_symbol=quote(symbol)
@@ -68,14 +68,15 @@ if dashboard == "Scanner":
     st.title(symbol+" Stocks Price Update")
     if symbol:
         try:
-            stock_data = yfinance.Ticker("INFY.NS").history(period="1y")
+            ticker = symbol+'.NS'
+            stock_data = yfinance.Ticker(ticker).history(period="1y")
             latest_price = stock_data['Close'].iloc[-1]
             print(stock_data,latest_price)
             st.success(f"The latest price is: {latest_price}")
             # Plotting historical price movement
-            st.subheader("Historical Price Movement")
+            st.subheader("Historical Price Movement in Line chart")
             plt.figure(figsize=(10, 6))
-            plt.plot(stock_data.index, stock_data['CH_CLOSING_PRICE'])
+            plt.plot(stock_data.index, stock_data['Close'])
             plt.xlabel('Date')
             plt.ylabel('Price')
             plt.title('Price Movement')

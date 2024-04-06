@@ -62,9 +62,7 @@ dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts"
 
 if dashboard == "Data":
     # symbol_list = ["RELIANCE", "SBIN","TCS","INFY","HDFC","ITC","ASIANPAINT","AXISBANK","ADANIPORTS","BAJAJFINSV"]
-    symbol = st.sidebar.selectbox("Select stock symbol", tickers)
-    # encoded_symbol=quote(symbol)
-
+    symbol = st.sidebar.selectbox("Select stock to pull data", tickers)
     st.title(symbol+" Stocks Price Update")
     if symbol:
         try:
@@ -236,12 +234,26 @@ if dashboard == "Crossovers":
     # Display stock data and recommendation
     st.write("List of stock recommended for Buy",Buy)
     st.write("List of stock recommended for Sell",Sell)
-    # st.write(files,df.tail(5))
+    st.write("Lets plot the moving averages with closing price")
+    # Plotly graph for visualization
+    ticker_choice = tickers
+    symbol = st.selectbox("Select a stock to view moving average crossover",ticker_choice)
+    ticker = symbol+'.NS'
+    df = yfinance.Ticker(ticker).history(period="1y")
+    df["MA_fast"] = ta.sma(df["Close"], length =fast).round(1)
+    df["MA_slow"] = ta.sma(df["Close"], length =slow).round(1)
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df.index, y=df['Close'], name='Close', line=dict(color='black')))
+    fig.add_trace(go.Scatter(x=df.index, y=df['MA_fast'], name='fast', line=dict(color='red')))
+    fig.add_trace(go.Scatter(x=df.index, y=df['MA_slow'], name='slow', line=dict(color='blue')))
+    fig.update_xaxes(type='category')
+    fig.update_layout(height=800)
+    st.plotly_chart(fig,use_container_width=True)
 
-#the below file settings is for plotting the chart only
+#the below file settings is for plotting the candle stick chart
 ticker_choice = tickers
-symbol = st.sidebar.selectbox("Select a stock",ticker_choice)
-st.write(f"This is the chart of {symbol}")
+symbol = st.sidebar.selectbox("Select a stock to view in candle stick format",ticker_choice)
+st.write(f"This is the candle stick chart of {symbol}")
 url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(symbol)
 download = requests.get(url).content
 chart_df = pd.read_csv(io.StringIO(download.decode('utf-8')))

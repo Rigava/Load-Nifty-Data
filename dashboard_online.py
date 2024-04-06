@@ -58,7 +58,7 @@ with open("nifty50tickers.pickle",'rb') as f:
 ticker_choice = tickers
 symbol = st.sidebar.selectbox("Select a stock",ticker_choice)
 st.write(f"This is the chart of {symbol}")
-dashboard = st.sidebar.selectbox("select analysis",["Squeeze","Breakouts"])
+dashboard = st.sidebar.selectbox("select analysis",["Squeeze","Breakouts","Crossovers"])
 #the below file settings is for plotting the chart only
 url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(symbol)
 download = requests.get(url).content
@@ -169,3 +169,17 @@ if dashboard == "Breakouts":
     st.write("List of stock in consolidation",consolidation)
     st.write("List of stock trying to break up",breakup)
     st.write("List of stock trying to break down",breakdown)
+
+import pandas_ta as ta 
+if dashboard == "Crossovers":
+    # User input for strategy parameters
+    fast_period = st.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
+    slow_period = st.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
+    rsi_period = st.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
+    if len(df) > 0:
+        # Calculate crossover, MACD, and RSI indicators
+        df["MA_fast"] = ta.sma(df["Close"], timeperiod=fast_period)
+        df["MA_slow"] = ta.sma(df["Close"], timeperiod=slow_period)
+        # df["MACD"],_,_ = ta.macd(df["Close"], fastperiod=fast_period, slowperiod=slow_period, signalperiod=9)
+        df["RSI"] = ta.rsi(df["Close"], timeperiod=rsi_period)
+    st.write(df)

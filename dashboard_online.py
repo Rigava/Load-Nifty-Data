@@ -320,7 +320,7 @@ if dashboard == "Moving Average Strategy":
     df = yfinance.download(ticker, start="2021-01-01", end="2024-04-05")
     #Parameter settings by user
     fast=st.sidebar.slider("MA fast", min_value=1, max_value=100, value=10, step=1)
-    slow=st.sidebar.slider("MA slow", min_value=1, max_value=100, value=50, step=1)
+    slow=st.sidebar.slider("MA slow", min_value=1, max_value=200, value=50, step=1)
     # Calculate RSI
     df['RSI'] = ta.rsi(df['Close'],length=14)
     # Calculate SMA 10 and SMA 50
@@ -343,7 +343,7 @@ if dashboard == "Moving Average Strategy":
                 buy_price = df['Open'][i+1]
                 trades_df = trades_df.append({'Date': df.index[i], 'Price': buy_price, 'Action': 'Buy'}, ignore_index=True)
     #             print("Buy at:", buy_price)
-        elif df['fast'][i - 1] > df['slow'][i] and df['fast'][i] < df['slow'][i] :
+        elif df['fast'][i - 1] > df['slow'][i-1] and df['fast'][i] < df['slow'][i] :
             # Sell signal
             if position == 'buy':
                 sell_price = df['Open'][i+1]

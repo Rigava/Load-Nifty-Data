@@ -363,10 +363,12 @@ if dashboard == "Moving Average Strategy":
     st.write("Winning Ratio:", winning_ratio)
     # Plotting the trades
     fig = go.Figure(data=[go.Scatter(x=df.index, y=df['Close'], name='Close'),
-                        go.Scatter(x=trades_df['Date'], y=trades_df['Price'], mode='markers',
+                          go.Scatter(x=df.index, y=df['slow'], name='slow', line=dict(color='black')),
+                          go.Scatter(x=df.index, y=df['fast'], name='slow', line=dict(color='red')),
+                          go.Scatter(x=trades_df['Date'], y=trades_df['Price'], mode='markers',
                                     marker=dict(color=trades_df['Action'].map({'Buy': 'green', 'Sell': 'red'}),
-                                                size=8),
-                                    name='Trades')])
+                                                size=8),name='Trades')])
+    fig.add_trace()
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)
     st.write(trades_df)

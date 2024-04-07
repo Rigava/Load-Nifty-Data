@@ -339,13 +339,13 @@ if dashboard == "Moving Average Strategy":
             # Buy signal
             if position is None:
                 position = 'buy'
-                buy_price = df['Close'][i]
+                buy_price = df['Open'][i+1]
                 trades_df = trades_df.append({'Date': df.index[i], 'Price': buy_price, 'Action': 'Buy'}, ignore_index=True)
     #             print("Buy at:", buy_price)
         elif df['fast'][i] < df['slow'][i] :
             # Sell signal
             if position == 'buy':
-                sell_price = df['Close'][i]
+                sell_price = df['Open'][i+1]
                 profit = sell_price - buy_price
                 cumulative_profit += profit
                 total_trades += 1

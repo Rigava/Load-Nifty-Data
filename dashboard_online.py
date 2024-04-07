@@ -335,7 +335,7 @@ if dashboard == "Moving Average Strategy":
     # upper_bound=st.sidebar.slider("RSI high", min_value=1, max_value=100, value=70, step=1)
     # Iterate over the data
     for i in range(1, len(df)):
-        if df['Close'][i]>df['fast'][i] and df['fast'][i] < df['slow'] :
+        if df['Close'][i]>df['fast'][i] and df['fast'][i] < df['slow'][i] :
             # Buy signal
             if position is None:
                 position = 'buy'

@@ -57,7 +57,7 @@ st.title('NIFTY 50 STOCK DASHBOARD')
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossovers","Strategy"])
+dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossovers","RSI Strategy","Moving Average Strategy"])
 
 ## Dashboard 0
 if dashboard == "Data":
@@ -251,7 +251,7 @@ if dashboard == "Crossovers":
     st.plotly_chart(fig,use_container_width=True)
 
 ## Dashboard 4 STRATEGY----BUY ABOVE RSI 30 AND SELL BELOW 70
-if dashboard == "Strategy":
+if dashboard == "RSI Strategy":
     ticker_choice = tickers
     symbol = st.selectbox("Select a stock for the strategy",ticker_choice)
     # Download historical data
@@ -310,6 +310,66 @@ if dashboard == "Strategy":
     st.plotly_chart(fig,use_container_width=True)
     st.write(trades_df)
 
+## Dashboard 5 STRATEGY----BUY Closing price ABOVE MA10 AND SELL BELOW MA50
+if dashboard == "Moving Average Strategy":
+    ticker_choice = tickers
+    symbol = st.selectbox("Select a stock for the MA strategy",ticker_choice)
+    # Download historical data
+    ticker = symbol+'.NS'
+    # df = yfinance.Ticker(ticker).history(period="1y")
+    df = yfinance.download(ticker, start="2021-01-01", end="2024-04-05")
+    # Calculate RSI
+    df['RSI'] = ta.rsi(df['Close'],length=14)
+    # Calculate SMA 10 and SMA 50
+    df['fast'] = ta.sma(df['Close'], length=10)
+    df['slow'] = ta.sma(df['Close'], length=50)
+    # Initialize variables and DataFrame
+    position = None
+    buy_price = 0
+    cumulative_profit = 0
+    winning_trades = 0
+    total_trades = 0
+    trades_df = pd.DataFrame(columns=['Date', 'Price', 'Action'])
+    #Parameter settings by user
+    # lower_bound=st.sidebar.slider("RSI low", min_value=1, max_value=100, value=30, step=1)
+    # upper_bound=st.sidebar.slider("RSI high", min_value=1, max_value=100, value=70, step=1)
+    # Iterate over the data
+    for i in range(1, len(df)):
+        if df['Close'][i]>df['fast'][i] and df['fast'][i] < df['slow'] :
+            # Buy signal
+            if position is None:
+                position = 'buy'
+                buy_price = df['Close'][i]
+                trades_df = trades_df.append({'Date': df.index[i], 'Price': buy_price, 'Action': 'Buy'}, ignore_index=True)
+    #             print("Buy at:", buy_price)
+        elif df['fast'][i] < df['slow'][i] :
+            # Sell signal
+            if position == 'buy':
+                sell_price = df['Close'][i]
+                profit = sell_price - buy_price
+                cumulative_profit += profit
+                total_trades += 1
+                if profit > 0:
+                    winning_trades += 1
+                trades_df = trades_df.append({'Date': df.index[i], 'Price': sell_price, 'Action': 'Sell'}, ignore_index=True)
+                position = None
+    #             print("Sell at:", sell_price)
+    #             print("Profit:", profit)
+    # Calculate metrics
+    winning_ratio = winning_trades / total_trades if total_trades > 0 else 0
+    # Print metrics
+    st.write("Cumulative Profit:", cumulative_profit)
+    st.write("Total Trades:", total_trades)
+    st.write("Winning Ratio:", winning_ratio)
+    # Plotting the trades
+    fig = go.Figure(data=[go.Scatter(x=df.index, y=df['Close'], name='Close'),
+                        go.Scatter(x=trades_df['Date'], y=trades_df['Price'], mode='markers',
+                                    marker=dict(color=trades_df['Action'].map({'Buy': 'green', 'Sell': 'red'}),
+                                                size=8),
+                                    name='Trades')])
+    fig.update_layout(height=800)
+    st.plotly_chart(fig,use_container_width=True)
+    st.write(trades_df)
 
 ## CANDLE VIEW FOR ALL DASHBOARD
 #Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis

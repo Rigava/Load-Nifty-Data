@@ -257,7 +257,7 @@ if dashboard == "Strategy":
     # Download historical data
     ticker = symbol+'.NS'
     # df = yfinance.Ticker(ticker).history(period="1y")
-    df = yfinance.download(ticker, start="2021-01-01", end="2023-06-09")
+    df = yfinance.download(ticker, start="2021-01-01", end="2024-04-05")
     # Calculate RSI
     df['RSI'] = ta.rsi(df['Close'],length=14)
     # Calculate SMA 200

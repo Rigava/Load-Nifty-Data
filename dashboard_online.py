@@ -318,11 +318,14 @@ if dashboard == "Moving Average Strategy":
     ticker = symbol+'.NS'
     # df = yfinance.Ticker(ticker).history(period="1y")
     df = yfinance.download(ticker, start="2021-01-01", end="2024-04-05")
+    #Parameter settings by user
+    fast=st.sidebar.slider("MA fast", min_value=1, max_value=100, value=10, step=1)
+    slow=st.sidebar.slider("MA slow", min_value=1, max_value=100, value=50, step=1)
     # Calculate RSI
     df['RSI'] = ta.rsi(df['Close'],length=14)
     # Calculate SMA 10 and SMA 50
-    df['fast'] = ta.sma(df['Close'], length=10)
-    df['slow'] = ta.sma(df['Close'], length=50)
+    df['fast'] = ta.sma(df['Close'], length=fast)
+    df['slow'] = ta.sma(df['Close'], length=slow)
     # Initialize variables and DataFrame
     position = None
     buy_price = 0
@@ -330,9 +333,7 @@ if dashboard == "Moving Average Strategy":
     winning_trades = 0
     total_trades = 0
     trades_df = pd.DataFrame(columns=['Date', 'Price', 'Action'])
-    #Parameter settings by user
-    # lower_bound=st.sidebar.slider("RSI low", min_value=1, max_value=100, value=30, step=1)
-    # upper_bound=st.sidebar.slider("RSI high", min_value=1, max_value=100, value=70, step=1)
+
     # Iterate over the data
     for i in range(1, len(df)):
         if df['Close'][i]>df['fast'][i] and df['fast'][i] < df['slow'][i] :
@@ -364,7 +365,7 @@ if dashboard == "Moving Average Strategy":
     # Plotting the trades
     fig = go.Figure(data=[go.Scatter(x=df.index, y=df['Close'], name='Close'),
                           go.Scatter(x=df.index, y=df['slow'], name='slow', line=dict(color='black')),
-                          go.Scatter(x=df.index, y=df['fast'], name='slow', line=dict(color='red')),
+                          go.Scatter(x=df.index, y=df['fast'], name='fast', line=dict(color='red')),
                           go.Scatter(x=trades_df['Date'], y=trades_df['Price'], mode='markers',
                                     marker=dict(color=trades_df['Action'].map({'Buy': 'green', 'Sell': 'red'}),
                                                 size=8),name='Trades')])

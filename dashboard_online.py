@@ -256,8 +256,8 @@ if dashboard == "Strategy":
     symbol = st.selectbox("Select a stock for the strategy",ticker_choice)
     # Download historical data
     ticker = symbol+'.NS'
-    df = yfinance.Ticker(ticker).history(period="1y")
-    # df = yf.download('RELIANCE.NS', start="2021-01-01", end="2023-06-09")
+    # df = yfinance.Ticker(ticker).history(period="1y")
+    df = yfinance.download(ticker, start="2021-01-01", end="2023-06-09")
     # Calculate RSI
     df['RSI'] = ta.rsi(df['Close'],length=14)
     # Calculate SMA 200
@@ -266,6 +266,8 @@ if dashboard == "Strategy":
     position = None
     buy_price = 0
     cumulative_profit = 0
+    winning_trades = 0
+    total_trades = 0
     trades_df = pd.DataFrame(columns=['Date', 'Price', 'Action'])
     #Parameter settings by user
     lower_bound=st.sidebar.slider("RSI low", min_value=1, max_value=100, value=30, step=1)
@@ -285,13 +287,14 @@ if dashboard == "Strategy":
                 sell_price = df['Close'][i]
                 profit = sell_price - buy_price
                 cumulative_profit += profit
+                total_trades += 1
+                if profit > 0:
+                    winning_trades += 1
                 trades_df = trades_df.append({'Date': df.index[i], 'Price': sell_price, 'Action': 'Sell'}, ignore_index=True)
                 position = None
     #             print("Sell at:", sell_price)
     #             print("Profit:", profit)
     # Calculate metrics
-    winning_trades = len(trades_df[trades_df['Price'] > buy_price])
-    total_trades = len(trades_df)
     winning_ratio = winning_trades / total_trades if total_trades > 0 else 0
     # Print metrics
     st.write("Cumulative Profit:", cumulative_profit)

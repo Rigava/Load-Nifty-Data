@@ -368,7 +368,6 @@ if dashboard == "Moving Average Strategy":
                           go.Scatter(x=trades_df['Date'], y=trades_df['Price'], mode='markers',
                                     marker=dict(color=trades_df['Action'].map({'Buy': 'green', 'Sell': 'red'}),
                                                 size=8),name='Trades')])
-    fig.add_trace()
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)
     st.write(trades_df)

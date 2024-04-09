@@ -317,7 +317,7 @@ if dashboard == "Moving Average Strategy":
     # Download historical data
     ticker = symbol+'.NS'
     # df = yfinance.Ticker(ticker).history(period="1y")
-    df = yfinance.download(ticker, start="2021-01-01", end="2024-04-05")
+    df = yfinance.download(ticker, start="2020-01-01", end=None)
     #Parameter settings by user
     fast=st.sidebar.slider("MA fast", min_value=1, max_value=100, value=10, step=1)
     slow=st.sidebar.slider("MA slow", min_value=1, max_value=200, value=50, step=1)

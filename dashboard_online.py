@@ -378,10 +378,11 @@ if dashboard == "Moving Average Strategy":
 ticker_choice = tickers
 candle_symbol = st.sidebar.selectbox("Select a stock to view in candle stick format",ticker_choice)
 st.write(f"Below is the candle stick chart of {candle_symbol}")
-url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(candle_symbol)
-download = requests.get(url).content
-chart_df = pd.read_csv(io.StringIO(download.decode('utf-8')))
-print(chart_df.head())
+# url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(candle_symbol)
+# download = requests.get(url).content
+# chart_df = pd.read_csv(io.StringIO(download.decode('utf-8')))
+# print(chart_df.head())
+chart_df = yfinance.download(ticker, start="2020-01-01", end=None)
 df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
 df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
 fig = go.Figure(data=[go.Candlestick(x=df['Date'],

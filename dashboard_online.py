@@ -383,8 +383,8 @@ st.write(f"Below is the candle stick chart of {candle_symbol}")
 # chart_df = pd.read_csv(io.StringIO(download.decode('utf-8')))
 # print(chart_df.head())
 ticker = candle_symbol+'.NS'
-chart_df = yfinance.download(ticker, start="2020-01-01", end=None)
-df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
+df = yfinance.download(ticker, start="2020-01-01", end=None)
+# df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
 # df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
 fig = go.Figure(data=[go.Candlestick(x=df['Date'],
                 open=df['Open'],

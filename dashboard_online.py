@@ -57,7 +57,7 @@ st.title('NIFTY 50 STOCK DASHBOARD')
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossovers","RSI Strategy","Moving Average Strategy"])
+dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossover & RSI Shortlist","RSI Strategy","Moving Average Strategy"])
 
 ## Dashboard 0
 if dashboard == "Data":
@@ -189,7 +189,7 @@ if dashboard == "Breakouts":
     st.write("List of stock trying to break up",breakup)
     st.write("List of stock trying to break down",breakdown)
 ## Dashboard 3 CROSSOVERS
-if dashboard == "Crossovers":
+if dashboard == "Crossover & RSI Shortlist":
     # User input for strategy parameters
     fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
     slow = st.sidebar.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
@@ -257,7 +257,7 @@ if dashboard == "RSI Strategy":
     # Download historical data
     ticker = symbol+'.NS'
     # df = yfinance.Ticker(ticker).history(period="1y")
-    df = yfinance.download(ticker, start="2021-01-01", end="2024-04-05")
+    df = yfinance.download(ticker, start="2021-01-01", end=None)
     # Calculate RSI
     df['RSI'] = ta.rsi(df['Close'],length=14)
     # Calculate SMA 200
@@ -384,8 +384,8 @@ st.write(f"Below is the candle stick chart of {candle_symbol}")
 # print(chart_df.head())
 ticker = candle_symbol+'.NS'
 df = yfinance.download(ticker, start="2020-01-01", end=None)
-st.write(df.dtypes)
-st.write(df)
+# st.write(df.dtypes)
+# st.write(df)
 # df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
 # df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
 fig = go.Figure(data=[go.Candlestick(x=df.index,

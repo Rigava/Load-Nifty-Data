@@ -378,7 +378,6 @@ import numpy as np
 def getactualTrades(df):
     Buy_dates=[]
     Sell_dates=[]
-    # Looping over the entire rows of df
     for i in range(len(df)):
         # if the signal=1
         if df.Signal.iloc[i]: 

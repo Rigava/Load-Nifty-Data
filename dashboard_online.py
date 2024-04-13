@@ -434,7 +434,7 @@ if dashboard == "RSI SMA Strategy":
        matrixProfits.append(relProfits)
     for i in matrixProfits:
         if len(i)>0:
-            avgsMatrixProfits.appned(i.mean())
+            avgsMatrixProfits.append(i.mean())
     stockwithmaximumprofit = tickers[avgsMatrixProfits.index(max(avgsMatrixProfits))]
     st.write(stockwithmaximumprofit)
             

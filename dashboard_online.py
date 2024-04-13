@@ -404,6 +404,7 @@ def taCalc(df):
     # Calculate SMA 10 and SMA 50
     df['SMA200'] = ta.sma(df['Close'], length=200)
     df['Signal'] = np.where((df['Close']>df.SMA200) & (df['RSI']<30),1,0)
+    return df
 if dashboard == "RSI SMA Strategy":
     ticker_choice = tickers
     symbol = st.selectbox("Select a stock for the MA strategy",ticker_choice)
@@ -413,6 +414,7 @@ if dashboard == "RSI SMA Strategy":
     df = yfinance.download(ticker, start="2020-01-01", end=None)
     df = taCalc(df)
     st.write(df)
+    
     #To store the buy and sell dates
     actualTrades = getactualTrades(df)
     st.write(actualTrades)

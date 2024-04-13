@@ -404,7 +404,7 @@ def taCalc(df):
     df['RSI'] = ta.rsi(df['Close'],length=14)
     # Calculate SMA 10 and SMA 50
     df['SMA200'] = ta.sma(df['Close'], length=200)
-    df['Signal'] = np.where((df['Close']>df.SMA200) & (df['RSI']<30),True,False)
+    df['Signal'] = np.where((df['Close']>df.SMA200) & (df['RSI']<30),1,0)
 if dashboard == "RSI SMA Strategy":
     ticker_choice = tickers
     symbol = st.selectbox("Select a stock for the MA strategy",ticker_choice)

@@ -410,11 +410,9 @@ if dashboard == "RSI SMA Strategy":
     symbol = st.selectbox("Select a stock for the MA strategy",ticker_choice)
     # Download historical data
     ticker = symbol+'.NS'
-    # df = yfinance.Ticker(ticker).history(period="1y")
-    df = yfinance.download(ticker, start="2020-01-01", end=None)
+    df = yfinance.download(ticker, start="2015-01-01", end=None)
     df = taCalc(df)
     st.write(df)
-    
     #To store the buy and sell dates
     actualTrades = getactualTrades(df)
     st.write(actualTrades)
@@ -426,8 +424,10 @@ if dashboard == "RSI SMA Strategy":
     avgsMatrixProfits=[]
     TickerIndex =pd.DataFrame()
     tickers_yahoo = [i +'.NS' for i in tickers]
-    for i in tickers_yahoo:
-       df = yfinance.download(ticker, start="2020-01-01", end=None)
+    for files in tickers:
+       url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
+       download = requests.get(url).content
+       df = pd.read_csv(io.StringIO(download.decode('utf-8')))  
        df = taCalc(df)
        actualTrades = getactualTrades(df)
        relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)/df.loc[actualTrades.Buying_Dates].Open.values

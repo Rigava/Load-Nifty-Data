@@ -378,7 +378,7 @@ import numpy as np
 def getactualTrades(df):
     Buy_dates=[]
     Sell_dates=[]
-    for i in range(len(df)):
+    for i in range(len(df) - 11):
         # if the signal=1
         if df.Signal.iloc[i]: 
             # buy on the next date of signal=1

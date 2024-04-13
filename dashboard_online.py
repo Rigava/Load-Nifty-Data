@@ -421,7 +421,24 @@ if dashboard == "RSI SMA Strategy":
     ## Relative profits
     relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)/df.loc[actualTrades.Buying_Dates].Open.values
     st.write(relProfits)
-
+    #Here we are implementing the strategy to all Nifty50 stocks
+    matrixProfits = []
+    avgsMatrixProfits=[]
+    TickerIndex =pd.DataFrame()
+    tickers_yahoo = [i +'.NS' for i in tickers]
+    for i in tickers_yahoo:
+       df = yfinance.download(ticker, start="2020-01-01", end=None)
+       df = taCalc(df)
+       actualTrades = getactualTrades(df)
+       relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)/df.loc[actualTrades.Buying_Dates].Open.values
+       matrixProfits.append(relProfits)
+    for i in matrixProfits:
+        if len(i)>0:
+            avgsMatrixProfits.appned(i.mean())
+    stockwithmaximumprofit = tickers[avgsMatrixProfits.index(max(avgsMatrixProfits))]
+    st.write(stockwithmaximumprofit)
+            
+    
 ## CANDLE VIEW FOR ALL DASHBOARD....#Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis
 ticker_choice = tickers
 candle_symbol = st.sidebar.selectbox("Select a stock to view in candle stick format",ticker_choice)

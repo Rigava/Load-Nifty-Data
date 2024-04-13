@@ -401,7 +401,6 @@ def getactualTrades(df):
     return actualTrades
 def taCalc(df):
     df['RSI'] = ta.rsi(df['Close'],length=14)
-    # Calculate SMA 10 and SMA 50
     df['SMA200'] = ta.sma(df['Close'], length=200)
     df['Signal'] = np.where((df['Close']>df.SMA200) & (df['RSI']<30),1,0)
     return df
@@ -427,7 +426,18 @@ if dashboard == "RSI SMA Strategy":
     for files in tickers:
        url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
        download = requests.get(url).content
-       df = pd.read_csv(io.StringIO(download.decode('utf-8')))  
+       df = pd.read_csv(io.StringIO(download.decode('utf-8'))) 
+       #selecting the relevant columns
+       df = df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
+       df = df.drop_duplicates(subset=['Date'],keep='first')
+       df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
+       cols = df.select_dtypes(exclude=['float']).columns
+       df['Date']=pd.to_datetime(df['Date'])
+       for col in cols:
+            if col == 'Date':
+                pass
+            else:
+                df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)     
        df = taCalc(df)
        actualTrades = getactualTrades(df)
        relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)/df.loc[actualTrades.Buying_Dates].Open.values

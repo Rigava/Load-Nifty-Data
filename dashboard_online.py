@@ -57,7 +57,7 @@ st.title('NIFTY 50 STOCK DASHBOARD')
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossover & RSI Shortlist","RSI Strategy","Moving Average Strategy"])
+dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossover & RSI Shortlist","RSI Strategy","Moving Average Strategy","RSI SMA Strategy"])
 
 ## Dashboard 0
 if dashboard == "Data":
@@ -373,15 +373,57 @@ if dashboard == "Moving Average Strategy":
     st.plotly_chart(fig,use_container_width=True)
     st.write(trades_df)
 
-## CANDLE VIEW FOR ALL DASHBOARD
-#Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis
+## Dashboard 6 STRATEGY----BUY Closing price ABOVE MA200 & RSI below 30 ; SELL RSI below 40
+import numpy as np
+def getactualTrades(df):
+    Buy_dates=[]
+    Sell_dates=[]
+    # Looping over the entire rows of df
+    for i in range(len(df)):
+        # if the signal=1
+        if df.Signal.iloc[i]: 
+            # buy on the next date of signal=1
+            Buy_dates.append(df.iloc[i+1].name) 
+            # Start looping in the subsequent 10 rows to check if the rsi is above 40, else we sell above 10 days
+            for j in range(1,11):
+                # if rsi is above 40 anytime in next 10 days
+                if df['RSI'].iloc[i+j]>40:
+                    #sell on the very next date of the signal
+                    Sell_dates.append(df.iloc[i+j+1].name)
+                    #if the rsi is greater than 40 we break from this loop
+                    break
+                # else if rsi was never above 40 then we sell above 10 days
+                elif j == 10:
+                    Sell_dates.append(df.iloc[i+j+1].name)
+    frame = pd.DataFrame({'Buying_Dates':Buy_dates,'Selling_Dates':Sell_dates})
+    actualTrades=frame[frame.Buying_Dates>frame.Selling_Dates.shift(1)]
+    #Taking the first datapoint from the frame and appending to actual Trades
+    actualTrades = frame[:1].append(actualTrades)
+    return actualTrades
+def taCalc(df):
+    df['RSI'] = ta.rsi(df['Close'],length=14)
+    # Calculate SMA 10 and SMA 50
+    df['SMA200'] = ta.sma(df['Close'], length=200)
+    df['Signal'] = np.where((df['Close']>df.SMA200) & (df['RSI']<30),True,False)
+if dashboard == "RSI SMA Strategy":
+    ticker_choice = tickers
+    symbol = st.selectbox("Select a stock for the MA strategy",ticker_choice)
+    # Download historical data
+    ticker = symbol+'.NS'
+    # df = yfinance.Ticker(ticker).history(period="1y")
+    df = yfinance.download(ticker, start="2020-01-01", end=None)
+    df = taCalc(df)
+    #To store the buy and sell dates
+    actualTrades = getactualTrades(df)
+    st.write(actualTrades)
+    ## Relative profits
+    relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)/df.loc[actualTrades.Buying_Dates].Open.values
+    st.write(relProfits)
+
+## CANDLE VIEW FOR ALL DASHBOARD....#Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis
 ticker_choice = tickers
 candle_symbol = st.sidebar.selectbox("Select a stock to view in candle stick format",ticker_choice)
 st.write(f"Below is the candle stick chart of {candle_symbol}")
-# url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(candle_symbol)
-# download = requests.get(url).content
-# chart_df = pd.read_csv(io.StringIO(download.decode('utf-8')))
-# print(chart_df.head())
 ticker = candle_symbol+'.NS'
 df = yfinance.download(ticker, start="2020-01-01", end=None)
 # st.write(df.dtypes)

@@ -412,6 +412,7 @@ if dashboard == "RSI SMA Strategy":
     # df = yfinance.Ticker(ticker).history(period="1y")
     df = yfinance.download(ticker, start="2020-01-01", end=None)
     df = taCalc(df)
+    st.write(df)
     #To store the buy and sell dates
     actualTrades = getactualTrades(df)
     st.write(actualTrades)

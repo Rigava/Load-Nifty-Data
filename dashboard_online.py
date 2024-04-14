@@ -385,9 +385,6 @@ def getactualTrades(df):
     Sell_dates=[]
     Buy_price=[]
     Sell_price=[]
-    cumulative_profit = 0
-    winning_trades = 0
-    total_trades = 0
     for i in range(len(df) - 11):
         # if the signal=1
         if df.Signal.iloc[i]: 
@@ -400,12 +397,14 @@ def getactualTrades(df):
                 if df['RSI'].iloc[i+j]>40:
                     #sell on the very next date of the signal
                     Sell_dates.append(df.iloc[i+j+1].name)
+                    Sell_price.append(df.iloc[i+j+1].Open)
                     #if the rsi is greater than 40 we break from this loop
                     break
                 # else if rsi was never above 40 then we sell above 10 days
                 elif j == 10:
                     Sell_dates.append(df.iloc[i+j+1].name)
-    frame = pd.DataFrame({'Buying_Dates':Buy_dates,'Selling_Dates':Sell_dates,'EntryPrice':Buy_price})
+    frame = pd.DataFrame({'Buying_Dates':Buy_dates,'Selling_Dates':Sell_dates,'EntryPrice':Buy_price,'ExitPrice':Sell_price})
+    # To Remove the overlapping trades we are shifting the selling dates by 1 row in orginal frame and filtering them out
     actualTrades=frame[frame.Buying_Dates>frame.Selling_Dates.shift(1)]
     #Taking the first datapoint from the frame and appending to actual Trades
     actualTrades = frame[:1].append(actualTrades)

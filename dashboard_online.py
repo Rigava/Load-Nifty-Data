@@ -427,6 +427,7 @@ if dashboard == "RSI SMA Strategy":
     st.write(df)
     #To store the buy and sell dates
     actualTrades = getactualTrades(df)
+    st.write(actualTrades)
     actualTrades['profit'] = actualTrades['ExitPrice'] - actualTrades['EntryPrice']
     actualTrades['winTrade'] = actualTrades['profit'].apply(lambda x: 1 if x>0 else 0)
     actualTrades['Trades'] = 1      

@@ -375,14 +375,25 @@ if dashboard == "Moving Average Strategy":
 
 ## Dashboard 6 STRATEGY----BUY Closing price ABOVE MA200 & RSI below 30 ; SELL RSI below 40
 import numpy as np
+def taCalc(df):
+    df['RSI'] = ta.rsi(df['Close'],length=14)
+    df['SMA200'] = ta.sma(df['Close'], length=200)
+    df['Signal'] = np.where((df['Close']>df.SMA200) & (df['RSI']<30),1,0)
+    return df
 def getactualTrades(df):
     Buy_dates=[]
     Sell_dates=[]
+    Buy_price=[]
+    Sell_price=[]
+    cumulative_profit = 0
+    winning_trades = 0
+    total_trades = 0
     for i in range(len(df) - 11):
         # if the signal=1
         if df.Signal.iloc[i]: 
             # buy on the next date of signal=1
             Buy_dates.append(df.iloc[i+1].name) 
+            Buy_price.append(df.iloc[i+1].Open)
             # Start looping in the subsequent 10 rows to check if the rsi is above 40, else we sell above 10 days
             for j in range(1,11):
                 # if rsi is above 40 anytime in next 10 days
@@ -394,16 +405,12 @@ def getactualTrades(df):
                 # else if rsi was never above 40 then we sell above 10 days
                 elif j == 10:
                     Sell_dates.append(df.iloc[i+j+1].name)
-    frame = pd.DataFrame({'Buying_Dates':Buy_dates,'Selling_Dates':Sell_dates})
+    frame = pd.DataFrame({'Buying_Dates':Buy_dates,'Selling_Dates':Sell_dates,'EntryPrice':Buy_price})
     actualTrades=frame[frame.Buying_Dates>frame.Selling_Dates.shift(1)]
     #Taking the first datapoint from the frame and appending to actual Trades
     actualTrades = frame[:1].append(actualTrades)
     return actualTrades
-def taCalc(df):
-    df['RSI'] = ta.rsi(df['Close'],length=14)
-    df['SMA200'] = ta.sma(df['Close'], length=200)
-    df['Signal'] = np.where((df['Close']>df.SMA200) & (df['RSI']<30),1,0)
-    return df
+
 if dashboard == "RSI SMA Strategy":
     ticker_choice = tickers
     symbol = st.selectbox("Select a stock for the MA strategy",ticker_choice)
@@ -416,7 +423,8 @@ if dashboard == "RSI SMA Strategy":
     actualTrades = getactualTrades(df)
     st.write(actualTrades)
     ## Relative profits
-    relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)/df.loc[actualTrades.Buying_Dates].Open.values
+    relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)
+    # /df.loc[actualTrades.Buying_Dates].Open.values
     st.write(relProfits)
     #Here we are implementing the strategy to all Nifty50 stocks
     matrixProfits = []

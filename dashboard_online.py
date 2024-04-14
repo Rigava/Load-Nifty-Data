@@ -410,10 +410,11 @@ def getactualTrades(df):
     #Taking the first datapoint from the frame and appending to actual Trades
     actualTrades = frame[:1].append(actualTrades)
 
-def getTradeParameters(df):
-    df['profit'] = df['ExitPrice']- df['EntryPrice']
+def getTradeParameters(data):
+    df = data.copy()
+    df['profit'] = df['ExitPrice'] - df['EntryPrice']
     df['winTrade'] = df['profit'].apply(lambda x: 1 if x>0 else 0)
-    df['Trades'] =1        
+    df['Trades'] = 1        
     return df
 
 if dashboard == "RSI SMA Strategy":

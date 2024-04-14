@@ -427,12 +427,15 @@ if dashboard == "RSI SMA Strategy":
     st.write(df)
     #To store the buy and sell dates
     actualTrades = getactualTrades(df)
-    finalTrades= getTradeParameters(actualTrades)
-    st.write(finalTrades)
+    actualTrades['profit'] = actualTrades['ExitPrice'] - actualTrades['EntryPrice']
+    actualTrades['winTrade'] = actualTrades['profit'].apply(lambda x: 1 if x>0 else 0)
+    actualTrades['Trades'] = 1      
+    # finalTrades= getTradeParameters(actualTrades)
+    st.write(actualTrades)
     ## Relative profits
-    relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)
+    Profits = df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values
     # /df.loc[actualTrades.Buying_Dates].Open.values
-    st.write(relProfits)
+    st.write(Profits)
     #Here we are implementing the strategy to all Nifty50 stocks
     matrixProfits = []
     avgsMatrixProfits=[]

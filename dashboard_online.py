@@ -403,6 +403,7 @@ def getactualTrades(df):
                 # else if rsi was never above 40 then we sell above 10 days
                 elif j == 10:
                     Sell_dates.append(df.iloc[i+j+1].name)
+                    Sell_price.append(df.iloc[i+j+1].Open)
     frame = pd.DataFrame({'Buying_Dates':Buy_dates,'Selling_Dates':Sell_dates,'EntryPrice':Buy_price,'ExitPrice':Sell_price})
     # To Remove the overlapping trades we are shifting the selling dates by 1 row in orginal frame and filtering them out
     actualTrades=frame[frame.Buying_Dates>frame.Selling_Dates.shift(1)]

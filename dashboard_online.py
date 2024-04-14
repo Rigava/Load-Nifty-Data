@@ -411,13 +411,6 @@ def getactualTrades(df):
     actualTrades = frame[:1].append(actualTrades)
     return actualTrades
 
-def getTradeParameters(data):
-    df = data.copy()
-    df['profit'] = df['ExitPrice'] - df['EntryPrice']
-    df['winTrade'] = df['profit'].apply(lambda x: 1 if x>0 else 0)
-    df['Trades'] = 1        
-    return df
-
 if dashboard == "RSI SMA Strategy":
     ticker_choice = tickers
     symbol = st.selectbox("Select a stock for the MA strategy",ticker_choice)
@@ -428,16 +421,19 @@ if dashboard == "RSI SMA Strategy":
     st.write(df)
     #To store the buy and sell dates
     actualTrades = getactualTrades(df)
-    st.write(actualTrades)
     actualTrades['profit'] = actualTrades['ExitPrice'] - actualTrades['EntryPrice']
     actualTrades['winTrade'] = actualTrades['profit'].apply(lambda x: 1 if x>0 else 0)
     actualTrades['Trades'] = 1      
-    # finalTrades= getTradeParameters(actualTrades)
     st.write(actualTrades)
-    ## Relative profits
-    Profits = df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values
-    # /df.loc[actualTrades.Buying_Dates].Open.values
-    st.write(Profits)
+    # Calculate metrics
+    TotalTrades = actualTrades['Trades'].sum()
+    WinTrades = actualTrades['winTrade'].sum()
+    winning_ratio = WinTrades / TotalTrades
+    TotalProfit = actualTrades['profit'].sum()
+    # Print metrics
+    st.write("Profit Generated:", TotalProfit)
+    st.write("Total Trades:", TotalTrades)
+    st.write("Winning Ratio:", winning_ratio)
     #Here we are implementing the strategy to all Nifty50 stocks
     matrixProfits = []
     avgsMatrixProfits=[]

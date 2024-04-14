@@ -259,8 +259,7 @@ if dashboard == "RSI Strategy":
     symbol = st.selectbox("Select a stock for the strategy",ticker_choice)
     # Download historical data
     ticker = symbol+'.NS'
-    # df = yfinance.Ticker(ticker).history(period="1y")
-    df = yfinance.download(ticker, start="2021-01-01", end=None)
+    df = yfinance.download(ticker, start="2020-01-01", end=None)
     # Calculate RSI
     df['RSI'] = ta.rsi(df['Close'],length=14)
     # Calculate SMA 200
@@ -357,8 +356,6 @@ if dashboard == "Moving Average Strategy":
                     winning_trades += 1
                 trades_df = trades_df.append({'Date': df.index[i], 'Price': sell_price, 'Action': 'Sell'}, ignore_index=True)
                 position = None
-    #             print("Sell at:", sell_price)
-    #             print("Profit:", profit)
     # Calculate metrics
     winning_ratio = winning_trades / total_trades if total_trades > 0 else 0
     # Print metrics
@@ -429,18 +426,7 @@ if dashboard == "RSI SMA Strategy":
     for files in tickers:
        url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
        download = requests.get(url).content
-       df = pd.read_csv(io.StringIO(download.decode('utf-8'))) 
-       #selecting the relevant columns
-       df = df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
-       df = df.drop_duplicates(subset=['Date'],keep='first')
-       df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-       cols = df.select_dtypes(exclude=['float']).columns
-       df['Date']=pd.to_datetime(df['Date'])
-       for col in cols:
-            if col == 'Date':
-                pass
-            else:
-                df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)     
+       df = pd.read_csv(io.StringIO(download.decode('utf-8')))    
        df = taCalc(df)
        actualTrades = getactualTrades(df)
        relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)/df.loc[actualTrades.Buying_Dates].Open.values

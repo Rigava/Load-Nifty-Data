@@ -409,7 +409,12 @@ def getactualTrades(df):
     actualTrades=frame[frame.Buying_Dates>frame.Selling_Dates.shift(1)]
     #Taking the first datapoint from the frame and appending to actual Trades
     actualTrades = frame[:1].append(actualTrades)
-    return actualTrades
+
+def getTradeParameters(df):
+    df['profit'] = df['ExitPrice']- df['EntryPrice']
+    df['winTrade'] = df['profit'].apply(lambda x: 1 if x>0 else 0)
+    df['Trades'] =1        
+    return df
 
 if dashboard == "RSI SMA Strategy":
     ticker_choice = tickers
@@ -421,7 +426,8 @@ if dashboard == "RSI SMA Strategy":
     st.write(df)
     #To store the buy and sell dates
     actualTrades = getactualTrades(df)
-    st.write(actualTrades)
+    finalTrades= getTradeParameters(actualTrades)
+    st.write(finalTrades)
     ## Relative profits
     relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)
     # /df.loc[actualTrades.Buying_Dates].Open.values

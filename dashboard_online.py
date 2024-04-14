@@ -409,6 +409,7 @@ def getactualTrades(df):
     actualTrades=frame[frame.Buying_Dates>frame.Selling_Dates.shift(1)]
     #Taking the first datapoint from the frame and appending to actual Trades
     actualTrades = frame[:1].append(actualTrades)
+    return actualTrades
 
 def getTradeParameters(data):
     df = data.copy()

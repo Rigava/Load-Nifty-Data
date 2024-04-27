@@ -129,17 +129,7 @@ if dashboard == "Breakouts":
         download = requests.get(url).content
         data = pd.read_csv(io.StringIO(download.decode('utf-8')))
         df=data.copy()
-        # #selecting the relevant columns
-        # df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
-        # df = df.drop_duplicates(subset=['Date'],keep='first')
-        # df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-        # cols = df.select_dtypes(exclude=['float']).columns
-        # df['Date']=pd.to_datetime(df['Date'])
-        # for col in cols:
-        #     if col == 'Date':
-        #         pass
-        #     else:
-        #         df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)        
+
         if is_consolidating(df):
             consolidation.append(files)
         if is_breakingout(df):
@@ -165,17 +155,7 @@ if dashboard == "Crossover & RSI Shortlist":
         download = requests.get(url).content
         data = pd.read_csv(io.StringIO(download.decode('utf-8')))   
         df=data.copy()
-        # #selecting the relevant columns
-        # df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
-        # df = df.drop_duplicates(subset=['Date'],keep='first')
-        # df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-        # cols = df.select_dtypes(exclude=['float']).columns
-        # df['Date']=pd.to_datetime(df['Date'])
-        # for col in cols:
-        #     if col == 'Date':
-        #         pass
-        #     else:
-        #         df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)        
+ 
         if len(df) > 0:
             # Calculate crossover, MACD, and RSI indicators
             df["MA_fast"] = ta.sma(df["Close"], length =fast).round(1)

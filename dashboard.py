@@ -19,8 +19,9 @@ dashboard = st.sidebar.selectbox("select analysis",["Pattern","Squeeze","Breakou
 #the below file settings is for plotting the chart only
 file = r'stock_dfs_updated\{}.csv'.format(symbol)
 chart_df = pd.read_csv(file)
-df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
-df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
+df=chart_df.copy()
+# df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
+# df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
 fig = go.Figure(data=[go.Candlestick(x=df['Date'],
                 open=df['Open'],
                 high=df['High'],
@@ -37,17 +38,17 @@ if dashboard == "Pattern":
     for files in os.listdir('stock_dfs_updated'):
         #selecting the relevant columns
         data = pd.read_csv('stock_dfs_updated/{}'.format(files))
-        df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
-        df = df.drop_duplicates(subset=['Date'],keep='first')
-        df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-        
-        cols = df.select_dtypes(exclude=['float']).columns
-        df['Date']=pd.to_datetime(df['Date'])
-        for col in cols:
-            if col == 'Date':
-                pass
-            else:
-                df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)
+        df=data.copy()
+        # df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
+        # df = df.drop_duplicates(subset=['Date'],keep='first')
+        # df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
+        # cols = df.select_dtypes(exclude=['float']).columns
+        # df['Date']=pd.to_datetime(df['Date'])
+        # for col in cols:
+        #     if col == 'Date':
+        #         pass
+        #     else:
+        #         df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)
         pattern_function=getattr(talib,pattern)
         result = pattern_function(df['Open'], df['High'], df['Low'], df['Close'])
         last= result.tail(1).values[0]
@@ -61,18 +62,8 @@ if dashboard == "Squeeze":
     for files in os.listdir('stock_dfs_updated'):
         data = pd.read_csv('stock_dfs_updated/{}'.format(files))
         #selecting the relevant columns
-        df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
-        df = df.drop_duplicates(subset=['Date'],keep='first')
-        df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-        
-        cols = df.select_dtypes(exclude=['float']).columns
-        df['Date']=pd.to_datetime(df['Date'])
-        for col in cols:
-            if col == 'Date':
-                pass
-            else:
-                df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)
-        print(file,df.dtypes)
+        df=data.copy()
+
         df['20sma'] = df['Close'].rolling(window=20).mean()
         df['stddev'] = df['Close'].rolling(window=20).std()
         df['lower_band'] = df['20sma'] - (2 * df['stddev'])
@@ -126,19 +117,7 @@ if dashboard == "Breakouts":
     for files in os.listdir('stock_dfs_updated'):
         data = pd.read_csv('stock_dfs_updated/{}'.format(files))
         #selecting the relevant columns
-        df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
-        df = df.drop_duplicates(subset=['Date'],keep='first')
-        df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-        
-        cols = df.select_dtypes(exclude=['float']).columns
-        df['Date']=pd.to_datetime(df['Date'])
-        for col in cols:
-            if col == 'Date':
-                pass
-            else:
-                df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)
-        print(file,df.dtypes)
-        
+        df=data.copy()
         if is_consolidating(df):
             consolidation.append(files)
         if is_breakingout(df):

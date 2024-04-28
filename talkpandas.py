@@ -17,7 +17,7 @@ if dashboard=="Prompting":
     st.title("Your Data Analysis Dashboard")
     choice = st.selectbox("Select a default files",["Finance","Country","Upload my csv"])
     if choice =="Finance":
-        url = "https://raw.githubusercontent.com/Rigava/DataRepo/master/yesbank.csv"
+        url = "https://raw.githubusercontent.com/Rigava/DataRepo/main/yesbank.csv"
         download = requests.get(url).content
         df = pd.read_csv(io.StringIO(download.decode('utf-8')))      
     if choice =="Country":

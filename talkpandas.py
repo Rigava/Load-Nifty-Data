@@ -54,7 +54,10 @@ ticker =pd.read_html(wiki)[1].Symbol.to_list()
 df =yf.download(ticker, start = '2023-01-01')['Close']
 if dashboard=="NSE":
     ret_df = np.log(df/df.shift(1))
-    st.dataframe(ret_df)
-    st.pyplt(ret_df.cumsum().plot())
-    
+    st.dataframe(ret_df) 
+    plt.figure(figsize=(10, 6))
+    plt.plot(df.index, df['Close'])
+    st.pyplt(plt)
+    st.write(ret_df.cumsum())
+
 

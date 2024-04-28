@@ -419,6 +419,13 @@ def trail(df,entry,dist):
                 if profit > 0:
                     winning_trades += 1
                 trades_df = trades_df.append({'Date': row.Datetime,'Price': sellprice, 'Action': 'Sell'}, ignore_index=True)
+                    # Calculate metrics
+    
+    winning_ratio = winning_trades / total_trades if total_trades > 0 else 0
+    # Print metrics
+    st.write("Cumulative Profit:", cumulative_profit)
+    st.write("Total Trades:", total_trades)
+    st.write("Winning Ratio:", winning_ratio)
     return trades_df
 if dashboard == "ST Momentum":
     data= yfinance.download("^NSEI",start="2023-01-01" , interval="1h")
@@ -435,7 +442,8 @@ if dashboard == "ST Momentum":
     df.reset_index(inplace=True)
     
     trades_df = (trail(df,.002,.98))    
-    st.dataframe(trades_df)        
+    st.dataframe(trades_df)       
+
     # Plotting the trades
     fig = go.Figure(data=[go.Scatter(x=data.index, y=data['Close'], name='Close'),
                           go.Scatter(x=data.index, y=data['smaSlow'], name='slow', line=dict(color='black')),

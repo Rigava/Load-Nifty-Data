@@ -350,6 +350,7 @@ def getactualTrades(df):
     return actualTrades
 
 if dashboard == "RSI SMA Strategy":
+    st.write("BUY Closing price ABOVE MA200 & RSI below 30 ; SELL RSI below 40")
     ticker_choice = tickers
     symbol = st.selectbox("Select a stock for the MA strategy",ticker_choice)
     # Download historical data

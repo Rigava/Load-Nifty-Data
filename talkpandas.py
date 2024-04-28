@@ -54,8 +54,9 @@ import matplotlib.pyplot as plt
 wiki ='https://en.wikipedia.org/wiki/BSE_SENSEX'
 ticker =pd.read_html(wiki)[1].Symbol.to_list()
 df =yf.download(ticker, start = '2023-01-01')['Close']
-st.write(df)
+
 if dashboard=="NSE":
+    st.write(df)
     ret_df = np.log(df/df.shift(1))
     st.dataframe(ret_df) 
     st.write(ret_df.cumsum())

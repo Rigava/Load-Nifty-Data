@@ -11,7 +11,7 @@ GOOGLE_API_KEY = st.secrets.API_KEY
 
 llm = GooglePalm(api_key=GOOGLE_API_KEY)
 
-dashboard = st.sidebar.selectbox("select analysis",["Prompting","NSE"])
+dashboard = st.sidebar.selectbox("select analysis",["Prompting","Sensex"])
 
 if dashboard=="Prompting":
     st.title("Your Data Analysis Dashboard")
@@ -55,21 +55,23 @@ wiki ='https://en.wikipedia.org/wiki/BSE_SENSEX'
 ticker =pd.read_html(wiki)[1].Symbol.to_list()
 df =yf.download(ticker, start = '2023-01-01')['Close']
 
-if dashboard=="NSE":
+if dashboard=="Sensex":
     st.write(df)
     ret_df = np.log(df/df.shift(1))
     ret_df.dropna(inplace=True)
-    st.write("Correlation of the stocks return",ret_df.corr())
+
+    st.write("Correlation of the stocks return")
     plt.figure(figsize=(20, 10))
     plot = sns.heatmap(ret_df.corr(),annot=True)
     st.pyplot(plot.get_figure())
  
     #Correlation of returns
 
-
-    # plt.figure(figsize=(20, 6))
-    # plt.plot(df.index, df['Close'])
-    # st.pyplt(plt)
+    symbol = st.sidebar.selectbox("Select a stock to view in candle stick format",ticker)
+    st.write(f"Below is the stock return chart of {symbol}")
+    plt.figure(figsize=(20, 10))
+    plt.plot(ret_df.Date, ret_df.symbol)
+    st.pyplt(plt)
     
 
 

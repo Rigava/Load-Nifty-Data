@@ -17,7 +17,7 @@ st.title('NIFTY 50 STOCK DASHBOARD')
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossover & RSI Shortlist","RSI Strategy","Moving Average Strategy","RSI SMA Strategy"])
+dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossover & RSI Shortlist","RSI Strategy","Moving Average Strategy","RSI SMA Strategy","ST Momentum"])
 
 ## Dashboard 0
 if dashboard == "Data":
@@ -390,7 +390,41 @@ if dashboard == "RSI SMA Strategy":
             avgsMatrixProfits.append(i.mean())
     stockwithmaximumprofit = tickers[avgsMatrixProfits.index(max(avgsMatrixProfits))]
     st.write(stockwithmaximumprofit)
-            
+# -------------------------------------Function for Momentum Strategy---------------------------------------------------------    
+def trail(df,entry,dist):
+    trades_df = pd.DataFrame(columns=['Date', 'Price', 'Action'])
+    cumulative_profit = 0
+    winning_trades = 0
+    total_trades = 0
+    profits = []
+    in_position = False
+
+    for index,row in df.iterrows():
+        if not in_position and row.ret > entry:
+            buyprice = row.price
+            in_position=True 
+            trailing_stop = buyprice * dist
+            trades_df = trades_df.append({'Date': row.Datetime,'Price': buyprice, 'Action': 'Buy'}, ignore_index=True)
+        if in_position:
+            #ammend stoploss if closing price is moving upward
+            if row.Close * dist >= trailing_stop:
+                trailing_stop = row.Close * dist
+            if row.Close <= trailing_stop:
+                sellprice = row.price
+                profit = (sellprice-buyprice)/buyprice 
+                profits.append(profit)
+                in_position =False
+                cumulative_profit += profit
+                total_trades += 1
+                if profit > 0:
+                    winning_trades += 1
+                trades_df = trades_df.append({'Date': row.Datetime,'Price': sellprice, 'Action': 'Sell'}, ignore_index=True)
+    return trades_df
+if dashboard == "ST Momentum":
+    data= yfinance.download("^NSEI",start="2023-01-01" , interval="1h")
+    data['smaSlow']=data['Close'].rolling(window=50).mean()
+    data['smaFast']=data['Close'].rolling(window=10).mean()
+    st.DataFrame(trail(data,.002,.98))           
     
 ## CANDLE VIEW FOR ALL DASHBOARD....#Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis
 ticker_choice = tickers

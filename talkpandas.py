@@ -59,7 +59,7 @@ if dashboard=="Sensex":
     
     ret_df = np.log(df/df.shift(1))
     ret_df.dropna(inplace=True)
-    st.write(df)
+    st.write(ret_df)
 
     st.write("Correlation of the stocks return")
     plt.figure(figsize=(20, 10))
@@ -68,7 +68,7 @@ if dashboard=="Sensex":
  
     #Correlation of returns
 
-    symbol = st.sidebar.selectbox("Select a stock to view in candle stick format",ticker)
+    symbol = st.sidebar.selectbox("Select a stock to view its return",ticker)
     st.write(f"Below is the stock return chart of {symbol}")
     plt.figure(figsize=(20, 10))
     plt.plot(ret_df.Date, ret_df.symbol)

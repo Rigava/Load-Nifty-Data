@@ -424,7 +424,7 @@ if dashboard == "ST Momentum":
     data= yfinance.download("^NSEI",start="2023-01-01" , interval="1h")
     data['smaSlow']=data['Close'].rolling(window=50).mean()
     data['smaFast']=data['Close'].rolling(window=10).mean()
-    st.DataFrame(trail(data,.002,.98))           
+    st.write(trail(data,.002,.98))           
     
 ## CANDLE VIEW FOR ALL DASHBOARD....#Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis
 ticker_choice = tickers

@@ -49,15 +49,25 @@ import pandas as pd
 import yfinance as yf
 import numpy as np
 import matplotlib.pyplot as plt
+import seaborn as sns
 wiki ='https://en.wikipedia.org/wiki/BSE_SENSEX'
 ticker =pd.read_html(wiki)[1].Symbol.to_list()
 df =yf.download(ticker, start = '2023-01-01')['Close']
+st.write(df)
 if dashboard=="NSE":
     ret_df = np.log(df/df.shift(1))
     st.dataframe(ret_df) 
-    plt.figure(figsize=(10, 6))
-    plt.plot(df.index, df['Close'])
-    st.pyplt(plt)
     st.write(ret_df.cumsum())
+    ret_df.dropna(inplace=True)
+    plot = sns.heatmap(ret_df.corr(),annot=True)
+    st.pyplot(plot.get_figure())
+ 
+    #Correlation of returns
+
+
+    # plt.figure(figsize=(10, 6))
+    # plt.plot(df.index, df['Close'])
+    # st.pyplt(plt)
+    
 
 

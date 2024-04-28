@@ -428,8 +428,9 @@ if dashboard == "ST Momentum":
     data['price'] = data['Open'].shift(-1)
     data.dropna(inplace=True)
     #Find the cummulative retrun of buy and hold strategy 
-    cummRetrun = (data['ret']+1).cumprod()
-    st.write(f'The cummulative reutun of the buy and hold strategy would be {cummRetrun} ')
+    data['cummReturn'] = (data['ret']+1).cumprod()
+    lastworRet= data['cummReturn'][-1]
+    st.write(f'The cummulative reutun of the buy and hold strategy would be {lastworRet} ')
     data.reset_index(inplace=True)
     st.dataframe(data)
     st.write(trail(data,.002,.98))           

@@ -424,20 +424,21 @@ if dashboard == "ST Momentum":
     data= yfinance.download("^NSEI",start="2023-01-01" , interval="1h")
     data['smaSlow']=data['Close'].rolling(window=50).mean()
     data['smaFast']=data['Close'].rolling(window=10).mean()
+    data['ret'] = data['Close'].pct_change()
+    data.dropna(inplace=True)
+    #Find the cummulative retrun of buy and hold strategy 
+    cummRetrun = (data['ret']+1).cumprod()
+    st.write(f'The cummulative reutun of the buy and hold strategy would be {cummRetrun} ')
     data.reset_index(inplace=True)
     st.dataframe(data)
     st.write(trail(data,.002,.98))           
     
-## CANDLE VIEW FOR ALL DASHBOARD....#Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis
+##-------------------------------------- CANDLE VIEW FOR ALL DASHBOARD....#Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis-------------------------------------------
 ticker_choice = tickers
 candle_symbol = st.sidebar.selectbox("Select a stock to view in candle stick format",ticker_choice)
 st.write(f"Below is the candle stick chart of {candle_symbol}")
 ticker = candle_symbol+'.NS'
 df = yfinance.download(ticker, start="2020-01-01", end=None)
-# st.write(df.dtypes)
-# st.write(df)
-# df = chart_df[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
-# df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
 fig = go.Figure(data=[go.Candlestick(x=df.index,
                 open=df['Open'],
                 high=df['High'],

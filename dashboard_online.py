@@ -404,7 +404,7 @@ def trail(df,entry,dist):
             buyprice = row.price
             in_position=True 
             trailing_stop = buyprice * dist
-            trades_df = trades_df.append({'Date': row.Datetime,'Price': buyprice, 'Action': 'Buy'}, ignore_index=True)
+            trades_df = trades_df.append({'Date': row.Date,'Price': buyprice, 'Action': 'Buy'}, ignore_index=True)
         if in_position:
             #ammend stoploss if closing price is moving upward
             if row.Close * dist >= trailing_stop:
@@ -418,12 +418,14 @@ def trail(df,entry,dist):
                 total_trades += 1
                 if profit > 0:
                     winning_trades += 1
-                trades_df = trades_df.append({'Date': row.Datetime,'Price': sellprice, 'Action': 'Sell'}, ignore_index=True)
+                trades_df = trades_df.append({'Date': row.Date,'Price': sellprice, 'Action': 'Sell'}, ignore_index=True)
     return trades_df
 if dashboard == "ST Momentum":
     data= yfinance.download("^NSEI",start="2023-01-01" , interval="1h")
     data['smaSlow']=data['Close'].rolling(window=50).mean()
     data['smaFast']=data['Close'].rolling(window=10).mean()
+    data.reset_index(inplace=True)
+    st.dataframe(data)
     st.write(trail(data,.002,.98))           
     
 ## CANDLE VIEW FOR ALL DASHBOARD....#Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis

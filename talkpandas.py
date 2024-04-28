@@ -60,13 +60,14 @@ if dashboard=="NSE":
     ret_df = np.log(df/df.shift(1))
     ret_df.dropna(inplace=True)
     st.write("Correlation of the stocks return",ret_df.corr())
+    plt.figure(figsize=(20, 10))
     plot = sns.heatmap(ret_df.corr(),annot=True)
     st.pyplot(plot.get_figure())
  
     #Correlation of returns
 
 
-    # plt.figure(figsize=(10, 6))
+    # plt.figure(figsize=(20, 6))
     # plt.plot(df.index, df['Close'])
     # st.pyplt(plt)
     

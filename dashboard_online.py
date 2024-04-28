@@ -411,7 +411,7 @@ def trail(df,entry,dist):
                 trailing_stop = row.Close * dist
             if row.Close <= trailing_stop:
                 sellprice = row.price
-                profit = (sellprice-buyprice)/buyprice 
+                profit = (sellprice-buyprice)
                 profits.append(profit)
                 in_position =False
                 cumulative_profit += profit

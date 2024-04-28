@@ -429,11 +429,21 @@ if dashboard == "ST Momentum":
     data.dropna(inplace=True)
     #Find the cummulative retrun of buy and hold strategy 
     data['cummReturn'] = (data['ret']+1).cumprod()
-    lastworRet= data['cummReturn'][-1]
+    lastworRet= data['cummReturn'][-1].round(2)
     st.write(f'The cummulative reutun of the buy and hold strategy would be {lastworRet} ')
-    data.reset_index(inplace=True)
-    st.dataframe(data)
-    st.write(trail(data,.002,.98))           
+    df=data.copy()
+    df.reset_index(inplace=True)
+    # st.dataframe(data)
+    trades_df = (trail(df,.002,.98))            
+    # Plotting the trades
+    fig = go.Figure(data=[go.Scatter(x=df.index, y=df['Close'], name='Close'),
+                          go.Scatter(x=df.index, y=df['smaSlow'], name='slow', line=dict(color='black')),
+                          go.Scatter(x=df.index, y=df['smaFast'], name='fast', line=dict(color='red')),
+                          go.Scatter(x=trades_df['Date'], y=trades_df['Price'], mode='markers',
+                                    marker=dict(color=trades_df['Action'].map({'Buy': 'green', 'Sell': 'red'}),
+                                                size=8),name='Trades')])
+    fig.update_layout(height=800)
+    st.plotly_chart(fig,use_container_width=True)
     
 ##-------------------------------------- CANDLE VIEW FOR ALL DASHBOARD....#Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis-------------------------------------------
 ticker_choice = tickers

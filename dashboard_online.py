@@ -390,7 +390,7 @@ if dashboard == "RSI SMA Strategy":
         if len(i)>0:
             avgsMatrixProfits.append(i.mean())
     stockwithmaximumprofit = tickers[avgsMatrixProfits.index(max(avgsMatrixProfits))]
-    st.write(stockwithmaximumprofit)
+    st.write("Startegy generated maximum profit for stock-",stockwithmaximumprofit)
 # -------------------------------------Function for Momentum Strategy---------------------------------------------------------    
 def trail(df,entry,dist):
     trades_df = pd.DataFrame(columns=['Date', 'Price', 'Action'])

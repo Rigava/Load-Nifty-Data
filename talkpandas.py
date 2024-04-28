@@ -19,8 +19,7 @@ if dashboard=="Prompting":
     if choice =="Finance":
         url = "https://raw.githubusercontent.com/Rigava/DataRepo/main/yesbank.csv"
         download = requests.get(url).content
-        df = pd.read_csv(io.StringIO(download.decode('utf-8')))
-        st.write(df)   
+        df = pd.read_csv(io.StringIO(download.decode('utf-8')))  
     elif choice =="Country":
         url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/WorldDBTables/CountryTable.csv"
         download = requests.get(url).content
@@ -45,5 +44,17 @@ if dashboard=="Prompting":
                     st.pyplot()
             else:
                 st.warning("Please enter another query")
-
+# ---------------------------------------------------Portfolio Theory-------------------------------------                
+import pandas as pd
+import yfinance as yf
+import numpy as np
+import matplotlib.pyplot as plt
+wiki ='https://en.wikipedia.org/wiki/BSE_SENSEX'
+ticker =pd.read_html(wiki)[1].Symbol.to_list()
+df =yf.download(ticker, start = '2023-01-01')['Close']
+if dashboard=="NSE":
+    ret_df = np.log(df/df.shift(1))
+    st.dataframe(ret_df)
+    st.pyplt(ret_df.cumsum().plot())
+    
 

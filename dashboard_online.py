@@ -433,12 +433,13 @@ if dashboard == "ST Momentum":
     st.write(f'The cummulative reutun of the buy and hold strategy would be {lastworRet} ')
     df=data.copy()
     df.reset_index(inplace=True)
-    # st.dataframe(data)
-    trades_df = (trail(df,.002,.98))            
+    
+    trades_df = (trail(df,.002,.98))    
+    st.dataframe(trades_df)        
     # Plotting the trades
-    fig = go.Figure(data=[go.Scatter(x=df.index, y=df['Close'], name='Close'),
-                          go.Scatter(x=df.index, y=df['smaSlow'], name='slow', line=dict(color='black')),
-                          go.Scatter(x=df.index, y=df['smaFast'], name='fast', line=dict(color='red')),
+    fig = go.Figure(data=[go.Scatter(x=data.index, y=data['Close'], name='Close'),
+                          go.Scatter(x=data.index, y=data['smaSlow'], name='slow', line=dict(color='black')),
+                          go.Scatter(x=data.index, y=data['smaFast'], name='fast', line=dict(color='red')),
                           go.Scatter(x=trades_df['Date'], y=trades_df['Price'], mode='markers',
                                     marker=dict(color=trades_df['Action'].map({'Buy': 'green', 'Sell': 'red'}),
                                                 size=8),name='Trades')])

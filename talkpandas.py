@@ -56,9 +56,10 @@ ticker =pd.read_html(wiki)[1].Symbol.to_list()
 df =yf.download(ticker, start = '2023-01-01')['Close']
 
 if dashboard=="Sensex":
-    st.write(df)
+    
     ret_df = np.log(df/df.shift(1))
     ret_df.dropna(inplace=True)
+    st.write(df)
 
     st.write("Correlation of the stocks return")
     plt.figure(figsize=(20, 10))

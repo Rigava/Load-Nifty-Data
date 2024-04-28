@@ -21,7 +21,7 @@ if dashboard=="Prompting":
         download = requests.get(url).content
         df = pd.read_csv(io.StringIO(download.decode('utf-8')))
         st.write(df)   
-    if choice =="Country":
+    elif choice =="Country":
         url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/WorldDBTables/CountryTable.csv"
         download = requests.get(url).content
         df = pd.read_csv(io.StringIO(download.decode('utf-8')))            

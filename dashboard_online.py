@@ -350,7 +350,7 @@ def getactualTrades(df):
     return actualTrades
 
 if dashboard == "RSI SMA Strategy":
-    st.write("BUY Closing price ABOVE MA200 & RSI below 30 ; SELL RSI below 40")
+    st.write("BUY Closing price ABOVE MA200 & RSI below 30 ; SELL when RSI above 40 or after 10 days")
     ticker_choice = tickers
     symbol = st.selectbox("Select a stock for the MA strategy",ticker_choice)
     # Download historical data
@@ -384,7 +384,7 @@ if dashboard == "RSI SMA Strategy":
        df = pd.read_csv(io.StringIO(download.decode('utf-8')))    
        df = taCalc(df)
        actualTrades = getactualTrades(df)
-       relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)/df.loc[actualTrades.Buying_Dates].Open.values
+       relProfits = (df.loc[actualTrades.Selling_Dates].Open.values - df.loc[actualTrades.Buying_Dates].Open.values)
        matrixProfits.append(relProfits)
     for i in matrixProfits:
         if len(i)>0:

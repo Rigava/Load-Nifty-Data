@@ -66,13 +66,26 @@ if dashboard=="Sensex":
     plot = sns.heatmap(ret_df.corr(),annot=True)
     st.pyplot(plot.get_figure())
  
-    #Correlation of returns
+    #Prompting on stock returns dataframe
+    sdf = SmartDataframe(ret_df,config={"llm":llm})
 
-    symbol = st.sidebar.selectbox("Select a stock to view its return",ticker)
-    st.write(f"Below is the stock return chart of {symbol}")
-    plt.figure(figsize=(20, 10))
-    plt.plot(ret_df.Date, ret_df.symbol)
-    st.pyplt(plt)
+    prompt = st.text_area("Enter your query")
+    if st.button("Generate"):
+        if prompt:
+            with st.spinner("Generating response..."):
+                response = sdf.chat(prompt)
+                st.success(response)
+
+                st.set_option('deprecation.showPyplotGlobalUse', False)
+                st.pyplot()
+        else:
+            st.warning("Please enter another query")
+
+    # symbol = st.sidebar.selectbox("Select a stock to view its return",ticker)
+    # st.write(f"Below is the stock return chart of {symbol}")
+    # plt.figure(figsize=(20, 10))
+    # plt.plot(ret_df.Date, ret_df.symbol)
+    # st.pyplt(plt)
     
 
 

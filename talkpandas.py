@@ -19,7 +19,8 @@ if dashboard=="Prompting":
     if choice =="Finance":
         url = "https://raw.githubusercontent.com/Rigava/DataRepo/main/yesbank.csv"
         download = requests.get(url).content
-        df = pd.read_csv(io.StringIO(download.decode('utf-8')))      
+        df = pd.read_csv(io.StringIO(download.decode('utf-8')))
+        st.write(df)   
     if choice =="Country":
         url = "https://raw.githubusercontent.com/datasciencedojo/datasets/master/WorldDBTables/CountryTable.csv"
         download = requests.get(url).content

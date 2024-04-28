@@ -425,6 +425,7 @@ if dashboard == "ST Momentum":
     data['smaSlow']=data['Close'].rolling(window=50).mean()
     data['smaFast']=data['Close'].rolling(window=10).mean()
     data['ret'] = data['Close'].pct_change()
+    data['price'] = data['Open'].shift(-1)
     data.dropna(inplace=True)
     #Find the cummulative retrun of buy and hold strategy 
     cummRetrun = (data['ret']+1).cumprod()

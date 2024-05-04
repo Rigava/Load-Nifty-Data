@@ -279,8 +279,8 @@ def backtest(df,S,F):
     gain=(pd.Series(profits)+1).prod()
     return gain
 # Create a list of same size
-sma_fast = pd.DataFrame(np.arange(1,50,1))
-sma_slow =pd.DataFrame(np.arange(50,200,5))
+sma_fast = pd.DataFrame(np.arange(1,100,5))
+sma_slow =pd.DataFrame(np.arange(101,200,5))
 final =pd.merge(sma_fast,sma_slow,how='cross')
 final.columns =['Fast','Slow']
 final =final[final.Fast < final.Slow]

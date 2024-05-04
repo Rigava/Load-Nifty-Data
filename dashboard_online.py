@@ -360,10 +360,13 @@ if dashboard == "Moving Average Strategy":
     final =pd.merge(sma_fast,sma_slow,how='cross')
     final.columns =['Fast','Slow']
     final =final[final.Fast < final.Slow]
-
-    tf=optimiser(df)
-    st.write("Best pairs of SMA returns are as below")
-    st.write(tf)
+    if st.button("Optimize the SMA"):
+        st.write("Generating the best pair of SMA...")
+        tf=optimiser(df)
+        st.success("Best pairs found successfully!")
+        st.write("Best pairs of SMA returns are as below")
+        st.write(tf)
+          
 
 ## Dashboard 6 STRATEGY----BUY Closing price ABOVE MA200 & RSI below 30 ; SELL RSI below 40
 

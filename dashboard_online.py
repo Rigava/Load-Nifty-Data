@@ -11,6 +11,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import yfinance
 import pandas_ta as ta
+import numpy as np
 
 st.title('NIFTY 50 STOCK DASHBOARD')
 
@@ -365,7 +366,7 @@ if dashboard == "Moving Average Strategy":
     st.write(tf)
 
 ## Dashboard 6 STRATEGY----BUY Closing price ABOVE MA200 & RSI below 30 ; SELL RSI below 40
-import numpy as np
+
 def taCalc(df):
     df['RSI'] = ta.rsi(df['Close'],length=14)
     df['SMA200'] = ta.sma(df['Close'], length=200)

@@ -487,9 +487,9 @@ if dashboard == "Stock Momentum":
     st.write("Correlation of the stocks return")    
     ret_df = np.log(df/df.shift(1))
     ret_df.dropna(inplace=True)
-    st.write(ret_df)
+    # st.write(ret_df)
     plt.figure(figsize=(20, 10))
-    plot = sns.heatmap(df.corr(),annot=True)
+    plot = sns.heatmap(ret_df.corr(),annot=True)
     st.pyplot(plot.get_figure())
     #Benchmark returns
     nifty =yfinance.download('^NSEI',start='2023-01-01')

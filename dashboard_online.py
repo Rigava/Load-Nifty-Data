@@ -454,6 +454,21 @@ if dashboard == "Nifty Momentum":
                                                 size=8),name='Trades')])
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)
+
+# -------------------------------------Function for Stocks Momentum Strategy--------------------------------------------------------- 
+import seaborn as sns 
+if dashboard == "Stock Momentum":
+    wiki ='https://en.wikipedia.org/wiki/BSE_SENSEX'
+    ticker =pd.read_html(wiki)[1].Symbol.to_list()
+    df =yfinance.download(ticker, start = '2023-01-01')['Close']
+    df.resample('M').last()
+    st.write(df)    
+    st.write("Correlation of the stocks return")
+    plt.figure(figsize=(20, 10))
+    plot = sns.heatmap(ret_df.corr(),annot=True)
+    st.pyplot(plot.get_figure())
+
+
     
 ##-------------------------------------- CANDLE VIEW FOR ALL DASHBOARD....#Finally the below file settings is for plotting the candle stick chart as a good to have in the analysis-------------------------------------------
 ticker_choice = tickers

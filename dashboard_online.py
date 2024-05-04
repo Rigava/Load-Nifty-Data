@@ -278,12 +278,6 @@ def backtest(df,S,F):
                 profits.append(profit)
     gain=(pd.Series(profits)+1).prod()
     return gain
-# Create a list of same size
-sma_fast = pd.DataFrame(np.arange(1,100,5))
-sma_slow =pd.DataFrame(np.arange(101,200,5))
-final =pd.merge(sma_fast,sma_slow,how='cross')
-final.columns =['Fast','Slow']
-final =final[final.Fast < final.Slow]
 
 def optimiser(df):
     profits = []
@@ -300,6 +294,7 @@ def optimiser(df):
     return tradeFrame.sort_values('strategy_return',ascending=False)
 
 if dashboard == "Moving Average Strategy":
+
     ticker_choice = tickers
     symbol = st.selectbox("Select a stock for the MA strategy",ticker_choice)
     # Download historical data
@@ -356,7 +351,14 @@ if dashboard == "Moving Average Strategy":
                                                 size=8),name='Trades')])
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)
-    st.write(trades_df)
+    st.write(trades_df)  
+
+    # Create a list of same size
+    sma_fast = pd.DataFrame(np.arange(1,50,1))
+    sma_slow =pd.DataFrame(np.arange(50,200,5))
+    final =pd.merge(sma_fast,sma_slow,how='cross')
+    final.columns =['Fast','Slow']
+    final =final[final.Fast < final.Slow]
 
     tf=optimiser(df)
     st.write("Best pairs of SMA returns are as below")

@@ -484,14 +484,18 @@ if dashboard == "Stock Momentum":
     all_mtl_ret = all_prices.pct_change().resample('M').agg(lambda x : (x+1).prod()-1)
     # df.resample('M').last()
     st.write(df)    
-    st.write("Correlation of the stocks return")
+    st.write("Correlation of the stocks return")    
+    ret_df = np.log(df/df.shift(1))
+    ret_df.dropna(inplace=True)
+    st.write(ret_df)
     plt.figure(figsize=(20, 10))
     plot = sns.heatmap(df.corr(),annot=True)
     st.pyplot(plot.get_figure())
+    #Benchmark returns
     nifty =yfinance.download('^NSEI',start='2023-01-01')
     bench_ret=(nifty.Close.pct_change()+1).prod()-1
     st.write(f"Benchmark nifty index return with buy and hold strategy: {bench_ret}")
-
+    #Strategy returns
     trades,strategy_returns= mom(all_mtl_ret,6)
     # st.write(mom(all_mtl_ret,6)[0])
     st.write(f"Stock portfolio using the momentume strategy: {strategy_returns}")

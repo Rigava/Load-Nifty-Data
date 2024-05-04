@@ -456,17 +456,46 @@ if dashboard == "Nifty Momentum":
     st.plotly_chart(fig,use_container_width=True)
 
 # -------------------------------------Function for Stocks Momentum Strategy--------------------------------------------------------- 
+def mom(all_mtl_ret,lookback):
+    all_mtl_ret_lb = all_mtl_ret.rolling(lookback).agg(lambda x: (x+1).prod()-1)
+    all_mtl_ret_lb.dropna(inplace=True)
+    returns=[]
+    stocks=[]
+    dates=[]
+    for row in range(len(all_mtl_ret_lb)-1):
+        curr = all_mtl_ret_lb.iloc[row]
+        win = curr.nlargest(10)
+        stocks.append(win.index)
+        dates.append(win.name)
+        # To calcculate the return we use the next month return from the all_mtl_ret table
+        ts = win.name + pd.offsets.MonthEnd(1)
+        win_ret =  all_mtl_ret.loc[ts,win.index]
+        returns.append(win_ret.mean())
+    cumm_ret = (pd.Series(returns)+1).prod()-1
+    tradeFrame =pd.DataFrame(stocks,returns)
+        
+    return tradeFrame,cumm_ret
 import seaborn as sns 
 if dashboard == "Stock Momentum":
     wiki ='https://en.wikipedia.org/wiki/BSE_SENSEX'
     ticker =pd.read_html(wiki)[1].Symbol.to_list()
     df =yfinance.download(ticker, start = '2023-01-01')['Close']
-    df.resample('M').last()
+    all_prices=df.copy()
+    all_mtl_ret = all_prices.pct_change().resample('M').agg(lambda x : (x+1).prod()-1)
+    # df.resample('M').last()
     st.write(df)    
     st.write("Correlation of the stocks return")
     plt.figure(figsize=(20, 10))
     plot = sns.heatmap(df.corr(),annot=True)
     st.pyplot(plot.get_figure())
+    nifty =yfinance.download('^NSEI',start='2023-01-01')
+    bench_ret=(nifty.Close.pct_change()+1).prod()-1
+    st.write(f"Benchmark nifty index return with buy and hold strategy: {bench_ret}")
+
+    trades,strategy_returns= mom(all_mtl_ret,6)
+    # st.write(mom(all_mtl_ret,6)[0])
+    st.write(f"Stock portfolio using the momentume strategy: {strategy_returns}")
+    st.write(trades)
 
 
     

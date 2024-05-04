@@ -251,7 +251,54 @@ if dashboard == "RSI Strategy":
     st.plotly_chart(fig,use_container_width=True)
     st.write(trades_df)
 
-## Dashboard 5 STRATEGY----BUY Closing price ABOVE MA10 AND SELL BELOW MA50
+##-------------------------------------------- Dashboard 5 STRATEGY----BUY Closing price ABOVE MA10 AND SELL BELOW MA50
+def backtest(df,S,F):
+    df=data.copy()
+    df['smaS']=df.Close.rolling(window=S).mean()
+    df['smaF']=df.Close.rolling(window=F).mean()
+    df['price'] =df.Open.shift(-1)
+    df.reset_index(inplace=True)
+    in_position = False
+    profits = []
+    # trades_df = pd.DataFrame(columns=['Date', 'Price', 'Action'])
+    for index,row in df.iterrows():
+        if not in_position:
+            if row.smaF > row.smaS:
+                date =row.Date
+                buyprice = row.price
+                in_position = True
+                # print(date,buyprice)
+        if in_position:
+            if row.smaF < row.smaS:
+                date =row.Date
+                sellprice = row.price
+                profit = (sellprice-buyprice)/buyprice
+                in_position = False
+                # print(date,buyprice)
+                profits.append(profit)
+    gain=(pd.Series(profits)+1).prod()
+    return gain
+# Create a list of same size
+sma_fast = pd.DataFrame(np.arange(1,50,1))
+sma_slow =pd.DataFrame(np.arange(50,200,5))
+final =pd.merge(sma_fast,sma_slow,how='cross')
+final.columns =['Fast','Slow']
+final =final[final.Fast < final.Slow]
+
+def optimiser(df):
+    profits = []
+    slow,fast=[],[]
+    data=df.copy()
+
+    for f,s in final.values:
+        profit = backtest(data,s,f)
+        profits.append(profit)
+        slow.append(s)
+        fast.append(f)
+    cols = {'level_0':'Slow_SMA','level_1': 'Fast_SMA',0:'strategy_return'}
+    tradeFrame = pd.DataFrame(profits,[slow,fast]).reset_index().rename(columns= cols)
+    return tradeFrame.sort_values('strategy_return',ascending=False)
+
 if dashboard == "Moving Average Strategy":
     ticker_choice = tickers
     symbol = st.selectbox("Select a stock for the MA strategy",ticker_choice)
@@ -310,6 +357,10 @@ if dashboard == "Moving Average Strategy":
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)
     st.write(trades_df)
+
+    tf=optimiser(df)
+    st.write("Best pairs of SMA returns are as below")
+    st.write(tf)
 
 ## Dashboard 6 STRATEGY----BUY Closing price ABOVE MA200 & RSI below 30 ; SELL RSI below 40
 import numpy as np

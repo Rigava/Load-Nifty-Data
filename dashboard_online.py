@@ -17,7 +17,7 @@ st.title('NIFTY 50 STOCK DASHBOARD')
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossover & RSI Shortlist","RSI Strategy","Moving Average Strategy","RSI SMA Strategy","ST Momentum"])
+dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossover & RSI Shortlist","RSI Strategy","Moving Average Strategy","RSI SMA Strategy","Nifty Momentum","Stock Momentum"])
 
 ## Dashboard 0
 if dashboard == "Data":
@@ -428,7 +428,7 @@ def trail(df,entry,dist):
     st.write("Total Trades:", total_trades)
     st.write("Winning Ratio:", winning_ratio)
     return trades_df
-if dashboard == "ST Momentum":
+if dashboard == "Nifty Momentum":
     data= yfinance.download("^NSEI",start="2023-01-01" , interval="1h")
     data['smaSlow']=data['Close'].rolling(window=50).mean()
     data['smaFast']=data['Close'].rolling(window=10).mean()

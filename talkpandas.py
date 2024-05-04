@@ -32,7 +32,7 @@ if dashboard=="Prompting":
         # df = pd.read_csv(upload_csv)
         sdf = SmartDataframe(df,config={"llm":llm})
         st.dataframe(df.tail(3))
-
+        st.write("Some sample questions- Describe the data, dtypes of variables, shape of the data, any missing value, are there any duplicate rows, plot the graph, group the data by and calculate average ")
         prompt = st.text_area("Enter your query")
         if st.button("Generate"):
             if prompt:
@@ -67,7 +67,7 @@ if dashboard=="Sensex":
     st.pyplot(plot.get_figure())
  
     #Prompting on stock returns dataframe
-    sdf = SmartDataframe(ret_df,config={"llm":llm})
+    sample_question = ['']
 
     prompt = st.text_area("Enter your query")
     if st.button("Generate"):

@@ -253,7 +253,7 @@ if dashboard == "RSI Strategy":
     st.write(trades_df)
 
 ##-------------------------------------------- Dashboard 5 STRATEGY----BUY Closing price ABOVE MA10 AND SELL BELOW MA50
-def backtest(df,S,F):
+def backtest(data,S,F):
     df=data.copy()
     df['smaS']=df.Close.rolling(window=S).mean()
     df['smaF']=df.Close.rolling(window=F).mean()

@@ -465,7 +465,7 @@ if dashboard == "Stock Momentum":
     st.write(df)    
     st.write("Correlation of the stocks return")
     plt.figure(figsize=(20, 10))
-    plot = sns.heatmap(ret_df.corr(),annot=True)
+    plot = sns.heatmap(df.corr(),annot=True)
     st.pyplot(plot.get_figure())
 
 

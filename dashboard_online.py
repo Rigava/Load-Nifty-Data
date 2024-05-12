@@ -64,18 +64,6 @@ if dashboard == "Squeeze":
         download = requests.get(url).content
         data = pd.read_csv(io.StringIO(download.decode('utf-8')))
         df=data.copy()
-        # #selecting the relevant columns
-        # df = data[['Date','OpenPrice','HighPrice','LowPrice','ClosePrice','TotalTradedQuantity']]
-        # df = df.drop_duplicates(subset=['Date'],keep='first')
-        # df.rename(columns={df.columns[0]:"Date",df.columns[1]:"Open",df.columns[2]:"High",df.columns[3]:"Low",df.columns[4]:"Close",df.columns[5]:"Volume"},inplace=True)
-        
-        # cols = df.select_dtypes(exclude=['float']).columns
-        # df['Date']=pd.to_datetime(df['Date'])
-        # for col in cols:
-        #     if col == 'Date':
-        #         pass
-        #     else:
-        #         df[col] = df[col].apply(lambda x: (unidecode(x).replace(',',''))).astype(float)
 
         df['20sma'] = df['Close'].rolling(window=20).mean()
         df['stddev'] = df['Close'].rolling(window=20).std()
@@ -143,10 +131,10 @@ if dashboard == "Breakouts":
 ## Dashboard 3 CROSSOVERS
 if dashboard == "Crossover & RSI Shortlist":
     # User input for strategy parameters
-    fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=12, step=1)
-    slow = st.sidebar.slider("Slow Period", min_value=10, max_value=200, value=26, step=1)
+    fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=10, step=1)
+    slow = st.sidebar.slider("Slow Period", min_value=10, max_value=200, value=50, step=1)
     rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
-    rsi_low = st.sidebar.slider("RSI low", min_value=1, max_value=100, value=30, step=1)
+    rsi_low = st.sidebar.slider("RSI low", min_value=1, max_value=100, value=40, step=1)
     rsi_high = st.sidebar.slider("RSI high", min_value=1, max_value=100, value=70, step=1)
     Buy = []
     Sell = []

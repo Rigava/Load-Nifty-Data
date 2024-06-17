@@ -29,7 +29,7 @@ if dashboard == "Data":
             ticker = symbol+'.NS'
             stock_data = yfinance.Ticker(ticker).history(period="1y")
             latest_price = stock_data['Close'].iloc[-1].round(1)
-            print(stock_data,latest_price)
+            # print(stock_data,latest_price)
             
             stock_data["RSI"] = ta.rsi(stock_data["Close"], lentgh =14).round(1)
             # stock_data["ADX"] = stock_data.ta.adx()/round(1)

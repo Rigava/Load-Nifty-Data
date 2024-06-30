@@ -1,24 +1,20 @@
 import streamlit as st
-import requests
 import io
 import pandas as pd
 import plotly.graph_objects as go
 import pickle
-from unidecode import unidecode
-from patterns import candlestick_patterns
 import requests
 from datetime import datetime
 import matplotlib.pyplot as plt
 import yfinance
 import pandas_ta as ta
-import numpy as np
 
 st.title('NIFTY 50 STOCK DASHBOARD')
 
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Data","Squeeze","Breakouts","Crossover & RSI Shortlist","RSI Strategy","Moving Average Strategy","RSI SMA Strategy","Nifty Momentum","Stock Momentum"])
+dashboard = st.sidebar.selectbox("select analysis",["Data","Crossover & RSI Shortlist"])
 
 ## Dashboard 0
 if dashboard == "Data":
@@ -55,80 +51,9 @@ if dashboard == "Data":
             st.error("Error occurred while fetching stock data.")
             st.error(e)
 
-## Dashboard 1 SQUEEZE
-#below setting is for identifying the breakouts based on squeezing and consolidation/Breakout functions
-if dashboard == "Squeeze":
-    squeeze=[]
-    for files in tickers:
-        url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
-        download = requests.get(url).content
-        data = pd.read_csv(io.StringIO(download.decode('utf-8')))
-        df=data.copy()
-
-        df['20sma'] = df['Close'].rolling(window=20).mean()
-        df['stddev'] = df['Close'].rolling(window=20).std()
-        df['lower_band'] = df['20sma'] - (2 * df['stddev'])
-        df['upper_band'] = df['20sma'] + (2 * df['stddev'])
-
-        df['TR'] = abs(df['High'] - df['Low'])
-        df['ATR'] = df['TR'].rolling(window=20).mean()
-        df['lower_keltner'] = df['20sma'] - (df['ATR'] * 1.5)
-        df['upper_keltner'] = df['20sma'] + (df['ATR'] * 1.5)
-
-        def in_squeeze(df):
-            return df['lower_band'] > df['lower_keltner'] and df['upper_band'] < df['upper_keltner']
-        df['squeeze_on'] = df.apply(in_squeeze, axis=1)
-
-        if df.iloc[-3]['squeeze_on'] and not df.iloc[-1]['squeeze_on']:
-            squeeze.append(files)
-    st.write("List of stock coming out of squeeze phase",squeeze)
-## Dashboard 2 Functions
-def is_consolidating(data):
-    recent_candles = data[-15:]
-    max_close = recent_candles['Close'].max()
-    min_close = recent_candles['Close'].min()
-    if min_close > (max_close * 0.95):
-        return True
-    return False
 
 
-def is_breakingout(data):
-    last_close = data[-1:]['Close'].values[0]
-    if is_consolidating(data[:-1]):
-        recent_candles = data[-16:-1]
-        if last_close > recent_candles['Close'].max():
-            return True
-    return False
-
-
-def is_breakdown(data):
-    last_close = data[-1:]['Close'].values[0]
-    if is_consolidating(data[:-1]):
-        recent_candles = data[-16:-1]
-        if last_close < recent_candles['Close'].min():
-            return True
-    return False
-## Dashboard 2 BREAKOUTS
-if dashboard == "Breakouts":
-    consolidation = []
-    breakup=[]
-    breakdown = []
-    for files in tickers:
-        url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
-        download = requests.get(url).content
-        data = pd.read_csv(io.StringIO(download.decode('utf-8')))
-        df=data.copy()
-
-        if is_consolidating(df):
-            consolidation.append(files)
-        if is_breakingout(df):
-            breakup.append(files)
-        if is_breakdown(df):
-            breakdown.append(files)
-    st.write("List of stock in consolidation",consolidation)
-    st.write("List of stock trying to break up",breakup)
-    st.write("List of stock trying to break down",breakdown)
-## Dashboard 3 CROSSOVERS
+## Dashboard 1 CROSSOVERS
 if dashboard == "Crossover & RSI Shortlist":
     # User input for strategy parameters
     fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=10, step=1)
@@ -139,12 +64,12 @@ if dashboard == "Crossover & RSI Shortlist":
     Buy = []
     Sell = []
     Hold = []
+    # Iterate over stock data to find stock with crossover and rsi signal
     for files in tickers:
         url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
         download = requests.get(url).content
         data = pd.read_csv(io.StringIO(download.decode('utf-8')))   
         df=data.copy()
- 
         if len(df) > 0:
             # Calculate crossover, MACD, and RSI indicators
             df["MA_fast"] = ta.sma(df["Close"], length =fast).round(1)
@@ -184,27 +109,32 @@ if dashboard == "Crossover & RSI Shortlist":
                     buyprice = row.Close
                     Flag=True
                     buyframe= buyframe.append({'BuyDate': row.Date,'BuyPrice': buyprice}, ignore_index=True)
-                    marker_df = marker_df.append({'Date': row.Date, 'Action': 'Buy','Price':buyprice}, ignore_index=True)
+                    marker_df = marker_df.append({'Date': row.Date, 'Action': 'Buy','Price':row.Close}, ignore_index=True)
             if Flag:
                 if df1.SMA10.iloc[i] < df1.SMA50.iloc[i]  and df1.SMA10.iloc[i-1] > df1.SMA50.iloc[i-1]:
                     sellprice = row.Close              
                     sellframe= sellframe.append({'SellDate': row.Date,'SellPrice': sellprice}, ignore_index=True)
-                    marker_df = marker_df.append({'Date': row.Date, 'Action': 'Sell','Price':sellprice}, ignore_index=True)
+                    marker_df = marker_df.append({'Date': row.Date, 'Action': 'Sell','Price':row.Close}, ignore_index=True)
                     Flag=False 
+        # st.dataframe(marker_df)
+
         tradedf=pd.concat([buyframe,sellframe],axis=1)
         tradedf.dropna()
         tradedf['profit']=tradedf['SellPrice']-tradedf['BuyPrice']
         totalProfit = tradedf['profit'].sum().round(2)
+
         st.write(f"Total profit from the moving average strategy is {totalProfit}")
-        st.dataframe(tradedf)
-        st.dataframe(marker_df)
-        return tradedf
-    tradedf(df)
+        # st.dataframe(tradedf)
+        
+        return marker_df
+    marker_df = tradedf(df)
     # Plotly graph for visualization
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df.Date, y=df['Close'], name='Close', line=dict(color='black')))
     fig.add_trace(go.Scatter(x=df.Date, y=df['SMA10'], name='fast', line=dict(color='red')))
     fig.add_trace(go.Scatter(x=df.Date, y=df['SMA50'], name='slow', line=dict(color='blue')))
+
+    fig.add_trace(go.Scatter(x=marker_df.Date, y=marker_df.Price, name='Trades',mode='markers' ,marker=dict(color=marker_df.Action.map({'Buy':'green','Sell':'red'}),size=8)))
     fig.update_xaxes(type='category')
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)

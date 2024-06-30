@@ -109,13 +109,13 @@ if dashboard == "Crossover & RSI Shortlist":
     st.write("List of stock with sell signal",Sell)
     st.write("The below plot shows the moving averages with closing price")
     # Select Stock for Backtesting the crossover strategy
-    ticker_choice = tickers
-    symbol = st.selectbox("Select a stock to view moving average crossover",ticker_choice)
+ 
+    symbol = st.selectbox("Select a stock to view moving average crossover",tickers)
     ticker = symbol+'.NS'
     df = yfinance.Ticker(ticker).history(period="5y")
     # Add MA indicators
-    df["SMA10"] = ta.sma(df["Close"], length =fast).round(1)
-    df["SMA50"] = ta.sma(df["Close"], length =slow).round(1)
+    df = AddSMAIndicators(df,fast,slow)
+    df = AddRSIIndicators(df)
     #Below crossover function is used to backtest the trade
     def tradedf(df1):
         df1.reset_index(inplace=True)

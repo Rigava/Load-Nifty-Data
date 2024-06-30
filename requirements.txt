@@ -1,7 +1,7 @@
 plotly
 requests
 pyyaml
-pandas_ta
+# pandas_ta
 yfinance
 seaborn
 pandas

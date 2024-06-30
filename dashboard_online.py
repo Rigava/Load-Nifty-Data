@@ -18,7 +18,7 @@ def AddRSIIndicators(df):
     df['avgUp']=df['Upmove'].ewm(span=27).mean()
     df['avgDown']=df['Downmove'].ewm(span=27).mean()
     df['RS']= df['avgUp']/df['avgDown']
-    df['RSI_cal']= df['RS'].apply(lambda x: 100-(100/(x+1)))
+    df['RSI']= df['RS'].apply(lambda x: 100-(100/(x+1)))
     print('RSI indicators added')
     return df
 def AddSMAIndicators(df,fast,slow):
@@ -52,7 +52,7 @@ if dashboard == "Data":
             stock_data = yfinance.Ticker(ticker).history(period="1y")
             latest_price = stock_data['Close'].iloc[-1].round(1)
             stock_data = AddRSIIndicators(stock_data)
-            latest_rsi = stock_data['RSI_cal'].iloc[-1]
+            latest_rsi = stock_data['RSI'].iloc[-1]
             st.success(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
             # Plotting historical price movement
             st.subheader("Historical Price Movement in Line chart")

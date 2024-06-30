@@ -98,9 +98,9 @@ if dashboard == "Crossover & RSI Shortlist":
             df = AddSMAIndicators(df,fast,slow)
             df = AddRSIIndicators(df)
             # Determine buy or sell recommendation based on last row of the data to provide buy signal
-            if df["SMA10"].iloc[-1] > df["SMA50"].iloc[-1] and df["RSI"].iloc[-1] < rsi_low:
+            if df["RSI"].iloc[-1] > rsi_low and df["RSI"].iloc[-2] < rsi_low:
                 Buy.append(files)
-            elif df["SMA10"].iloc[-1] < df["SMA50"].iloc[-1] and df["RSI"].iloc[-1] > rsi_high:
+            elif df["RSI"].iloc[-1] < rsi_high and df["RSI"].iloc[-2] > rsi_high:
                 Sell.append(files)
             else:
                 Hold.append(files)            

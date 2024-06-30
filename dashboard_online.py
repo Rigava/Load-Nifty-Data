@@ -134,7 +134,7 @@ if dashboard == "Crossover & RSI Shortlist":
                     Flag=True
                     Buy.append(buydate)
                     Buyp.append(buyprice) 
-                    bi.append(i+1)                   
+                    bi.append(i)                   
                    
             if Flag:
                 if df1.SMA10.iloc[i] < df1.SMA50.iloc[i]  and df1.SMA10.iloc[i-1] > df1.SMA50.iloc[i-1]:
@@ -142,7 +142,7 @@ if dashboard == "Crossover & RSI Shortlist":
                     selldate =row.Date
                     Sell.append(selldate)
                     Sellp.append(sellprice)       
-                    bi.append(i+1)      
+                    bi.append(i)      
                     Flag=False 
         buyframe = pd.DataFrame({'BuyDate':Buy,'BuyPrice':Buyp})
         sellframe = pd.DataFrame({'SellDate':Sell,'SellPrice':Sellp})

@@ -134,8 +134,8 @@ if dashboard == "Crossover & RSI Shortlist":
     fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=10, step=1)
     slow = st.sidebar.slider("Slow Period", min_value=10, max_value=200, value=50, step=1)
     rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
-    rsi_low = st.sidebar.slider("RSI low", min_value=1, max_value=100, value=40, step=1)
-    rsi_high = st.sidebar.slider("RSI high", min_value=1, max_value=100, value=70, step=1)
+    rsi_low = st.sidebar.slider("RSI low for buy", min_value=1, max_value=100, value=30, step=1)
+    rsi_high = st.sidebar.slider("RSI high for sell", min_value=1, max_value=100, value=70, step=1)
     Buy = []
     Sell = []
     Hold = []
@@ -149,11 +149,8 @@ if dashboard == "Crossover & RSI Shortlist":
             # Calculate crossover, MACD, and RSI indicators
             df["MA_fast"] = ta.sma(df["Close"], length =fast).round(1)
             df["MA_slow"] = ta.sma(df["Close"], length =slow).round(1)
-            # df["MACD"],_,_ = ta.macd(df["Close"], fast=fast, slow=slow, signal=9)
             df["RSI"] = ta.rsi(df["Close"], lentgh =rsi_period).round(1)
-            # st.write(files)
-            # st.dataframe(df.tail(5))
-            # Determine buy or sell recommendation based on strategy
+            # Determine buy or sell recommendation based on last row of the data to provide buy signal
             if df["MA_fast"].iloc[-1] > df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] < rsi_low:
                 # and df["MACD"].iloc[-1] > 0
                 Buy.append(files)
@@ -163,20 +160,52 @@ if dashboard == "Crossover & RSI Shortlist":
             else:
                 Hold.append(files)            
     # Display stock data and recommendation
-    st.write("List of stock recommended for Buy",Buy)
-    st.write("List of stock recommended for Sell",Sell)
-    st.write("Lets plot the moving averages with closing price")
-    # Plotly graph for visualization
+    st.write("List of stock for with buy signal",Buy)
+    st.write("List of stock with sell signal",Sell)
+    st.write("The below plot shows the moving averages with closing price")
+    # Select Stock for Backtesting the crossover strategy
     ticker_choice = tickers
     symbol = st.selectbox("Select a stock to view moving average crossover",ticker_choice)
     ticker = symbol+'.NS'
-    df = yfinance.Ticker(ticker).history(period="1y")
-    df["MA_fast"] = ta.sma(df["Close"], length =fast).round(1)
-    df["MA_slow"] = ta.sma(df["Close"], length =slow).round(1)
+    df = yfinance.Ticker(ticker).history(period="5y")
+    # Add MA indicators
+    df["SMA10"] = ta.sma(df["Close"], length =fast).round(1)
+    df["SMA50"] = ta.sma(df["Close"], length =slow).round(1)
+    #Below crossover function is used to backtest the trade
+    def tradedf(df1):
+        df1.reset_index(inplace=True)
+        Flag = False
+        buyframe=pd.DataFrame(columns=['BuyDate','BuyPrice'])
+        sellframe=pd.DataFrame(columns=['SellDate','SellPrice'])
+        marker_df = pd.DataFrame(columns=['Date','Action','Price'])
+        for i,row in df1.iterrows():
+            if not Flag:
+                if df1.SMA10.iloc[i] > df1.SMA50.iloc[i]  and df1.SMA10.iloc[i-1] < df1.SMA50.iloc[i-1]:
+                    buyprice = row.Close
+                    Flag=True
+                    buyframe= buyframe.append({'BuyDate': row.Date,'BuyPrice': buyprice}, ignore_index=True)
+                    marker_df = marker_df.append({'Date': row.Date, 'Action': 'Buy','Price':buyprice}, ignore_index=True)
+            if Flag:
+                if df1.SMA10.iloc[i] < df1.SMA50.iloc[i]  and df1.SMA10.iloc[i-1] > df1.SMA50.iloc[i-1]:
+                    sellprice = row.Close              
+                    sellframe= sellframe.append({'SellDate': row.Date,'SellPrice': sellprice}, ignore_index=True)
+                    marker_df = marker_df.append({'Date': row.Date, 'Action': 'Sell','Price':sellprice}, ignore_index=True)
+                    Flag=False 
+        tradedf=pd.concat([buyframe,sellframe],axis=1)
+        tradedf.dropna()
+        tradedf['profit']=tradedf['SellPrice']-tradedf['BuyPrice']
+        totalProfit = tradedf['profit'].sum().round(2)
+        st.write(f"Total profit from the moving average strategy is {totalProfit}")
+        st.dataframe(tradedf)
+        st.dataframe(marker_df)
+        return tradedf
+    tradedf(df)
+    # Plotly graph for visualization
     fig = go.Figure()
-    fig.add_trace(go.Scatter(x=df.index, y=df['Close'], name='Close', line=dict(color='black')))
-    fig.add_trace(go.Scatter(x=df.index, y=df['MA_fast'], name='fast', line=dict(color='red')))
-    fig.add_trace(go.Scatter(x=df.index, y=df['MA_slow'], name='slow', line=dict(color='blue')))
+    fig.add_trace(go.Scatter(x=df.Date, y=df['Close'], name='Close', line=dict(color='black')))
+    fig.add_trace(go.Scatter(x=df.Date, y=df['SMA10'], name='fast', line=dict(color='red')))
+    fig.add_trace(go.Scatter(x=df.Date, y=df['SMA50'], name='slow', line=dict(color='blue')))
     fig.update_xaxes(type='category')
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)
+    

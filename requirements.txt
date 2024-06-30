@@ -1,11 +1,6 @@
 plotly
-unidecode
-# ta-lib
 requests
-pandasai
-google-generativeai
 pyyaml
 pandas_ta
-nselib
 yfinance
 seaborn

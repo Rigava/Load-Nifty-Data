@@ -10,7 +10,7 @@ import yfinance
 # import pandas_ta as ta
 import numpy as np
 
-def RSI(df):
+def AddRSIIndicators(df):
     df['priceChange']=df['Close']-df['Close'].shift(1)
     df=df.dropna()
     df['Upmove']=df['priceChange'].apply(lambda x: x if x>0 else 0)
@@ -19,6 +19,20 @@ def RSI(df):
     df['avgDown']=df['Downmove'].ewm(span=27).mean()
     df['RS']= df['avgUp']/df['avgDown']
     df['RSI_cal']= df['RS'].apply(lambda x: 100-(100/(x+1)))
+    print('RSI indicators added')
+    return df
+def AddSMAIndicators(df,fast,slow):
+    df['SMA10']=df.Close.rolling(fast).mean()
+    df['SMA50']=df.Close.rolling(slow).mean()
+    print('SMA indicators added')
+    return df
+def MACDIndicator(df):
+    df['EMA12']= df.Close.ewm(span=12).mean()
+    df['EMA26']= df.Close.ewm(span=26).mean()
+    df['MACD'] = df.EMA12 - df.EMA26
+    df['Signal'] = df.MACD.ewm(span=9).mean()
+    df['MACD_diff']=df.MACD - df.Signal
+    print('indicators added')
     return df
 
 st.title('NIFTY 50 STOCK DASHBOARD')
@@ -37,9 +51,7 @@ if dashboard == "Data":
             ticker = symbol+'.NS'
             stock_data = yfinance.Ticker(ticker).history(period="1y")
             latest_price = stock_data['Close'].iloc[-1].round(1)
-            stock_data = RSI(stock_data)
-            # stock_data["RSI"] = ta.rsi(stock_data["Close"], lentgh =14).round(1)
-            # stock_data["ADX"] = stock_data.ta.adx()/round(1)
+            stock_data = AddRSIIndicators(stock_data)
             latest_rsi = stock_data['RSI_cal'].iloc[-1]
             st.success(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
             # Plotting historical price movement
@@ -82,16 +94,13 @@ if dashboard == "Crossover & RSI Shortlist":
         data = pd.read_csv(io.StringIO(download.decode('utf-8')))   
         df=data.copy()
         if len(df) > 0:
-            # Calculate crossover, MACD, and RSI indicators
-            df["MA_fast"] = ta.sma(df["Close"], length =fast).round(1)
-            df["MA_slow"] = ta.sma(df["Close"], length =slow).round(1)
-            df["RSI"] = ta.rsi(df["Close"], lentgh =rsi_period).round(1)
+            # Calculate crossover and RSI indicators
+            df = AddSMAIndicators(df,fast,slow)
+            df = AddRSIIndicators(df)
             # Determine buy or sell recommendation based on last row of the data to provide buy signal
-            if df["MA_fast"].iloc[-1] > df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] < rsi_low:
-                # and df["MACD"].iloc[-1] > 0
+            if df["SMA10"].iloc[-1] > df["SMA50"].iloc[-1] and df["RSI"].iloc[-1] < rsi_low:
                 Buy.append(files)
-            elif df["MA_fast"].iloc[-1] < df["MA_slow"].iloc[-1] and df["RSI"].iloc[-1] > rsi_high:
-                # and df["MACD"].iloc[-1] < 0
+            elif df["SMA10"].iloc[-1] < df["SMA50"].iloc[-1] and df["RSI"].iloc[-1] > rsi_high:
                 Sell.append(files)
             else:
                 Hold.append(files)            

@@ -121,34 +121,38 @@ if dashboard == "Crossover & RSI Shortlist":
     def tradedf(df1):
         df1.reset_index(inplace=True)
         Flag = False
-        buyframe=pd.DataFrame(columns=['BuyDate','BuyPrice'])
-        sellframe=pd.DataFrame(columns=['SellDate','SellPrice'])
+        bi,si=[],[]
+        Buy,Sell =[],[]
+        Buyp,Sellp = [],[]
+       
         marker_df = pd.DataFrame(columns=['Date','Action','Price'])
         for i,row in df1.iterrows():
             if not Flag:
                 if df1.SMA10.iloc[i] > df1.SMA50.iloc[i]  and df1.SMA10.iloc[i-1] < df1.SMA50.iloc[i-1]:
                     buyprice = row.Close
+                    buydate =row.Date
                     Flag=True
-                    buyframe= buyframe.append({'BuyDate': row.Date,'BuyPrice': row.Close}, ignore_index=True)
-                    marker_df = marker_df.append({'Date': row.Date, 'Action': 'Buy','Price':row.Close}, ignore_index=True)
+                    Buy.append(buydate)
+                    Buyp.append(buyprice) 
+                    bi.append(i+1)                   
+                   
             if Flag:
                 if df1.SMA10.iloc[i] < df1.SMA50.iloc[i]  and df1.SMA10.iloc[i-1] > df1.SMA50.iloc[i-1]:
-                    sellprice = row.Close              
-                    sellframe= sellframe.append({'SellDate': row.Date,'SellPrice': sellprice}, ignore_index=True)
-                    marker_df = marker_df.append({'Date': row.Date, 'Action': 'Sell','Price':row.Close}, ignore_index=True)
+                    sellprice = row.Close 
+                    selldate =row.Date
+                    Sell.append(selldate)
+                    Sellp.append(sellprice)       
+                    bi.append(i+1)      
                     Flag=False 
-        # st.dataframe(marker_df)
-
+        buyframe = pd.DataFrame({'BuyDate':Buy,'BuyPrice':Buyp})
+        sellframe = pd.DataFrame({'SellDate':Sell,'SellPrice':Sellp})
         tradedf=pd.concat([buyframe,sellframe],axis=1)
         tradedf.dropna()
         tradedf['profit']=tradedf['SellPrice']-tradedf['BuyPrice']
         totalProfit = tradedf['profit'].sum().round(2)
-
         st.write(f"Total profit from the moving average strategy is {totalProfit}")
-        # st.dataframe(tradedf)
-        
-        return marker_df
-    marker_df = tradedf(df)
+        return tradedf,bi,si
+    marker_df,bi,si = tradedf(df)
     # Plotly graph for visualization
     st.write("The below plot shows the moving averages with closing price")
     fig = go.Figure()
@@ -156,7 +160,8 @@ if dashboard == "Crossover & RSI Shortlist":
     fig.add_trace(go.Scatter(x=df.Date, y=df['SMA10'], name='fast', line=dict(color='red')))
     fig.add_trace(go.Scatter(x=df.Date, y=df['SMA50'], name='slow', line=dict(color='blue')))
 
-    fig.add_trace(go.Scatter(x=marker_df.Date, y=marker_df.Price, name='Trades',mode='markers' ,marker=dict(color=marker_df.Action.map({'Buy':'green','Sell':'red'}),size=8)))
+    fig.add_trace(go.Scatter(x=df.iloc[bi].Date, y=df.iloc[bi].Close, name='buySignal',mode='markers' ,marker=dict(color='green',size=8))) 
+    fig.add_trace(go.Scatter(x=df.iloc[si].Date, y=df.iloc[si].Close, name='sellSignal',mode='markers' ,marker=dict(color='red',size=8)))
     fig.update_xaxes(type='category')
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)

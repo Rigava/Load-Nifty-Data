@@ -4,3 +4,4 @@ pyyaml
 pandas_ta
 yfinance
 seaborn
+pandas

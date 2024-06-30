@@ -1,8 +1,5 @@
 plotly
 requests
-pyyaml
-pandas_ta
-numpy==1.26.3
 yfinance
 seaborn
 pandas

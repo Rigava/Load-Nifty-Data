@@ -7,7 +7,7 @@ import requests
 from datetime import datetime
 import matplotlib.pyplot as plt
 import yfinance
-import pandas_ta as ta
+# import pandas_ta as ta
 import numpy as np
 
 def RSI(df):

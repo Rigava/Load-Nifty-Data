@@ -8,6 +8,18 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import yfinance
 import pandas_ta as ta
+import numpy as np
+
+def RSI(df):
+    df['priceChange']=df['Close']-df['Close'].shift(1)
+    df=df.dropna()
+    df['Upmove']=df['priceChange'].apply(lambda x: x if x>0 else 0)
+    df['Downmove']=df['priceChange'].apply(lambda x: abs(x) if x<0 else 0)
+    df['avgUp']=df['Upmove'].ewm(span=27).mean()
+    df['avgDown']=df['Downmove'].ewm(span=27).mean()
+    df['RS']= df['avgUp']/df['avgDown']
+    df['RSI_cal']= df['RS'].apply(lambda x: 100-(100/(x+1)))
+    return df
 
 st.title('NIFTY 50 STOCK DASHBOARD')
 
@@ -25,9 +37,8 @@ if dashboard == "Data":
             ticker = symbol+'.NS'
             stock_data = yfinance.Ticker(ticker).history(period="1y")
             latest_price = stock_data['Close'].iloc[-1].round(1)
-            # print(stock_data,latest_price)
-            
-            stock_data["RSI"] = ta.rsi(stock_data["Close"], lentgh =14).round(1)
+            stock_data = RSI(stock_data)
+            # stock_data["RSI"] = ta.rsi(stock_data["Close"], lentgh =14).round(1)
             # stock_data["ADX"] = stock_data.ta.adx()/round(1)
             latest_rsi = stock_data['RSI'].iloc[-1]
             st.success(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")

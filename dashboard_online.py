@@ -40,7 +40,7 @@ if dashboard == "Data":
             stock_data = RSI(stock_data)
             # stock_data["RSI"] = ta.rsi(stock_data["Close"], lentgh =14).round(1)
             # stock_data["ADX"] = stock_data.ta.adx()/round(1)
-            latest_rsi = stock_data['RSI'].iloc[-1]
+            latest_rsi = stock_data['RSI_cal'].iloc[-1]
             st.success(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
             # Plotting historical price movement
             st.subheader("Historical Price Movement in Line chart")

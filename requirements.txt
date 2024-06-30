@@ -2,4 +2,4 @@ plotly
 requests
 yfinance
 seaborn
-pandas
+pandas==1.5.3

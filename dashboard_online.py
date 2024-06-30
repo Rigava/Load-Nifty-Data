@@ -79,11 +79,12 @@ if dashboard == "Data":
 ## Dashboard 1 CROSSOVERS
 if dashboard == "Crossover & RSI Shortlist":
     # User input for strategy parameters
-    fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=10, step=1)
-    slow = st.sidebar.slider("Slow Period", min_value=10, max_value=200, value=50, step=1)
+
     rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
     rsi_low = st.sidebar.slider("RSI low for buy", min_value=1, max_value=100, value=30, step=1)
     rsi_high = st.sidebar.slider("RSI high for sell", min_value=1, max_value=100, value=70, step=1)
+    fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=10, step=1)
+    slow = st.sidebar.slider("Slow Period", min_value=10, max_value=200, value=50, step=1)
     Buy = []
     Sell = []
     Hold = []
@@ -97,7 +98,7 @@ if dashboard == "Crossover & RSI Shortlist":
             # Calculate crossover and RSI indicators
             df = AddSMAIndicators(df,fast,slow)
             df = AddRSIIndicators(df)
-            # Determine buy or sell recommendation based on last row of the data to provide buy signal
+            # Determine buy or sell recommendation based on last two rows of the data to provide buy signal
             if df["RSI"].iloc[-1] > rsi_low and df["RSI"].iloc[-2] < rsi_low:
                 Buy.append(files)
             elif df["RSI"].iloc[-1] < rsi_high and df["RSI"].iloc[-2] > rsi_high:
@@ -105,12 +106,12 @@ if dashboard == "Crossover & RSI Shortlist":
             else:
                 Hold.append(files)            
     # Display stock data and recommendation
-    st.write("List of stock for with buy signal",Buy)
-    st.write("List of stock with sell signal",Sell)
-    st.write("The below plot shows the moving averages with closing price")
+    st.write("List of stock for with RSI buy signal",Buy)
+    st.write("List of stock with sell RSI signal",Sell)
+
     # Select Stock for Backtesting the crossover strategy
  
-    symbol = st.selectbox("Select a stock to view moving average crossover",tickers)
+    symbol = st.selectbox("Select a stock to view thecumulative profits from trading moving average crossover strategy",tickers)
     ticker = symbol+'.NS'
     df = yfinance.Ticker(ticker).history(period="5y")
     # Add MA indicators
@@ -149,6 +150,7 @@ if dashboard == "Crossover & RSI Shortlist":
         return marker_df
     marker_df = tradedf(df)
     # Plotly graph for visualization
+    st.write("The below plot shows the moving averages with closing price")
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=df.Date, y=df['Close'], name='Close', line=dict(color='black')))
     fig.add_trace(go.Scatter(x=df.Date, y=df['SMA10'], name='fast', line=dict(color='red')))

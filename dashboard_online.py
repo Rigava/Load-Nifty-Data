@@ -128,7 +128,7 @@ if dashboard == "Crossover & RSI Shortlist":
                 if df1.SMA10.iloc[i] > df1.SMA50.iloc[i]  and df1.SMA10.iloc[i-1] < df1.SMA50.iloc[i-1]:
                     buyprice = row.Close
                     Flag=True
-                    buyframe= buyframe.append({'BuyDate': row.Date,'BuyPrice': buyprice}, ignore_index=True)
+                    buyframe= buyframe.append({'BuyDate': row.Date,'BuyPrice': row.Close}, ignore_index=True)
                     marker_df = marker_df.append({'Date': row.Date, 'Action': 'Buy','Price':row.Close}, ignore_index=True)
             if Flag:
                 if df1.SMA10.iloc[i] < df1.SMA50.iloc[i]  and df1.SMA10.iloc[i-1] > df1.SMA50.iloc[i-1]:

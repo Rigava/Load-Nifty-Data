@@ -24,6 +24,10 @@ def AddRSIIndicators(df):
 def AddSMAIndicators(df,fast,slow):
     df['SMA10']=df.Close.rolling(fast).mean()
     df['SMA50']=df.Close.rolling(slow).mean()
+    df['buySignal']=np.where(df.SMA10>df.SMA50,1,0)
+    df['sellSignal']=np.where(df.SMA10<df.SMA50,1,0)
+    df['Decision Buy GC']= df.buySignal.diff()
+    df['Decision Sell GC']= df.sellSignal.diff()
     print('SMA indicators added')
     return df
 def MACDIndicator(df):
@@ -55,6 +59,8 @@ if dashboard == "Data":
             stock_data = yfinance.Ticker(ticker).history(period="1y")
             latest_price = stock_data['Close'].iloc[-1].round(1)
             stock_data = AddRSIIndicators(stock_data)
+            stock_data = AddSMAIndicators(stock_data)
+            
             latest_rsi = stock_data['RSI'].iloc[-1].round(1)
             st.success(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
             # Plotting historical price movement

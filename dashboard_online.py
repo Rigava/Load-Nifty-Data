@@ -54,14 +54,14 @@ if dashboard == "Data":
     fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=10, step=1)
     slow = st.sidebar.slider("Slow Period", min_value=10, max_value=200, value=50, step=1)
     symbol = st.sidebar.selectbox("Select stock to pull data", tickers)
-    st.title(symbol+" Stocks Price Update")
+    st.success(" Stocks Price Update of {symbol}")
     if symbol:
         try:
             ticker = symbol+'.NS'
             stock_data = yfinance.Ticker(ticker).history(period="1y")
             latest_price = stock_data['Close'].iloc[-1].round(1)
             stock_data = AddRSIIndicators(stock_data)
-            stock_data = AddSMAIndicators(stock_data)
+            stock_data = AddSMAIndicators(stock_data,fast,slow)
             
             latest_rsi = stock_data['RSI'].iloc[-1].round(1)
             st.success(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")

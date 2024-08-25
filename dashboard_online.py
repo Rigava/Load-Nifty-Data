@@ -51,6 +51,8 @@ dashboard = st.sidebar.selectbox("select analysis",["Data","Stock Shortlist","Ba
 
 ## Dashboard 0
 if dashboard == "Data":
+    fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=10, step=1)
+    slow = st.sidebar.slider("Slow Period", min_value=10, max_value=200, value=50, step=1)
     symbol = st.sidebar.selectbox("Select stock to pull data", tickers)
     st.title(symbol+" Stocks Price Update")
     if symbol:

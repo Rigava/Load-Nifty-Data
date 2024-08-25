@@ -38,7 +38,7 @@ def MACDIndicator(df):
     print('MACD indicators added')
     return df
 st.set_page_config(page_title="Nifty 50 Universe", page_icon=":bar_chart:", layout="wide")
-st.title('NIFTY 50 Universe')
+st.title('NIFTY 50 Universe BY JOSH@I')
 
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)

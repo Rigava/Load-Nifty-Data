@@ -32,15 +32,18 @@ def MACDIndicator(df):
     df['MACD'] = df.EMA12 - df.EMA26
     df['Signal'] = df.MACD.ewm(span=9).mean()
     df['MACD_diff']=df.MACD - df.Signal
+    df.loc[(df['MACD_diff']>0) & (df.MACD_diff.shift(1)<0),'Decision MACD']='Buy'
+    df.loc[(df['MACD_diff']<0) & (df.MACD_diff.shift(1)>0),'Decision MACD']='Sell'
+    df.dropna()
     print('indicators added')
     return df
 
-st.title('NIFTY 50 STOCK DASHBOARD')
+st.title('NIFTY 50 Universe')
 
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Data","Crossover & RSI Shortlist"])
+dashboard = st.sidebar.selectbox("select analysis",["Data","Stock Shortlist","Back Testing"])
 
 ## Dashboard 0
 if dashboard == "Data":
@@ -63,7 +66,10 @@ if dashboard == "Data":
             plt.title('Price Movement')
             plt.xticks(rotation=45)
             st.pyplot(plt)
-            st.dataframe(stock_data.tail(10))
+            
+            with st.expander("🔍 Data Preview"):
+                st.dataframe(stock_data)
+           
             # Export data as CSV
             st.subheader("Export Data")
             if st.button("Export as CSV"):
@@ -76,41 +82,78 @@ if dashboard == "Data":
 
 
 
-## Dashboard 1 CROSSOVERS
-if dashboard == "Crossover & RSI Shortlist":
-    # User input for strategy parameters
+## -------------------------------------------------------------------------Dashboard 1 SHORTLIST ------------------------------------------------------------------------------------------------------------------
+if dashboard == "Stock Shortlist":
+    shortlist_option = st.sidebar.selectbox("select strategy",["MACD","RSI","Consolidation"])
+    if st.button("Shortlist", use_container_width=True):
+        Buy = []
+        Sell = []
+        Hold = []
+        framelist = []
+                # User input for strategy parameters
+        rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
+        rsi_low = st.sidebar.slider("RSI low for buy", min_value=1, max_value=100, value=30, step=1)
+        rsi_high = st.sidebar.slider("RSI high for sell", min_value=1, max_value=100, value=70, step=1) 
+        # Iterate over stock data to find stock with crossover and rsi signal
+        for files in tickers:
+            url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
+            download = requests.get(url).content
+            data = pd.read_csv(io.StringIO(download.decode('utf-8')))   
+            df=data.copy()
+            if len(df) > 0:
+                # Calculate indicators
+                df = AddRSIIndicators(df)
+                df = MACDIndicator(df)
+                framelist.append(df)
+                # Determine buy or sell recommendation based on last two rows of the data to provide buy & sell signals
+                if shortlist_option=="MACD":                
+                    if df['Decision MACD'].iloc[-1]=='Buy':    
+                        Buy.append(files)
+                    elif df['Decision MACD'].iloc[-1]=='Sell':
+                        Sell.append(files)
+                    else:
+                        Hold.append(files)  
+                
+                if shortlist_option=="RSI":
+                    if df["RSI"].iloc[-1] > rsi_low and df["RSI"].iloc[-2] < rsi_low: 
+                        Buy.append(files)
+                    elif df["RSI"].iloc[-1] < rsi_high and df["RSI"].iloc[-2] > rsi_high:
+                        Sell.append(files)
+                    else:
+                        Hold.append(files)            
+        # Display stock data and recommendation
+        st.write(":blue[List of stock with buy signal]",Buy)
+        st.write(":blue[List of stock with sell signal]",Sell)
+        bucket = Buy + Sell
+        for symbol in bucket:
+            try:
+                ticker = symbol+'.NS'
+                stock_data = yfinance.Ticker(ticker).history(period="1y")
+                latest_price = stock_data['Close'].iloc[-1].round(1)
+                stock_data = AddRSIIndicators(stock_data)
+                latest_rsi = stock_data['RSI'].iloc[-1].round(1)
+                st.subheader(symbol)
+                st.info(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
+                # Plotting historical price movement
+                st.markdown("Historical price movement of {symbol}")
+                plt.figure(figsize=(10, 6))
+                plt.plot(stock_data.index, stock_data['Close'])
+                plt.xlabel('Date')
+                plt.ylabel('Price')
+                plt.title('Price Movement')
+                plt.xticks(rotation=45)
+                st.pyplot(plt)
+            except Exception as e:
+                st.error("Error occurred while fetching stock data.")
+                st.error(e)
 
-    rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
-    rsi_low = st.sidebar.slider("RSI low for buy", min_value=1, max_value=100, value=30, step=1)
-    rsi_high = st.sidebar.slider("RSI high for sell", min_value=1, max_value=100, value=70, step=1)
+
+
+## -------------------------------------------------------------------------Dashboard 2 BACK TESTING----------------------------------------------------------------------------------------------------------------
+if dashboard == "Back Testing":
+    # Select Stock for Backtesting the crossover strategy
     fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=10, step=1)
     slow = st.sidebar.slider("Slow Period", min_value=10, max_value=200, value=50, step=1)
-    Buy = []
-    Sell = []
-    Hold = []
-    # Iterate over stock data to find stock with crossover and rsi signal
-    for files in tickers:
-        url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
-        download = requests.get(url).content
-        data = pd.read_csv(io.StringIO(download.decode('utf-8')))   
-        df=data.copy()
-        if len(df) > 0:
-            # Calculate crossover and RSI indicators
-            df = AddSMAIndicators(df,fast,slow)
-            df = AddRSIIndicators(df)
-            # Determine buy or sell recommendation based on last two rows of the data to provide buy signal
-            if df["RSI"].iloc[-1] > rsi_low and df["RSI"].iloc[-2] < rsi_low:
-                Buy.append(files)
-            elif df["RSI"].iloc[-1] < rsi_high and df["RSI"].iloc[-2] > rsi_high:
-                Sell.append(files)
-            else:
-                Hold.append(files)            
-    # Display stock data and recommendation
-    st.write("List of stock for with RSI buy signal",Buy)
-    st.write("List of stock with sell RSI signal",Sell)
-
-    # Select Stock for Backtesting the crossover strategy
- 
     symbol = st.selectbox("Select a stock to view thecumulative profits from trading moving average crossover strategy",tickers)
     ticker = symbol+'.NS'
     df = yfinance.Ticker(ticker).history(period="5y")
@@ -165,4 +208,4 @@ if dashboard == "Crossover & RSI Shortlist":
     fig.update_xaxes(type='category')
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)
-    
+

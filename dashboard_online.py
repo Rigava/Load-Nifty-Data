@@ -35,9 +35,9 @@ def MACDIndicator(df):
     df.loc[(df['MACD_diff']>0) & (df.MACD_diff.shift(1)<0),'Decision MACD']='Buy'
     df.loc[(df['MACD_diff']<0) & (df.MACD_diff.shift(1)>0),'Decision MACD']='Sell'
     df.dropna()
-    print('indicators added')
+    print('MACD indicators added')
     return df
-
+st.set_page_config(page_title="Nifty 50 Universe", page_icon=":bar_chart:", layout="wide")
 st.title('NIFTY 50 Universe')
 
 with open("nifty50tickers.pickle",'rb') as f:
@@ -136,12 +136,17 @@ if dashboard == "Stock Shortlist":
                 st.info(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
                 # Plotting historical price movement
                 st.markdown("Historical price movement of {symbol}")
-                plt.figure(figsize=(10, 6))
-                plt.plot(stock_data.index, stock_data['Close'])
-                plt.xlabel('Date')
-                plt.ylabel('Price')
-                plt.title('Price Movement')
-                plt.xticks(rotation=45)
+                fig =plt.figure(figsize=(12, 6))
+                ax1=fig.add_subplot(1,2,1)
+                ax2=fig.add_subplot(1,2,2)
+                ax1.plot(stock_data.index, stock_data['Close'])
+                ax1.set_xlabel('Date')
+                ax1.set_ylabel('Price')
+                ax1.set_title('Price Movement')
+                # ax1.set_xticks(rotation=45)
+       
+                ax2.plot(df.Signal,color='red')
+                ax2.plot(df.MACD,color='green')
                 st.pyplot(plt)
             except Exception as e:
                 st.error("Error occurred while fetching stock data.")

@@ -142,7 +142,7 @@ if dashboard == "Crossover & RSI Shortlist":
                     selldate =row.Date
                     Sell.append(selldate)
                     Sellp.append(sellprice)       
-                    bi.append(i)      
+                    si.append(i)      
                     Flag=False 
         buyframe = pd.DataFrame({'BuyDate':Buy,'BuyPrice':Buyp})
         sellframe = pd.DataFrame({'SellDate':Sell,'SellPrice':Sellp})

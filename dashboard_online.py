@@ -130,11 +130,12 @@ if dashboard == "Stock Shortlist":
                         Sell.append(files)
                     else:
                         Hold.append(files)  
-        latest_date = df['Date']
-        st.info(f"Latest Data {latest_date}")          
+     
         # Display stock data and recommendation
         st.write(":blue[List of stock with buy signal]",Buy)
         st.write(":blue[List of stock with sell signal]",Sell)
+        latest_date = df['Date']
+        st.info(f"Latest Data {latest_date}")     
         bucket = Buy + Sell
         for symbol in bucket:
             try:

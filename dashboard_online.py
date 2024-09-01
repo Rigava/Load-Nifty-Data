@@ -108,6 +108,8 @@ if dashboard == "Stock Shortlist":
             download = requests.get(url).content
             data = pd.read_csv(io.StringIO(download.decode('utf-8')))   
             df=data.copy()
+            latest_date = df['Date']
+            st.info(f"Latest Data {latest_date}")
             if len(df) > 0:
                 # Calculate indicators
                 df = AddRSIIndicators(df)
@@ -137,6 +139,7 @@ if dashboard == "Stock Shortlist":
             try:
                 ticker = symbol+'.NS'
                 stock_data = yfinance.Ticker(ticker).history(period="1y")
+                
                 latest_price = stock_data['Close'].iloc[-1].round(1)
                 stock_data = AddRSIIndicators(stock_data)
                 latest_rsi = stock_data['RSI'].iloc[-1].round(1)

@@ -144,6 +144,7 @@ if dashboard == "Stock Shortlist":
                 
                 latest_price = stock_data['Close'].iloc[-1].round(1)
                 stock_data = AddRSIIndicators(stock_data)
+                stock_data = MACDIndicator(stock_data)
                 latest_rsi = stock_data['RSI'].iloc[-1].round(1)
                 st.subheader(symbol)
                 st.info(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
@@ -158,8 +159,8 @@ if dashboard == "Stock Shortlist":
                 ax1.set_title('Price Movement')
                 # ax1.set_xticks(rotation=45)
        
-                ax2.plot(df.Signal,color='red')
-                ax2.plot(df.MACD,color='green')
+                ax2.plot(stock_data.Signal,color='red')
+                ax2.plot(stock_data.MACD,color='green')
                 st.pyplot(plt)
             except Exception as e:
                 st.error("Error occurred while fetching stock data.")

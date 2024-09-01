@@ -134,7 +134,7 @@ if dashboard == "Stock Shortlist":
         # Display stock data and recommendation
         st.write(":blue[List of stock with buy signal]",Buy)
         st.write(":blue[List of stock with sell signal]",Sell)
-        latest_date = df['Date']
+        latest_date = df['Date'].iloc[-1]
         st.info(f"Latest Data {latest_date}")     
         bucket = Buy + Sell
         for symbol in bucket:

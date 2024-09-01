@@ -108,8 +108,7 @@ if dashboard == "Stock Shortlist":
             download = requests.get(url).content
             data = pd.read_csv(io.StringIO(download.decode('utf-8')))   
             df=data.copy()
-            latest_date = df['Date']
-            st.info(f"Latest Data {latest_date}")
+
             if len(df) > 0:
                 # Calculate indicators
                 df = AddRSIIndicators(df)
@@ -130,7 +129,9 @@ if dashboard == "Stock Shortlist":
                     elif df["RSI"].iloc[-1] < rsi_high and df["RSI"].iloc[-2] > rsi_high:
                         Sell.append(files)
                     else:
-                        Hold.append(files)            
+                        Hold.append(files)  
+        latest_date = df['Date']
+        st.info(f"Latest Data {latest_date}")          
         # Display stock data and recommendation
         st.write(":blue[List of stock with buy signal]",Buy)
         st.write(":blue[List of stock with sell signal]",Sell)

@@ -238,6 +238,7 @@ if dashboard == "Back Testing":
         tradedf['profit']=tradedf['SellPrice']-tradedf['BuyPrice']
         totalProfit = tradedf['profit'].sum().round(2)
         st.write(f"Total profit from the moving average strategy is {totalProfit}")
+        st.dataframe(tradedf)
         return tradedf,bi,si
     marker_df,bi,si = tradedf(df)
     # Plotly graph for visualization

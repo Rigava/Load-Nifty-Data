@@ -184,6 +184,7 @@ if dashboard == "Stock Shortlist":
                     fig.tight_layout()  # Adjust layout to make room for both y-axes
                     ax1.legend(loc='upper left')
                     ax2.legend(loc='upper right')
+                    st.pyplot(plt)
        
 
             except Exception as e:

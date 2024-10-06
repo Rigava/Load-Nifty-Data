@@ -139,9 +139,10 @@ if dashboard == "Stock Shortlist":
         latest_date = df['Date'].iloc[-1]
         st.info(f"Latest Data {latest_date}")     
         bucket = Buy + Sell
-        # Display stock Chart for Buy and Sell
+        # Display stock Chart for Buy and Sell using yahoofinance as the source to fetch latest data
         for symbol in bucket:
             try:
+                # Fetch the data using yfinance lib
                 ticker = symbol+'.NS'
                 stock_data = yfinance.Ticker(ticker).history(period="1y")
                 
@@ -151,20 +152,40 @@ if dashboard == "Stock Shortlist":
                 latest_rsi = stock_data['RSI'].iloc[-1].round(1)
                 st.subheader(symbol)
                 st.info(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
-                # Plotting historical price movement
-                st.markdown(f"Historical price movement of {symbol}")
-                fig =plt.figure(figsize=(12, 6))
-                ax1=fig.add_subplot(1,2,1)
-                ax2=fig.add_subplot(1,2,2)
-                ax1.plot(stock_data.index, stock_data['Close'])
-                ax1.set_xlabel('Date')
-                ax1.set_ylabel('Price')
-                ax1.set_title('Price Movement')
-                # ax1.set_xticks(rotation=45)
+                # Plotting historical price movement based on selected strategy
+                if shortlist_option=="MACD":     
+                    st.markdown(f"Historical price movement of {symbol}")
+                    fig =plt.figure(figsize=(12, 6))
+                    ax1=fig.add_subplot(1,2,1)
+                    ax2=fig.add_subplot(1,2,2)
+                    ax1.plot(stock_data.index, stock_data['Close'])
+                    ax1.set_xlabel('Date')
+                    ax1.set_ylabel('Price')
+                    ax1.set_title('Price Movement')
+                    # ax1.set_xticks(rotation=45)
+                    ax2.plot(stock_data.Signal,color='red')
+                    ax2.plot(stock_data.MACD,color='green')
+                    st.pyplot(plt)
+                if shortlist_option=="RSI":
+                    # Create a figure and axis
+                    fig, ax1 = plt.subplots(figsize=(10, 6)) 
+                    # Plot the stock price on the left y-axis (primary axis)
+                    ax1.plot(stock_data.index, stock_data['Close'], label='Price', color='blue')
+                    ax1.set_xlabel('Date')
+                    ax1.set_ylabel('Price (INR)', color='blue')
+                    ax1.tick_params(axis='y', labelcolor='blue')  
+                    # Create a second y-axis for the RSI (secondary axis)
+                    ax2 = ax1.twinx()
+                    ax2.plot(stock_data.index, stock_data['RSI'], label='RSI', color='orange')
+                    ax2.set_ylabel('RSI', color='orange')
+                    ax2.tick_params(axis='y', labelcolor='orange')  
+                    # Add titles and legends
+                    plt.title(f'{ticker} Price and RSI')
+                    fig.tight_layout()  # Adjust layout to make room for both y-axes
+                    ax1.legend(loc='upper left')
+                    ax2.legend(loc='upper right')
        
-                ax2.plot(stock_data.Signal,color='red')
-                ax2.plot(stock_data.MACD,color='green')
-                st.pyplot(plt)
+
             except Exception as e:
                 st.error("Error occurred while fetching stock data.")
                 st.error(e)

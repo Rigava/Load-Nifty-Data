@@ -93,15 +93,17 @@ if dashboard == "Data":
 ## -------------------------------------------------------------------------Dashboard 1 SHORTLIST ------------------------------------------------------------------------------------------------------------------
 if dashboard == "Stock Shortlist":
     shortlist_option = st.sidebar.selectbox("select strategy",["MACD","RSI","Consolidation"])
+    # User input for strategy parameters
+    rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
+    rsi_low = st.sidebar.slider("RSI low for buy", min_value=1, max_value=100, value=30, step=1)
+    rsi_high = st.sidebar.slider("RSI high for sell", min_value=1, max_value=100, value=70, step=1) 
+    
     if st.button("Shortlist", use_container_width=True):
         Buy = []
         Sell = []
         Hold = []
         framelist = []
-                # User input for strategy parameters
-        rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
-        rsi_low = st.sidebar.slider("RSI low for buy", min_value=1, max_value=100, value=30, step=1)
-        rsi_high = st.sidebar.slider("RSI high for sell", min_value=1, max_value=100, value=70, step=1) 
+
         # Iterate over stock data to find stock with crossover and rsi signal
         for files in tickers:
             url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)

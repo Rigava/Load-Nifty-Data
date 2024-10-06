@@ -92,19 +92,19 @@ if dashboard == "Data":
 
 ## -------------------------------------------------------------------------Dashboard 1 SHORTLIST ------------------------------------------------------------------------------------------------------------------
 if dashboard == "Stock Shortlist":
-    shortlist_option = st.sidebar.selectbox("select strategy",["MACD","RSI","Consolidation"])
     # User input for strategy parameters
+    shortlist_option = st.sidebar.selectbox("select strategy",["MACD","RSI","Consolidation"])
     rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
     rsi_low = st.sidebar.slider("RSI low for buy", min_value=1, max_value=100, value=30, step=1)
     rsi_high = st.sidebar.slider("RSI high for sell", min_value=1, max_value=100, value=70, step=1) 
-    
+    # User Button for starting the Algo
     if st.button("Shortlist", use_container_width=True):
         Buy = []
         Sell = []
         Hold = []
         framelist = []
 
-        # Iterate over stock data to find stock with crossover and rsi signal
+        # Iterate over stock data to find stock with MACD crossover and rsi signal depending upon the selected strategy
         for files in tickers:
             url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format(files)
             download = requests.get(url).content
@@ -139,6 +139,7 @@ if dashboard == "Stock Shortlist":
         latest_date = df['Date'].iloc[-1]
         st.info(f"Latest Data {latest_date}")     
         bucket = Buy + Sell
+        # Display stock Chart for Buy and Sell
         for symbol in bucket:
             try:
                 ticker = symbol+'.NS'
@@ -151,7 +152,7 @@ if dashboard == "Stock Shortlist":
                 st.subheader(symbol)
                 st.info(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
                 # Plotting historical price movement
-                st.markdown("Historical price movement of {symbol}")
+                st.markdown(f"Historical price movement of {symbol}")
                 fig =plt.figure(figsize=(12, 6))
                 ax1=fig.add_subplot(1,2,1)
                 ax2=fig.add_subplot(1,2,2)

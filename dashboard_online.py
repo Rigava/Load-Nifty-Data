@@ -179,6 +179,9 @@ if dashboard == "Stock Shortlist":
                     ax2.plot(stock_data.index, stock_data['RSI'], label='RSI', color='orange')
                     ax2.set_ylabel('RSI', color='orange')
                     ax2.tick_params(axis='y', labelcolor='orange')  
+                    # Add RSI overbought/oversold levels
+                    ax2.axhline(70, color='red', linestyle='--', label='Overbought (70)')
+                    ax2.axhline(30, color='green', linestyle='--', label='Oversold (30)')
                     # Add titles and legends
                     plt.title(f'{ticker} Price and RSI')
                     fig.tight_layout()  # Adjust layout to make room for both y-axes

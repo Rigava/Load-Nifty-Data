@@ -58,7 +58,7 @@ if dashboard == "Data":
     if symbol:
         try:
             ticker = symbol+'.NS'
-            stock_data = yfinance.Ticker(ticker).history(period="1y")
+            stock_data = yfinance.Ticker(ticker).history(period="5y")
             latest_price = stock_data['Close'].iloc[-1].round(1)
             stock_data = AddRSIIndicators(stock_data)
             stock_data = AddSMAIndicators(stock_data,fast,slow)

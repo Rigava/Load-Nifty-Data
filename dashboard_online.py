@@ -293,6 +293,6 @@ if dashboard == "Nifty50 BackTest":
         subdf = slice_df(sym)
         # st.write('result for' + sym)
         # st.write(vectorized(subdf,10,50))
-        results.append(sym , vectorized(subdf,10,50))
+        results.append(vectorized(subdf,10,50))
     st.write(results)
     

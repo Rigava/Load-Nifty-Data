@@ -289,7 +289,8 @@ if dashboard == "Nifty50 BackTest":
     price_data=pd.DataFrame()
     try:
         for stok in tickers:
-            stock_data = yfinance.download(symbol, group_by='Ticker', start=start_date, end=end_date)
+            stok = stok+".NS"
+            stock_data = yfinance.download(stok, group_by='Ticker', start=start_date, end=end_date)
             stock_data['Ticker'] = stok
             price_data.concat(stock_data)    
     except Exception as e:

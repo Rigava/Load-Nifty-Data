@@ -291,8 +291,8 @@ if dashboard == "Nifty50 BackTest":
     results=[]
     for sym in yf_tickers:
         subdf = slice_df(sym)
-        # print('result for' + sym)
-        print(vectorized(subdf,10,50))
+        # st.write('result for' + sym)
+        # st.write(vectorized(subdf,10,50))
         results.append(sym , vectorized(subdf,10,50))
     st.write(results)
     

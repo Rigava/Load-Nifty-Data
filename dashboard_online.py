@@ -57,7 +57,7 @@ def vectorized(df,n,m):
         trades =pd.concat([trades,mtm])
     profits = trades.price.diff()[1::2] / trades.price[0::2].values
     gain = (profits + 1).prod()
-    return trades, gain 
+    return gain 
 def slice_df(symbol):
     sliced = price_df.copy()
     sliced = price_df[price_df.columns[price_df.columns.get_level_values(1)==symbol]]

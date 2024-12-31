@@ -287,6 +287,7 @@ if dashboard == "Nifty50 BackTest":
     end_date = st.sidebar.date_input("End Date", value=pd.to_datetime("2024-12-01"))
     st.write("COMING SOON-WIP")
     price_data=pd.DataFrame()
+    tickers= ["RELIANCE","TCS"]
     try:
         for stok in tickers:
             stok = stok+".NS"

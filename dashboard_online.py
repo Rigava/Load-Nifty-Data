@@ -41,13 +41,37 @@ def MACDIndicator(df):
     df.dropna()
     print('MACD indicators added')
     return df
+#For adding the sma1 and sma2
+def ma_calc(data,n,m):
+    data['sma_1'] = data['Close'].rolling(window=n).mean()
+    data['sma_2'] = data['Close'].rolling(window=m).mean()
+    data['price'] = data['Close'].shift(-1)
+def vectorized(df,n,m):
+    ma_calc(df,n,m)
+    first_buy = pd.Series(df.index == (df.sma_1>df.sma_2).idxmax(),index=df.index)
+    real_signal = first_buy | (df.sma_1>df.sma_2).diff()
+    trades = df[real_signal]
+    if len(trades)%2!=0:
+        mtm = data.tail(1).copy()
+        mtm.price = mtm.Close
+        trades =pd.concat([trades,mtm])
+    profits = trades.price.diff()[1::2] / trades.price[0::2].values
+    gain = (profits + 1).prod()
+    return trades, gain 
+def slice_df(symbol):
+    sliced = price_df.copy()
+    sliced = price_df[price_df.columns[price_df.columns.get_level_values(1)==symbol]]
+    sliced.columns = sliced.columns.droplevel(1)
+    return sliced   
+
 st.set_page_config(page_title="Nifty 50 Universe", page_icon=":bar_chart:", layout="wide")
 st.title('NIFTY 50 Universe BY JOSH@I')
 
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Data","Stock Shortlist","Back Testing"])
+dashboard = st.sidebar.selectbox("select analysis",["Data","Stock Shortlist","Back Testing","Nifty50 BackTest"])
+
 
 ## Dashboard 0
 if dashboard == "Data":
@@ -257,3 +281,19 @@ if dashboard == "Back Testing":
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)
 
+## Dashboard 4
+if dashboard == "Nifty50 BackTest":
+    yf_tickers=[]
+    for t in tickers:
+        t = symbol+'.NS'
+        yf_tickers.append(t)
+    price_df = yfinance.download(tickers,start="2010-01-01" )   
+    results=[]
+    for sym in yf_tickers:
+        subdf = slice_df(sym)
+        # print('result for' + sym)
+        print(vectorized(subdf,10,50))
+        results.append(sym , vectorized(subdf,10,50))
+
+    st.write(results)
+    

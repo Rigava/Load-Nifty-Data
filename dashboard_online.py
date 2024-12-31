@@ -281,18 +281,18 @@ if dashboard == "Back Testing":
     fig.update_layout(height=800)
     st.plotly_chart(fig,use_container_width=True)
 
-## Dashboard 4
-if dashboard == "Nifty50 BackTest":
-    yf_tickers=[]
-    for t in tickers:
-        t = t+'.NS'
-        yf_tickers.append(t)
-    price_df = yfinance.download(tickers,start="2010-01-01" )   
-    results=[]
-    for sym in yf_tickers:
-        subdf = slice_df(sym)
-        # st.write('result for' + sym)
-        # st.write(vectorized(subdf,10,50))
-        results.append(vectorized(subdf,10,50))
-    st.write(results)
+# ## Dashboard 4
+# if dashboard == "Nifty50 BackTest":
+#     yf_tickers=[]
+#     for t in tickers:
+#         t = t+'.NS'
+#         yf_tickers.append(t)
+#     price_df = yfinance.download(tickers,start="2010-01-01" )   
+#     results=[]
+#     for sym in yf_tickers:
+#         subdf = slice_df(sym)
+#         # st.write('result for' + sym)
+#         # st.write(vectorized(subdf,10,50))
+#         results.append(vectorized(subdf,10,50))
+#     st.write(results)
     

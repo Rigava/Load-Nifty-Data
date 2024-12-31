@@ -285,7 +285,7 @@ if dashboard == "Back Testing":
 if dashboard == "Nifty50 BackTest":
     yf_tickers=[]
     for t in tickers:
-        t = symbol+'.NS'
+        t = t+'.NS'
         yf_tickers.append(t)
     price_df = yfinance.download(tickers,start="2010-01-01" )   
     results=[]

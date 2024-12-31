@@ -282,7 +282,8 @@ if dashboard == "Back Testing":
     st.plotly_chart(fig,use_container_width=True)
 
 # ## Dashboard 4
-# if dashboard == "Nifty50 BackTest":
+if dashboard == "Nifty50 BackTest":
+    st.write("COMING SOON")
 #     yf_tickers=[]
 #     for t in tickers:
 #         t = t+'.NS'

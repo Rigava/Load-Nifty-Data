@@ -294,6 +294,5 @@ if dashboard == "Nifty50 BackTest":
         # print('result for' + sym)
         print(vectorized(subdf,10,50))
         results.append(sym , vectorized(subdf,10,50))
-
     st.write(results)
     

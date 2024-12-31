@@ -58,7 +58,7 @@ def vectorized(df,n,m):
     profits = trades.price.diff()[1::2] / trades.price[0::2].values
     gain = (profits + 1).prod()
     return gain 
-def slice_df(symbol):
+def slice_df(price_df,symbol):
     sliced = price_df.copy()
     sliced = price_df[price_df.columns[price_df.columns.get_level_values(1)==symbol]]
     sliced.columns = sliced.columns.droplevel(1)
@@ -283,7 +283,18 @@ if dashboard == "Back Testing":
 
 # ## Dashboard 4
 if dashboard == "Nifty50 BackTest":
-    st.write("COMING SOON")
+    start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2024-01-01"))
+    end_date = st.sidebar.date_input("End Date", value=pd.to_datetime("2024-12-01"))
+    st.write("COMING SOON-WIP")
+    price_data=pd.DataFrame()
+    try:
+        for stok in tickers:
+            stock_data = yfinance.download(symbol, group_by='Ticker', start=start_date, end=end_date)
+            stock_data['Ticker'] = stok
+            price_data.concat(stock_data)    
+    except Exception as e:
+        st.error(f"Could not fetch data for {symbol} from Yahoo Finance. {e}")
+    st.dataframe(price_data)
 #     yf_tickers=[]
 #     for t in tickers:
 #         t = t+'.NS'

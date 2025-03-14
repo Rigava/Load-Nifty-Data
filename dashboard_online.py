@@ -286,17 +286,20 @@ if dashboard == "Nifty50 BackTest":
     start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2024-01-01"))
     end_date = st.sidebar.date_input("End Date", value=pd.to_datetime("2024-12-01"))
     st.write("COMING SOON-WIP")
-    price_data=pd.DataFrame()
-    tickers= ["RELIANCE","TCS"]
+    price_data=[]
+    tickers= ["HDFCBANK","RELIANCE","TCS"]
     try:
         for stok in tickers:
-            stok = stok+".NS"
-            stock_data = yfinance.download(stok, start=start_date, end=end_date)
-            stock_data['Ticker'] = stok
-            price_data.concat(stock_data)    
+            stok = stok+'.NS'
+            stock_data = yfinance.download(stok, group_by='Ticker' ,start=start_date, end=end_date)
+            # Transform the DataFrame: stack the ticker symbols to create a multi-index (Date, Ticker), then reset the 'Ticker' level to turn it into a column
+            stock_data = stock_data.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
+            # stock_data['Ticker'] = stok
+            price_data.append(stock_data)    
     except Exception as e:
-        st.error(f"Could not fetch data for {symbol} from Yahoo Finance. {e}")
-    st.dataframe(price_data)
+        st.error(f"Could not fetch data for {stok} from Yahoo Finance. {e}")
+    df=pd.concat(price_data)
+    st.dataframe(df)
 #     yf_tickers=[]
 #     for t in tickers:
 #         t = t+'.NS'

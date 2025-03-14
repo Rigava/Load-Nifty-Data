@@ -3,8 +3,7 @@ import os
 import requests
 import pickle
 import datetime as dt
-from nselib import capital_market
-import yfinance
+import yfinance as yf
 
 #Get the ticker list from the wiki site and pickle it to file
 def save_nifty50():
@@ -34,8 +33,8 @@ def get_data(reload_nifty=False):
     ticker_yahoo = ticker+'.NS'
     print(ticker_yahoo)
     if not os.path.exists('stock_dfs_updated/{}.csv'.format(ticker)):
-      data = yfinance.download(ticker_yahoo, start="2020-01-01", end=None)
-      # data = capital_market.price_volume_and_deliverable_position_data(symbol=ticker, from_date='01-01-2023', to_date='12-04-2024')
+      data = yf.download(ticker_yahoo,group_by="Ticker",start="2020-01-01", end=None)
+      data = data.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
       data.to_csv('stock_dfs_updated/{}.csv'.format(ticker))
     else:
       print('Already have'.format(ticker))

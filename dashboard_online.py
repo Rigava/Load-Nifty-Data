@@ -52,7 +52,7 @@ def vectorized(df,n,m):
     real_signal = first_buy | (df.sma_1>df.sma_2).diff()
     trades = df[real_signal]
     if len(trades)%2!=0:
-        mtm = data.tail(1).copy()
+        mtm = df.tail(1).copy()
         mtm.price = mtm.Close
         trades =pd.concat([trades,mtm])
     profits = trades.price.diff()[1::2] / trades.price[0::2].values
@@ -121,6 +121,11 @@ if dashboard == "Stock Shortlist":
     rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
     rsi_low = st.sidebar.slider("RSI low for buy", min_value=1, max_value=100, value=30, step=1)
     rsi_high = st.sidebar.slider("RSI high for sell", min_value=1, max_value=100, value=70, step=1) 
+    url = "https://raw.githubusercontent.com/Rigava/Load-Nifty-Data/main/stock_dfs_updated/{}.csv".format("RELIANCE")
+    download = requests.get(url).content
+    data = pd.read_csv(io.StringIO(download.decode('utf-8')))   
+    latest_date = data['Date'].iloc[-1]
+    st.info(f"The latest data is from {latest_date}")  
     # User Button for starting the Algo
     if st.button("Shortlist", use_container_width=True):
         Buy = []
@@ -160,8 +165,7 @@ if dashboard == "Stock Shortlist":
         # Display stock data and recommendation
         st.write(":blue[List of stock with buy signal]",Buy)
         st.write(":blue[List of stock with sell signal]",Sell)
-        latest_date = df['Date'].iloc[-1]
-        st.info(f"Latest Data {latest_date}")     
+   
         bucket = Buy + Sell
         # Display stock Chart for Buy and Sell using yahoofinance as the source to fetch latest data
         for symbol in bucket:
@@ -283,33 +287,25 @@ if dashboard == "Back Testing":
 
 # ## Dashboard 4
 if dashboard == "Nifty50 BackTest":
-    start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2024-01-01"))
+    start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2010-01-01"))
     end_date = st.sidebar.date_input("End Date", value=pd.to_datetime("2024-12-01"))
-    st.write("COMING SOON-WIP")
-    price_data=[]
-    tickers= ["HDFCBANK","RELIANCE","TCS"]
+    st.write("SMA crossover (SMA50 & SMA100) best return algo Stock - WIP")
+    results=[]
+    yf_tickers= []
     try:
         for stok in tickers:
-            stok = stok+'.NS'
-            stock_data = yfinance.download(stok, group_by='Ticker' ,start=start_date, end=end_date)
-            # Transform the DataFrame: stack the ticker symbols to create a multi-index (Date, Ticker), then reset the 'Ticker' level to turn it into a column
-            stock_data = stock_data.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
-            # stock_data['Ticker'] = stok
-            price_data.append(stock_data)    
+            ticker = stok+'.NS'
+            yf_tickers.append(ticker)
     except Exception as e:
         st.error(f"Could not fetch data for {stok} from Yahoo Finance. {e}")
-    df=pd.concat(price_data)
-    st.dataframe(df)
-#     yf_tickers=[]
-#     for t in tickers:
-#         t = t+'.NS'
-#         yf_tickers.append(t)
-#     price_df = yfinance.download(tickers,start="2010-01-01" )   
-#     results=[]
-#     for sym in yf_tickers:
-#         subdf = slice_df(sym)
-#         # st.write('result for' + sym)
-#         # st.write(vectorized(subdf,10,50))
-#         results.append(vectorized(subdf,10,50))
-#     st.write(results)
+    
+    stock_data = yfinance.download(yf_tickers ,start=start_date, end=end_date)
+    for sym in yf_tickers:
+            subdf = slice_df(stock_data,sym)
+            results.append(vectorized(subdf,50,100))
+
+    df_profits=pd.DataFrame({'profits':results},index=tickers)
+    n_df = df_profits.sort_values(by='profits',ascending=False)
+    st.dataframe(n_df)
+
     

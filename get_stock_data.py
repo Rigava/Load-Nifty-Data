@@ -33,7 +33,7 @@ def get_data(reload_nifty=False):
     ticker_yahoo = ticker+'.NS'
     print(ticker_yahoo)
     if not os.path.exists('stock_dfs_updated/{}.csv'.format(ticker)):
-      data = yf.download(ticker_yahoo,group_by="Ticker",start="2020-01-01", end=None)
+      data = yf.download(ticker_yahoo,group_by="Ticker",start="2018-01-01", end=None)
       data = data.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
       data.to_csv('stock_dfs_updated/{}.csv'.format(ticker))
     else:

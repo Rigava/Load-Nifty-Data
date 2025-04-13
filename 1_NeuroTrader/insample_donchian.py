@@ -17,7 +17,7 @@ best_lookback, best_real_pf = optimize_donchian(train_df)
 print("In-sample PF", best_real_pf, "Best Lookback", best_lookback)
 
 
-n_permutations = 1000
+n_permutations = 200
 perm_better_count = 1
 permuted_pfs = []
 print("In-Sample MCPT")

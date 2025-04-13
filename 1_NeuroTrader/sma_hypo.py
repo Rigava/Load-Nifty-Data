@@ -1,4 +1,5 @@
 # https://www.youtube.com/watch?v=3zI_l_P-lF8
+##SMA as support and resistance
 import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
@@ -6,10 +7,10 @@ import plotly.graph_objects as go
 import yfinance as yf
 from scipy.stats import binomtest
 # Download data
-data= yf.download('^NSEI',group_by='Ticker',start="2023-09-01" ,end=None)
+data= yf.download('^NSEI',group_by='Ticker',start="2008-09-01" ,end=None)
 data = data.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
 # Calculate 50-day SMA
-data['sma_1']=data['Close'].rolling(window=50).mean()
+data['sma_1']=data['Close'].rolling(window=200).mean()
 #Calcultaing the average true range
 high = data["High"]
 low = data["Low"]
@@ -21,20 +22,23 @@ data['TR']=np.maximum(data['tr0'],data['tr1'],data['tr2'])
 data['ATR']=data['TR'].rolling(window=14).mean()
 data['ATR_wilder']=data['ATR'].ewm(span=14,adjust=False).mean()
 #Keltner Channels
-data['upper_keltner'] = data['sma_1'] + (data['ATR_wilder'] * 0.75)
-data['lower_keltner'] = data['sma_1'] - (data['ATR_wilder'] * 0.75)
-print(data[["Close","sma_1","upper_keltner","lower_keltner"]].tail(15))
+data['upper_keltner'] = data['sma_1'] + (data['ATR_wilder'] * 0.5)
+data['lower_keltner'] = data['sma_1'] - (data['ATR_wilder'] * 0.5)
+# print(data[["Close","sma_1","upper_keltner","lower_keltner"]].tail(15))
 
 # Define interaction classification
-conditions = [
-    data['Close'] > data['upper_keltner'],
-    data['Close'] < data['lower_keltner'],
-    (data['Close'] <= data['upper_keltner']) & (data['Close'] > data['sma_1']) & (data['Close'].shift(-1) > data['Close']),
-    (data['Close'] >= data['lower_keltner']) & (data['Close'] < data['sma_1']) & (data['Close'].shift(-1) < data['Close']),
-    (data['Close'] <= data['upper_keltner']) & (data['Close'] >= data['lower_keltner'])
-]
-choices = ["Penetration_Up", "Penetration_Down","Bounce_Up","Bounce_Down" ,"Within Bands"]
-data["interaction"] = np.select(conditions, choices, default="Penetration")
+
+penetration_upper = data['Close'] > data['upper_keltner']
+penetration_lower = data['Close'] < data['lower_keltner']
+bounce_upper = (data['Close'] <= data['upper_keltner']) & (data['Close'] > data['sma_1']) & ~penetration_upper & ~penetration_lower
+bounce_lower = (data['Close'] >= data['lower_keltner']) & (data['Close'] < data['sma_1']) & ~penetration_lower & ~penetration_upper
+within_bands = (data['Close'] <= data['upper_keltner']) & (data['Close'] >= data['lower_keltner'])
+
+data["interaction"] = np.where(penetration_upper, "Penetration_Up",
+                 np.where(penetration_lower, "Penetration_Down",
+                 np.where(bounce_upper, "Bounce_Up",
+                 np.where(bounce_lower, "Bounce_Down", "Within Bands"))))
+print(data[["Close","ATR_wilder" ,"sma_1", "upper_keltner", "lower_keltner", "interaction"]].tail(15))
 
 # Vectorized function to detect changes in interaction
 def detect_individual_signals(interactions, interaction_type):

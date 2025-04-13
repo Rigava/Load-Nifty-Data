@@ -4,6 +4,18 @@ import pandas as pd
 import numpy as np
 import matplotlib.pyplot as plt
 
+## STRATEGY 1: Donchian Breakout
+def donchian_breakout_data(ohlc: pd.DataFrame, lookback: int):
+    # input df is assumed to have a 'close' column
+    ohlc['Upper'] = ohlc['Close'].rolling(lookback - 1).max().shift(1)
+    ohlc['Lower'] = ohlc['Close'].rolling(lookback - 1).min().shift(1)
+    penetration_upper = ohlc['Close'] > ohlc['Upper']
+    penetration_lower = ohlc['Close'] < ohlc['Lower']
+    ohlc['signal'] = np.where(penetration_upper, 1,
+                     np.where(penetration_lower, -1, 0))
+    ohlc['signal'] = ohlc['signal'].ffill()
+    return ohlc
+
 def donchian_breakout(ohlc: pd.DataFrame, lookback: int):
     # input df is assumed to have a 'close' column
     upper = ohlc['Close'].rolling(lookback - 1).max().shift(1)
@@ -51,11 +63,11 @@ import yfinance as yf
 if __name__ == '__main__':
 
     # Load data
-    df = yf.download('^NSEI',group_by="Ticker",start="2010-01-01", end=None)
+    df = yf.download('^NSEI',group_by="Ticker",start="2022-01-01", end=None)
     df = df.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
     df.index = df.index.astype('datetime64[s]')
 
-    df = df[(df.index.year >= 2010) & (df.index.year < 2020)] 
+    # df = df[(df.index.year >= 2010) & (df.index.year < 2020)] 
     best_lookback, best_real_pf = optimize_donchian(df)
 
     # Best lookback = 19, best_real_pf = 1.08

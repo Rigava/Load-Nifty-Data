@@ -10,6 +10,7 @@ from donchian import optimize_donchian,donchian_breakout_data
 from bar_permute import get_permutation
 from moving_average import optimize_moving_average,moving_average
 from tqdm import tqdm
+from io import BytesIO
 
 dashboard = st.sidebar.selectbox("Select Strategy",["InSample","Simulation","Trend_MA","Animation"])
 st.title('QUANT TRADER')
@@ -18,7 +19,7 @@ with open("nifty50tickers.pickle",'rb') as f:
 symbol = st.sidebar.selectbox("Select stock to pull data", tickers)
 
 if dashboard == "InSample":
-    df = yf.download(symbol+'.NS',group_by="Ticker",start="2022-01-01", end=None)
+    df = yf.download(symbol+'.NS',group_by="Ticker",start="2020-01-01", end=None)
     df = df.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
     df.index = df.index.astype('datetime64[s]')
     # st.write(df)

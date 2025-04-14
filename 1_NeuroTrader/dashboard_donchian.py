@@ -11,7 +11,7 @@ from bar_permute import get_permutation
 from moving_average import optimize_moving_average,moving_average
 from tqdm import tqdm
 
-dashboard = st.sidebar.selectbox("Select Strategy",["InSample","Simulation","Trend_MA","Nifty50 BackTest"])
+dashboard = st.sidebar.selectbox("Select Strategy",["InSample","Simulation","Trend_MA","Animation"])
 st.title('QUANT TRADER')
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
@@ -139,3 +139,143 @@ if dashboard == "Trend_MA":
         train_df = df[(df.index.year >= 2020) & (df.index.year < 2026)]
         best_lookback_fast,best_lookback_slow ,best_real_pf = optimize_moving_average(train_df)
         st.write("In-sample MA PF", best_real_pf, "Best Lookback Fast:", best_lookback_fast, "Bese lookback slow",best_lookback_slow)
+
+if dashboard == "Animation":
+    # Streamlit app title
+    st.title("Stock Comparison Dashboard")
+
+    with open("nifty50tickers.pickle",'rb') as f:
+        tickers=pickle.load(f)
+
+    # Sidebar for user input
+    selected_tickers = st.sidebar.multiselect(
+        "Select Stocks to Plot",tickers, default=['RELIANCE', 'ITC']
+    )
+    # Convert tickers to Yahoo Finance format
+    yf_tickers = [f"{stok}.NS" for stok in selected_tickers]
+    # Fetch stock data
+    @st.cache_data
+    def fetch_data(tickers):
+        return yf.download(tickers,period='5y')['Close']
+
+    if selected_tickers:
+        df = fetch_data(yf_tickers)
+        st.write("Data Preview", df.head())
+
+        # Create a static plot
+        fig, ax = plt.subplots(figsize=(10, 6))
+        ax.set_title("Stock returns History")
+        ax.set_xlabel("Date")
+        ax.set_ylabel("Price")
+
+        for ticker, yf_ticker in zip(selected_tickers, yf_tickers):
+            ax.plot(df.index, np.exp(np.log(df[yf_ticker]/df[yf_ticker].shift(1)).cumsum()), label=ticker)
+
+        ax.legend()
+        st.pyplot(fig)
+        # Create an interactive Plotly chart for actual prices
+    # Prepare data for animation
+        df_reset = df.reset_index()  # Reset index to use Date as a column
+        df_reset['Date'] = pd.to_datetime(df_reset['Date'])  # Ensure Date is in datetime format
+        df_reset['Date'] = df_reset['Date'].dt.strftime('%Y-%m-%d')  # Convert Date to string format
+
+        # Create the base figure
+        fig = go.Figure()
+
+        # Add traces for each stock
+        for ticker in yf_tickers:
+            fig.add_trace(go.Scatter(
+                x=df_reset['Date'],
+                y=df_reset[ticker],
+                mode='lines',
+                name=ticker,
+                line=dict(width=2)
+            ))
+
+        # Create frames for animation (one frame per day)
+        frames = []
+        for i, date in enumerate(df_reset['Date']):
+            frame_data = []
+            for ticker in yf_tickers:
+                frame_data.append(go.Scatter(
+                    x=df_reset['Date'][:i+1],  # Show data up to the current frame
+                    y=df_reset[ticker][:i+1],
+                    mode='lines',
+                    name=ticker,
+                    line=dict(width=2)
+                ))
+            frames.append(go.Frame(data=frame_data, name=str(date)))
+
+        fig.frames = frames
+
+        # Update layout for animation
+        fig.update_layout(
+            title="Stock Price History",
+            xaxis=dict(title="Date", showgrid=True),
+            yaxis=dict(title="Price", showgrid=True),
+            template="plotly_white",
+            updatemenus=[
+                dict(
+                    type="buttons",
+                    showactive=False,
+                    buttons=[
+                        dict(label="Play",
+                            method="animate",
+                            args=[None, dict(frame=dict(duration=50, redraw=True), fromcurrent=True)]),
+                        dict(label="Pause",
+                            method="animate",
+                            args=[[None], dict(frame=dict(duration=0, redraw=False), mode="immediate")])
+                    ]
+                )
+            ]
+        )
+
+        # Add slider for animation
+        fig.update_layout(
+            sliders=[{
+                "steps": [
+                    {
+                        "args": [[frame.name], {"frame": {"duration": 50, "redraw": True}, "mode": "immediate"}],
+                        "label": frame.name,
+                        "method": "animate",
+                    } for frame in fig.frames
+                ],
+                "transition": {"duration": 0},
+                "x": 0.1,
+                "len": 0.9
+            }]
+        )
+
+
+        # Add slider for animation
+        fig.update_layout(
+            sliders=[{
+                "steps": [
+                    {
+                        "args": [[frame.name], {"frame": {"duration": 50, "redraw": True}, "mode": "immediate"}],
+                        "label": frame.name,
+                        "method": "animate",
+                    } for frame in fig.frames
+                ],
+                "transition": {"duration": 0},
+                "x": 0.1,
+                "len": 0.9
+            }]
+        )
+
+        # Save the animated chart as an HTML file
+        html_str = fig.to_html(include_plotlyjs='cdn')  # Save the chart as a string
+        html_buffer = BytesIO(html_str.encode('utf-8'))  # Encode the string as bytes
+
+        # Add a download button for the HTML file
+        st.download_button(
+            label="Download Animated Chart as HTML",
+            data=html_buffer,
+            file_name="animated_stock_chart.html",
+            mime="text/html"
+        )
+
+        # Display the animated chart
+        st.plotly_chart(fig, use_container_width=True)
+    else:
+        st.write("Please select at least one stock to plot.")

@@ -161,7 +161,9 @@ if dashboard == "Animation":
 
     if selected_tickers:
         df = fetch_data(yf_tickers)
-        st.write("Data Preview", df.head())
+        # Resample data to monthly frequency
+        df_monthly = df.resample('M').last()  # Take the mean for each month
+        st.write("Data Preview (Monthly Data)", df_monthly.head())
 
         # Create a static plot
         fig, ax = plt.subplots(figsize=(10, 6))
@@ -174,9 +176,9 @@ if dashboard == "Animation":
 
         ax.legend()
         st.pyplot(fig)
-        # Create an interactive Plotly chart for actual prices
-    # Prepare data for animation
-        df_reset = df.reset_index()  # Reset index to use Date as a column
+        
+        # Prepare data for animation
+        df_reset = df_monthly.reset_index()  # Reset index to use Date as a column
         df_reset['Date'] = pd.to_datetime(df_reset['Date'])  # Ensure Date is in datetime format
         df_reset['Date'] = df_reset['Date'].dt.strftime('%Y-%m-%d')  # Convert Date to string format
 

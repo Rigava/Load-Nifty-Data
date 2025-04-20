@@ -6,7 +6,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import yfinance as yf
 import numpy as np
-from donchian import optimize_donchian,donchian_breakout_data,donchian_breakout
+from donchian import optimize_donchian,donchian_breakout_data,donchian_breakout,trades
 from bar_permute import get_permutation
 from moving_average import optimize_moving_average,moving_average
 from tqdm import tqdm
@@ -38,6 +38,7 @@ if dashboard == "InSample":
     
     #Visual to check on returns
     signal = donchian_breakout(df, best_lookback) 
+    trades_df = trades(donchian_data) 
 
     df['r'] = np.log(df['Close']).diff().shift(-1)
     df['donch_r'] = df['r'] * signal
@@ -46,7 +47,7 @@ if dashboard == "InSample":
     # bechmark_returns_pct = (donchian_data['return']+1).cumprod()
     
     plt.plot(equity_retrun_donc,color = "red" ,label='Donchian Strategy Returns')
-    # plt.plot(bechmark_returns_pct, label='Benchmark Returns')
+    plt.plot(trades_df['strat_equity'],color ="blue", label='Returns')
     plt.title("In-Sample Donchian Breakout")
     plt.ylabel('Cumulative Return')
     st.pyplot(plt)

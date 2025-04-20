@@ -20,6 +20,19 @@ def donchian_breakout_data(ohlc: pd.DataFrame, lookback: int):
     ohlc['benchmark_return']=ohlc['Close'].pct_change()
     ohlc['benchmark_euity'] = (1+ohlc['benchmark_return']).cumprod()
     return ohlc
+def trades(donchian_breakout_data):
+    trades = donchian_breakout_data[donchian_breakout_data['pos_change'] != 0]
+    if len(trades)%2!=0:
+        mtm = donchian_breakout_data.tail(1).copy()
+        mtm.price = mtm.Close
+        trades =pd.concat([trades,mtm])
+    trades['exit'] = trades['price'].shift(-1)
+    trades['profit'] = trades['exit'] - trades['price']
+    trades['profit'] = trades['profit']*trades['signal']
+    trades['strat_return'] = trades['profit']/trades['price'] 
+    trades['strat_equity'] = (1+trades['strat_return']).cumprod()
+    trades.dropna(inplace=True)
+    return trades
 
 def donchian_breakout(ohlc: pd.DataFrame, lookback: int):
     # input df is assumed to have a 'close' column

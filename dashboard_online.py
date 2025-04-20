@@ -130,7 +130,7 @@ if dashboard == "Data":
             ax2.axhline(70, color='red', linestyle='--', label='Overbought (70)')
             ax2.axhline(30, color='green', linestyle='--', label='Oversold (30)')
             # Add titles and legends
-            plt.title(f'{ticker} Price and RSI')
+            plt.title(f'{symbol} Price and RSI')
             fig.tight_layout()  # Adjust layout to make room for both y-axes
             ax1.legend(loc='upper left')
             ax2.legend(loc='upper right')

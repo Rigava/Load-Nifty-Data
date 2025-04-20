@@ -23,7 +23,7 @@ if dashboard == "InSample":
     df = df.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
     df.index = df.index.astype('datetime64[s]')
     # st.write(df)
-    # TO find the best lookback for the donchian breakout based on profit factor
+    # TO find the best lookback for the donchian breakout based on profit factor for last 5 years
     train_df = df[(df.index.year >= 2020) & (df.index.year < 2026)]
     best_lookback, best_real_pf = optimize_donchian(train_df)
     st.write("In-sample PF", best_real_pf, "Best Lookback", best_lookback)
@@ -46,7 +46,7 @@ if dashboard == "InSample":
     plt.style.use("dark_background")
     bechmark_returns_pct = (donchian_data['return']+1).cumprod()
     cummulative_returns_log = (donchian_data['donch_logr']).cumsum()
-    plt.plot(cummulative_returns_log,color = "red" ,label='Donchian Strategy Returns')
+    plt.plot(np.exp(cummulative_returns_log),color = "red" ,label='Donchian Strategy Returns')
     plt.plot(bechmark_returns_pct, label='Benchmark Returns')
     plt.title("In-Sample Donchian Breakout")
     plt.ylabel('Cumulative Return')

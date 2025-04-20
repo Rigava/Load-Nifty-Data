@@ -6,7 +6,7 @@ from datetime import datetime
 import matplotlib.pyplot as plt
 import yfinance as yf
 import numpy as np
-from donchian import optimize_donchian,donchian_breakout_data
+from donchian import optimize_donchian,donchian_breakout_data,donchian_breakout
 from bar_permute import get_permutation
 from moving_average import optimize_moving_average,moving_average
 from tqdm import tqdm
@@ -35,19 +35,17 @@ if dashboard == "InSample":
     fig.add_trace(go.Scatter(x=donchian_data.index, y=donchian_data['Upper'], mode='lines', name='Upper Band',line=dict(color="green")))
     fig.add_trace(go.Scatter(x=donchian_data.index, y=donchian_data['Lower'], mode='lines', name='Lower Band',line=dict(color="red")))   
     
-    fig.update_layout(title='Donchian Breakout Strategy', xaxis_title='Date', yaxis_title='Price', template='plotly_dark')
-    st.plotly_chart(fig, use_container_width=True)
-
-    donchian_data['return'] = donchian_data['Close'].pct_change()
-    donchian_data['logreturn'] = np.log(donchian_data['Close']/donchian_data['Close'].shift(1))    
-    donchian_data['donch_logr'] = donchian_data['logreturn'] * donchian_data['signal']
-    # st.write(donchian_data[['Date','Close','Upper','Lower','signal','return','donch_r']].tail(50))
     #Visual to check on returns
+    signal = donchian_breakout(df, best_lookback) 
+
+    df['r'] = np.log(df['Close']).diff().shift(-1)
+    df['donch_r'] = df['r'] * signal
+    equity_retrun_donc = (df['donch_r']).cumsum()
     plt.style.use("dark_background")
-    bechmark_returns_pct = (donchian_data['return']+1).cumprod()
-    cummulative_returns_log = (donchian_data['donch_logr']).cumsum()
-    plt.plot(np.exp(cummulative_returns_log),color = "red" ,label='Donchian Strategy Returns')
-    plt.plot(bechmark_returns_pct, label='Benchmark Returns')
+    # bechmark_returns_pct = (donchian_data['return']+1).cumprod()
+    
+    plt.plot(equity_retrun_donc,color = "red" ,label='Donchian Strategy Returns')
+    # plt.plot(bechmark_returns_pct, label='Benchmark Returns')
     plt.title("In-Sample Donchian Breakout")
     plt.ylabel('Cumulative Return')
     st.pyplot(plt)

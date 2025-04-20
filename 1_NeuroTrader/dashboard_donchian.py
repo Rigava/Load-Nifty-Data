@@ -27,8 +27,9 @@ if dashboard == "InSample":
     train_df = df[(df.index.year >= 2020) & (df.index.year < 2026)]
     best_lookback, best_real_pf = optimize_donchian(train_df)
     st.write("In-sample PF", best_real_pf, "Best Lookback", best_lookback)
-    #Visuals
+
     df = df[(df.index.year >= 2020) & (df.index.year < 2026)]
+    #Donchian breakout data
     donchian_data = donchian_breakout_data(df, best_lookback)
     fig = go.Figure()
     fig.add_trace(go.Scatter(x=donchian_data.index, y=donchian_data['Close'], mode='lines', name='Close Price',line=dict(color="blue")))

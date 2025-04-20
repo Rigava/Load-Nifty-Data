@@ -11,9 +11,14 @@ def donchian_breakout_data(ohlc: pd.DataFrame, lookback: int):
     ohlc['Lower'] = ohlc['Close'].rolling(lookback - 1).min().shift(1)
     penetration_upper = ohlc['Close'] > ohlc['Upper']
     penetration_lower = ohlc['Close'] < ohlc['Lower']
-    ohlc['signal'] = np.where(penetration_upper, 1,
-                     np.where(penetration_lower, -1, 0))
+    ohlc['signal'] = np.nan
+    ohlc.loc[penetration_upper, 'signal'] = 1 # for long entry
+    ohlc.loc[penetration_lower, 'signal'] = -1 # for short entry
     ohlc['signal'] = ohlc['signal'].ffill()
+    ohlc['price'] = ohlc['Open'].shift(-1)
+    ohlc['pos_change'] = ohlc['signal'].diff()
+    ohlc['benchmark_return']=ohlc['Close'].pct_change()
+    ohlc['benchmark_euity'] = (1+ohlc['return']).cumprod()
     return ohlc
 
 def donchian_breakout(ohlc: pd.DataFrame, lookback: int):
@@ -63,7 +68,7 @@ import yfinance as yf
 if __name__ == '__main__':
 
     # Load data
-    df = yf.download('^NSEI',group_by="Ticker",start="2022-01-01", end=None)
+    df = yf.download('ITC.NS',group_by="Ticker",start="2020-01-01", end=None)
     df = df.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
     df.index = df.index.astype('datetime64[s]')
 

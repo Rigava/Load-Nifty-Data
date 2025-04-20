@@ -35,7 +35,7 @@ if dashboard == "InSample":
     fig.add_trace(go.Scatter(x=donchian_data.index, y=donchian_data['Close'], mode='lines', name='Close Price',line=dict(color="blue")))
     fig.add_trace(go.Scatter(x=donchian_data.index, y=donchian_data['Upper'], mode='lines', name='Upper Band',line=dict(color="green")))
     fig.add_trace(go.Scatter(x=donchian_data.index, y=donchian_data['Lower'], mode='lines', name='Lower Band',line=dict(color="red")))   
-    st.pyplot(fig)
+    st.pyplot(plt)
     #Visual to check on returns
     signal = donchian_breakout(df, best_lookback) 
     trades_df = trades(donchian_data) 

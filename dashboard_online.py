@@ -99,6 +99,21 @@ if dashboard == "Data":
             plt.xticks(rotation=45)
             st.pyplot(plt)
             
+            st.markdown(f"MACD for {symbol}")
+            fig =plt.figure(figsize=(12, 6))
+            ax1=fig.add_subplot(1,2,1)
+            ax2=fig.add_subplot(1,2,2)
+            ax1.plot(stock_data.index, stock_data['Close'])
+            ax1.set_xlabel('Date')
+            ax1.set_ylabel('Price')
+            ax1.set_title('Price Movement')
+            # ax1.set_xticks(rotation=45)
+            ax2.plot(stock_data.Signal,color='red')
+            ax2.plot(stock_data.MACD,color='green')
+            st.pyplot(plt)
+
+
+
             with st.expander("🔍 Data Preview"):
                 st.dataframe(stock_data)
            

@@ -86,6 +86,7 @@ if dashboard == "Data":
             latest_price = stock_data['Close'].iloc[-1].round(1)
             stock_data = AddRSIIndicators(stock_data)
             stock_data = AddSMAIndicators(stock_data,fast,slow)
+            stock_data = MACDIndicator(stock_data)
             
             latest_rsi = stock_data['RSI'].iloc[-1].round(1)
             st.success(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")

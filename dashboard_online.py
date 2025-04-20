@@ -115,25 +115,25 @@ if dashboard == "Data":
             st.pyplot(plt)
 
             # RSI PLOT
-            fig, ax1 = plt.subplots(figsize=(10, 6)) 
+            fig, ax3 = plt.subplots(figsize=(10, 6)) 
             # Plot the stock price on the left y-axis (primary axis)
-            ax1.plot(stock_data.index, stock_data['Close'], label='Price', color='blue')
-            ax1.set_xlabel('Date')
-            ax1.set_ylabel('Price (INR)', color='blue')
-            ax1.tick_params(axis='y', labelcolor='blue')  
+            ax3.plot(stock_data.index, stock_data['Close'], label='Price', color='blue')
+            ax3.set_xlabel('Date')
+            ax3.set_ylabel('Price (INR)', color='blue')
+            ax3.tick_params(axis='y', labelcolor='blue')  
             # Create a second y-axis for the RSI (secondary axis)
-            ax2 = ax1.twinx()
-            ax2.plot(stock_data.index, stock_data['RSI'], label='RSI', color='orange')
-            ax2.set_ylabel('RSI', color='orange')
-            ax2.tick_params(axis='y', labelcolor='orange')  
+            ax4 = ax3.twinx()
+            ax4.plot(stock_data.index, stock_data['RSI'], label='RSI', color='orange')
+            ax4.set_ylabel('RSI', color='orange')
+            ax4.tick_params(axis='y', labelcolor='orange')  
             # Add RSI overbought/oversold levels
-            ax2.axhline(70, color='red', linestyle='--', label='Overbought (70)')
-            ax2.axhline(30, color='green', linestyle='--', label='Oversold (30)')
+            ax4.axhline(70, color='red', linestyle='--', label='Overbought (70)')
+            ax4.axhline(30, color='green', linestyle='--', label='Oversold (30)')
             # Add titles and legends
             plt.title(f'{symbol} Price and RSI')
             fig.tight_layout()  # Adjust layout to make room for both y-axes
-            ax1.legend(loc='upper left')
-            ax2.legend(loc='upper right')
+            ax3.legend(loc='upper left')
+            ax4.legend(loc='upper right')
             st.pyplot(plt)
 
             # Display stock data

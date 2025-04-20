@@ -85,8 +85,7 @@ if dashboard == "Data":
             stock_data = yfinance.Ticker(ticker).history(period="5y")
             # stock_data.index = stock_data.index.astype('datetime64[s]')
             latest_price = stock_data['Close'].iloc[-1].round(1)
-            latest_rsi = stock_data['RSI'].iloc[-1].round(1)
-            st.success(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
+
             # Plotting historical price movement
             st.subheader("Historical Price Movement for Last 5 years")
             plt.figure(figsize=(10, 6))
@@ -102,6 +101,8 @@ if dashboard == "Data":
             stock_data = MACDIndicator(stock_data)
             #Filter data for the last 1 years
             stock_data = stock_data[(stock_data.index.year>2023)]
+            latest_rsi = stock_data['RSI'].iloc[-1].round(1)
+            st.success(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
             ### MACD PLOT
             st.markdown(f"MACD for {symbol}")
             fig =plt.figure(figsize=(12, 6))

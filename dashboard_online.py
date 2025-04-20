@@ -84,14 +84,10 @@ if dashboard == "Data":
             ticker = symbol+'.NS'
             stock_data = yfinance.Ticker(ticker).history(period="5y")
             latest_price = stock_data['Close'].iloc[-1].round(1)
-            stock_data = AddRSIIndicators(stock_data)
-            stock_data = AddSMAIndicators(stock_data,fast,slow)
-            stock_data = MACDIndicator(stock_data)
-            
             latest_rsi = stock_data['RSI'].iloc[-1].round(1)
             st.success(f"The latest price is: {latest_price} and the rsi is {latest_rsi}")
             # Plotting historical price movement
-            st.subheader("Historical Price Movement in Line chart")
+            st.subheader("Historical Price Movement for Last 5 years")
             plt.figure(figsize=(10, 6))
             plt.plot(stock_data.index, stock_data['Close'])
             plt.xlabel('Date')
@@ -99,7 +95,12 @@ if dashboard == "Data":
             plt.title('Price Movement')
             plt.xticks(rotation=45)
             st.pyplot(plt)
-            
+            # Add indicators
+            stock_data = AddRSIIndicators(stock_data)
+            stock_data = AddSMAIndicators(stock_data,fast,slow)
+            stock_data = MACDIndicator(stock_data)
+            stock_data = stock_data[stock_data.index.year>2024]
+            ### MACD PLOT
             st.markdown(f"MACD for {symbol}")
             fig =plt.figure(figsize=(12, 6))
             ax1=fig.add_subplot(1,2,1)
@@ -113,8 +114,29 @@ if dashboard == "Data":
             ax2.plot(stock_data.MACD,color='green')
             st.pyplot(plt)
 
+            # RSI PLOT
+            fig, ax1 = plt.subplots(figsize=(10, 6)) 
+            # Plot the stock price on the left y-axis (primary axis)
+            ax1.plot(stock_data.index, stock_data['Close'], label='Price', color='blue')
+            ax1.set_xlabel('Date')
+            ax1.set_ylabel('Price (INR)', color='blue')
+            ax1.tick_params(axis='y', labelcolor='blue')  
+            # Create a second y-axis for the RSI (secondary axis)
+            ax2 = ax1.twinx()
+            ax2.plot(stock_data.index, stock_data['RSI'], label='RSI', color='orange')
+            ax2.set_ylabel('RSI', color='orange')
+            ax2.tick_params(axis='y', labelcolor='orange')  
+            # Add RSI overbought/oversold levels
+            ax2.axhline(70, color='red', linestyle='--', label='Overbought (70)')
+            ax2.axhline(30, color='green', linestyle='--', label='Oversold (30)')
+            # Add titles and legends
+            plt.title(f'{ticker} Price and RSI')
+            fig.tight_layout()  # Adjust layout to make room for both y-axes
+            ax1.legend(loc='upper left')
+            ax2.legend(loc='upper right')
+            st.pyplot(plt)
 
-
+            # Display stock data
             with st.expander("🔍 Data Preview"):
                 st.dataframe(stock_data)
            

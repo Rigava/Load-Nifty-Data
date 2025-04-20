@@ -44,7 +44,6 @@ if dashboard == "InSample":
     df['donch_r'] = df['r'] * signal
     equity_retrun_donc = (df['donch_r']).cumsum()
     plt.style.use("dark_background")
-    # bechmark_returns_pct = (donchian_data['return']+1).cumprod()
     
     plt.plot(equity_retrun_donc,color = "red" ,label='Donchian Strategy Returns')
     plt.plot(trades_df['strat_equity'],color ="blue", label='Returns')

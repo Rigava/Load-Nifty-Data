@@ -47,8 +47,9 @@ if dashboard == "InSample":
     equity_retrun_donc = (df['donch_r']).cumsum()
     plt.style.use("dark_background")
     
-    plt.plot(equity_retrun_donc,color = "red" ,label='Donchian Strategy Returns')
-    plt.plot(trades_df['strat_equity'],color ="blue", label='Returns')
+    plt.plot(np.exp(equity_retrun_donc),color = "red" ,label='Donchian Log Returns')
+    plt.plot(trades_df['strat_equity'],color ="blue", label='Donchian strategy Returns')
+    plt.plot(donchian_data['benchmark_equity'],color ="green", label='Benchmark Returns')
     plt.title("In-Sample Donchian Breakout")
     plt.ylabel('Cumulative Return')
     st.pyplot(plt)

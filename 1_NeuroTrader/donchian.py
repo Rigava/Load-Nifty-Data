@@ -18,7 +18,7 @@ def donchian_breakout_data(ohlc: pd.DataFrame, lookback: int):
     ohlc['price'] = ohlc['Open'].shift(-1)
     ohlc['pos_change'] = ohlc['signal'].diff()
     ohlc['benchmark_return']=ohlc['Close'].pct_change()
-    ohlc['benchmark_euity'] = (1+ohlc['benchmark_return']).cumprod()
+    ohlc['benchmark_equity'] = (1+ohlc['benchmark_return']).cumprod()
     return ohlc
 def trades(donchian_breakout_data):
     trades = donchian_breakout_data[donchian_breakout_data['pos_change'] != 0]

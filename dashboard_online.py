@@ -41,6 +41,29 @@ def MACDIndicator(df):
     df.dropna()
     print('MACD indicators added')
     return df
+#For Breakouts
+def is_consolidating(data):
+    recent_candles = data[-15:]
+    max_close = recent_candles['Close'].max()
+    min_close = recent_candles['Close'].min()
+    # print('the max close was {} and the min close was {}'.format(max_close,min_close))
+    if min_close > (max_close * 0.95):
+        return True
+    return False
+def is_breakingout(data):
+    last_close = data[-1:]['Close'].values[0]
+    if is_consolidating(data[:-1]):
+        recent_candles = data[-16:-1]
+        if last_close > recent_candles['Close'].max():
+            return True
+    return False
+def is_breakdown(data):
+    last_close = data[-1:]['Close'].values[0]
+    if is_consolidating(data[:-1]):
+        recent_candles = data[-16:-1]
+        if last_close < recent_candles['Close'].min():
+            return True
+    return False
 #For adding the sma1 and sma2
 def ma_calc(data,n,m):
     data['sma_1'] = data['Close'].rolling(window=n).mean()
@@ -70,7 +93,8 @@ st.title('NIFTY 50 Universe BY JOSH@I')
 with open("nifty50tickers.pickle",'rb') as f:
     tickers=pickle.load(f)
 
-dashboard = st.sidebar.selectbox("select analysis",["Data","Stock Shortlist","Back Testing","Nifty50 BackTest"])
+index = ["^NSEI","^NSEBANK","^CNXIT","^CNXPHARMA","^CNXMETAL","^CNXREALTY","^CNXPSUBANK","^CNXINFRA","^CNXENERGY"]
+dashboard = st.sidebar.selectbox("select analysis",["Data","Stock Shortlist","Back Testing","Stock Crossover","Index Squeeze","Donchian Channel"])
 
 
 ## Dashboard 0
@@ -161,7 +185,7 @@ if dashboard == "Data":
 ## -------------------------------------------------------------------------Dashboard 1 SHORTLIST ------------------------------------------------------------------------------------------------------------------
 if dashboard == "Stock Shortlist":
     # User input for strategy parameters
-    shortlist_option = st.sidebar.selectbox("select strategy",["MACD","RSI","Consolidation"])
+    shortlist_option = st.sidebar.selectbox("select strategy",["MACD","RSI","Breakout"])
     rsi_period = st.sidebar.slider("RSI Period", min_value=5, max_value=50, value=14, step=1)
     rsi_low = st.sidebar.slider("RSI low for buy", min_value=1, max_value=100, value=30, step=1)
     rsi_high = st.sidebar.slider("RSI high for sell", min_value=1, max_value=100, value=70, step=1) 
@@ -205,6 +229,9 @@ if dashboard == "Stock Shortlist":
                         Sell.append(files)
                     else:
                         Hold.append(files)  
+                if shortlist_option=="Breakout":
+                    if is_breakingout(df):
+                        Buy.append(files)
      
         # Display stock data and recommendation
         st.write(":blue[List of stock with buy signal]",Buy)
@@ -330,7 +357,7 @@ if dashboard == "Back Testing":
     st.plotly_chart(fig,use_container_width=True)
 
 # ## Dashboard 4
-if dashboard == "Nifty50 BackTest":
+if dashboard == "Stock Crossover":
     start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2010-01-01"))
     end_date = st.sidebar.date_input("End Date", value=pd.to_datetime("2024-12-01"))
     st.write("SMA crossover (SMA50 & SMA100) best return algo Stock - WIP")
@@ -352,4 +379,114 @@ if dashboard == "Nifty50 BackTest":
     n_df = df_profits.sort_values(by='profits',ascending=False)
     st.dataframe(n_df)
 
-    
+## Dashboard 5
+def in_squeeze(df):
+    return df['lower_band'] > df['lower_keltner'] and df['upper_band'] < df['upper_keltner']
+# Vectorized function to detect changes in interaction
+def detect_individual_signals(interactions, interaction_type):
+    """Identifies signal points where a specific interaction changes."""
+    prev_interaction = np.roll(interactions, shift=1)
+    signals = np.where((interactions == interaction_type) & (prev_interaction != interaction_type), 1, 0)
+    signals[0] = 0  # First row has no previous value to compare
+    return signals
+if dashboard == "Index Squeeze":
+    symbol = st.sidebar.selectbox("Select an Index",index)
+    # df = yfinance.Ticker(symbol).history(period="5y")
+ 
+    df = yfinance.download(symbol,group_by="Ticker",start="2010-01-01", end=None)
+    df = df.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
+    df.index = df.index.astype('datetime64[s]')
+
+    df['20sma'] = df['Close'].rolling(window=20).mean()
+    df['stddev'] = df['Close'].rolling(window=20).std()
+    df['lower_band'] = df['20sma'] - (2 * df['stddev'])
+    df['upper_band'] = df['20sma'] + (2 * df['stddev'])
+
+    df['TR'] = abs(df['High'] - df['Low'])
+    df['ATR'] = df['TR'].rolling(window=20).mean()
+    df['lower_keltner'] = df['20sma'] - (df['ATR'] * 1.5)
+    df['upper_keltner'] = df['20sma'] + (df['ATR'] * 1.5)
+    squeeze = (df['lower_band'] > df['lower_keltner']) & (df['upper_band'] < df['upper_keltner'])
+    df['interaction'] = np.where(squeeze, "Squeeze", "No Squeeze")
+    df['squeeze_on'] = detect_individual_signals(df['interaction'].values, "Squeeze")
+    squeeze_data = df[df['squeeze_on'] == 1]
+
+    st.write(squeeze_data)
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=df.index, y=df['Close'], mode='lines', name='Close Price',line=dict(color="blue")))
+    fig.add_trace(go.Scatter(x=df.index, y=df.lower_band, mode='lines', name='lower band',line=dict(color="red")))
+    fig.add_trace(go.Scatter(x=df.index, y=df.upper_band, mode='lines', name='upper band',line=dict(color="green")))
+    fig.add_trace(go.Scatter(x=df.index, y=df.lower_keltner, mode='lines', name='lower ketler',line=dict(color="grey")))
+    fig.add_trace(go.Scatter(x=df.index, y=df.upper_keltner, mode='lines', name='upper ketler',line=dict(color="grey")))
+    fig.add_trace(go.Scatter(x=squeeze_data.index, y=squeeze_data.Close, mode='markers', name='Signal', marker=dict(color="pink", size=10)))
+    fig.update_layout(title='Squeeze Strategy', xaxis_title='Date', yaxis_title='Price', template='plotly_dark')
+    st.plotly_chart(fig, use_container_width=True)
+#---------------------------------------------------------------NEUROTRADER---------------------------------------------------
+# Donchian Channel Breakout Strategy
+# Dashboard 6
+def donchian_breakout_data(ohlc: pd.DataFrame, lookback: int):
+    # input df is assumed to have a 'close' column
+    ohlc['Upper'] = ohlc['Close'].rolling(lookback - 1).max().shift(1)
+    ohlc['Lower'] = ohlc['Close'].rolling(lookback - 1).min().shift(1)
+    penetration_upper = ohlc['Close'] > ohlc['Upper']
+    penetration_lower = ohlc['Close'] < ohlc['Lower']
+    ohlc['signal'] = np.nan
+    ohlc.loc[penetration_upper, 'signal'] = 1 # for long entry
+    ohlc.loc[penetration_lower, 'signal'] = -1 # for short entry
+    ohlc['signal'] = ohlc['signal'].ffill()
+    ohlc['price'] = ohlc['Open'].shift(-1)
+    ohlc['pos_change'] = ohlc['signal'].diff()
+    ohlc['benchmark_return']=ohlc['Close'].pct_change()
+    ohlc['benchmark_euity'] = (1+ohlc['benchmark_return']).cumprod()
+    #signal for optimisation
+    upper = ohlc['Close'].rolling(lookback - 1).max().shift(1)
+    lower = ohlc['Close'].rolling(lookback - 1).min().shift(1)
+    signal = pd.Series(np.full(len(ohlc), np.nan), index=ohlc.index)
+    signal.loc[ohlc['Close'] > upper] = 1
+    signal.loc[ohlc['Close'] < lower] = -1
+    signal = signal.ffill()
+    return ohlc,signal
+def optimize_donchian(ohlc: pd.DataFrame):
+
+    best_pf = 0
+    best_lookback = -1
+    r = np.log(ohlc['Close']).diff().shift(-1)
+    for lookback in range(12, 169):
+        ohlc_date,signal = donchian_breakout_data(ohlc, lookback)
+        sig_rets = signal * r
+        sig_pf = sig_rets[sig_rets > 0].sum() / sig_rets[sig_rets < 0].abs().sum()
+
+        if sig_pf > best_pf:
+            best_pf = sig_pf
+            best_lookback = lookback
+
+    return best_lookback, best_pf
+if dashboard == "Donchian Channel":
+    st.write("Donchian Channel is a trend-following strategy that uses the highest high and lowest low over a specified period to identify breakout points. It generates buy and sell signals based on the price crossing these levels.")
+    symbol = st.sidebar.selectbox("Select an Index",index) 
+    df = yfinance.download(symbol,group_by="Ticker",start="2010-01-01", end=None)
+    df = df.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
+    df.index = df.index.astype('datetime64[s]')
+
+    best_lookback, best_real_pf = optimize_donchian(df)
+     # Best lookback = 19, best_real_pf = 1.08
+    st.write(f"Best lookback = {best_lookback}, best_real_pf = {best_real_pf}")
+        #Donchian breakout data
+    donchian_data,signals = donchian_breakout_data(df, best_lookback)
+
+    fig = go.Figure()
+    fig.add_trace(go.Scatter(x=donchian_data.index, y=donchian_data['Close'], mode='lines', name='Close Price',line=dict(color="blue")))
+    fig.add_trace(go.Scatter(x=donchian_data.index, y=donchian_data['Upper'], mode='lines', name='Upper Band',line=dict(color="green")))
+    fig.add_trace(go.Scatter(x=donchian_data.index, y=donchian_data['Lower'], mode='lines', name='Lower Band',line=dict(color="red")))   
+    fig.update_layout(title='Donchian Strategy', xaxis_title='Date', yaxis_title='Price', template='plotly_dark')
+    st.plotly_chart(fig, use_container_width=True)
+
+    df['r'] = np.log(df['Close']).diff().shift(-1)
+    df['donch_r'] = df['r'] * signals
+
+    plt.style.use("dark_background")
+    df['donch_r'].cumsum().plot(color='red')
+    plt.title("In-Sample Donchian Breakout")
+    plt.ylabel('Cumulative Log Return')
+    st.pyplot(plt)

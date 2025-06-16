@@ -123,7 +123,7 @@ import plotly.graph_objects as go
 if __name__ == '__main__':
    
     # Trend following strategy
-    data= yf.download('LTIM.NS',group_by='Ticker',start="2020-05-01" ,end=None)
+    data= yf.download('^NSEI',group_by='Ticker',start="2020-05-01" ,end=None)
     data = data.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
     plt.style.use('dark_background') 
     levels = support_resistance_levels(data, 365, first_w=1.0, atr_mult=3.0)

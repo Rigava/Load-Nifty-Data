@@ -358,8 +358,8 @@ if dashboard == "Back Testing":
 
 # ## Dashboard 4
 if dashboard == "Stock Crossover":
-    start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2010-01-01"))
-    end_date = st.sidebar.date_input("End Date", value=pd.to_datetime("2024-12-01"))
+    start_date = st.sidebar.date_input("Start Date", value=pd.to_datetime("2020-07-01"))
+    end_date = st.sidebar.date_input("End Date", value=pd.to_datetime("2025-06-29"))
     st.write("SMA crossover (SMA50 & SMA100) best return algo Stock - WIP")
     results=[]
     yf_tickers= []

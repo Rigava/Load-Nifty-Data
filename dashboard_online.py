@@ -307,6 +307,7 @@ if dashboard == "Back Testing":
     df = AddSMAIndicators(df,fast,slow)
     df = AddRSIIndicators(df)
     df['price'] = df['Close'].shift(-1)
+    st.write(df)
     #Below crossover function is used to backtest the trade
     def tradedf(df1):
         df1.reset_index(inplace=True)
@@ -343,10 +344,10 @@ if dashboard == "Back Testing":
         st.write(f"Total profit from the moving average strategy is {totalProfit}")
 
         # Below method uses vectorized approach to find the trades and calculate the profits return
-        first_buy = pd.Series(df.index == (df.SMAf>df.SMAs).idxmax(),index=df.index)
-        real_signal = first_buy | (df.SMAf>df.SMAs).diff()
+        first_buy = pd.Series(df.index == (df.SMA10>df.SMA50).idxmax(),index=df.index)
+        real_signal = first_buy | (df.SMA10>df.SMA50).diff()
         trades = df[real_signal]
-        if len(tradedf)%2 != 0:
+        if len(trades)%2 != 0:
             mtm = df.tail(1).copy()
             mtm.price = mtm.Close
             trades = pd.concat([trades,mtm])

@@ -306,6 +306,7 @@ if dashboard == "Back Testing":
     # Add MA indicators
     df = AddSMAIndicators(df,fast,slow)
     df = AddRSIIndicators(df)
+    df['price'] = df['Close'].shift(-1)
     #Below crossover function is used to backtest the trade
     def tradedf(df1):
         df1.reset_index(inplace=True)
@@ -340,7 +341,14 @@ if dashboard == "Back Testing":
         tradedf['profit']=tradedf['SellPrice']-tradedf['BuyPrice']
         totalProfit = tradedf['profit'].sum().round(2)
         st.write(f"Total profit from the moving average strategy is {totalProfit}")
+        if len(tradedf)%2 != 0:
+            mtm = df.tail(1).copy()
+            mtm.price = mtm.Close
+            trades =pd.concat([tradedf,mtm])
+            profits = trades.price.diff()[1::2] / trades.price[0::2].values
+            gain = (profits + 1).prod()
         st.dataframe(tradedf)
+        st.write(f"Strategu return from the moving average strategy is {gain}")
         return tradedf,bi,si
     marker_df,bi,si = tradedf(df)
     # Plotly graph for visualization

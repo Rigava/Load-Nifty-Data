@@ -341,14 +341,21 @@ if dashboard == "Back Testing":
         tradedf['profit']=tradedf['SellPrice']-tradedf['BuyPrice']
         totalProfit = tradedf['profit'].sum().round(2)
         st.write(f"Total profit from the moving average strategy is {totalProfit}")
+
+        # Below method uses vectorized approach to find the trades and calculate the profits return
+        first_buy = pd.Series(df.index == (df.SMAf>df.SMAs).idxmax(),index=df.index)
+        real_signal = first_buy | (df.SMAf>df.SMAs).diff()
+        trades = df[real_signal]
         if len(tradedf)%2 != 0:
             mtm = df.tail(1).copy()
             mtm.price = mtm.Close
-            tradedf = pd.concat([tradedf,mtm])
-        profits = tradedf.price.diff()[1::2] / tradedf.price[0::2].values
+            trades = pd.concat([trades,mtm])
+        profits = trades.price.diff()[1::2] / trades.price[0::2].values
         gain = (profits + 1).prod()
-        st.dataframe(tradedf)
+        st.dataframe(trades)
         st.write(f"Strategu return from the moving average strategy is {gain}")
+
+        st.dataframe(tradedf)
 
         return tradedf,bi,si
     marker_df,bi,si = tradedf(df)

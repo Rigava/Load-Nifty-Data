@@ -307,7 +307,7 @@ if dashboard == "Back Testing":
     df = AddSMAIndicators(df,fast,slow)
     df = AddRSIIndicators(df)
     df['price'] = df['Close'].shift(-1)
-    st.write(df)
+    # st.write(df)
     #Below crossover function is used to backtest the trade
     def tradedf(df1):
         df1.reset_index(inplace=True)
@@ -342,8 +342,8 @@ if dashboard == "Back Testing":
         tradedf['profit']=tradedf['SellPrice']-tradedf['BuyPrice']
         totalProfit = tradedf['profit'].sum().round(2)
         st.write(f"Total profit from the moving average strategy is {totalProfit}")
-
-        # Below method uses vectorized approach to find the trades and calculate the profits return
+        st.dataframe(tradedf)
+        # --------------------Below method uses vectorized approach to find the trades and calculate the profits return----------------------
         first_buy = pd.Series(df.index == (df.SMA10>df.SMA50).idxmax(),index=df.index)
         real_signal = first_buy | (df.SMA10>df.SMA50).diff()
         trades = df[real_signal]
@@ -353,12 +353,11 @@ if dashboard == "Back Testing":
             trades = pd.concat([trades,mtm])
         profits = trades.price.diff()[1::2] / trades.price[0::2].values
         gain = (profits + 1).prod()
+        st.write(f"Strategy return from the choosen parameters is {gain}")
         st.dataframe(trades)
-        st.write(f"Strategu return from the moving average strategy is {gain}")
-
-        st.dataframe(tradedf)
-
+    
         return tradedf,bi,si
+    
     marker_df,bi,si = tradedf(df)
     # Plotly graph for visualization
     st.write("The below plot shows the moving averages with closing price")

@@ -344,9 +344,9 @@ if dashboard == "Back Testing":
         if len(tradedf)%2 != 0:
             mtm = df.tail(1).copy()
             mtm.price = mtm.Close
-            trades =pd.concat([tradedf,mtm])
-            profits = trades.price.diff()[1::2] / trades.price[0::2].values
-            gain = (profits + 1).prod()
+            trades = pd.concat([tradedf,mtm])
+        profits = trades.price.diff()[1::2] / trades.price[0::2].values
+        gain = (profits + 1).prod()
         st.dataframe(tradedf)
         st.write(f"Strategu return from the moving average strategy is {gain}")
         return tradedf,bi,si

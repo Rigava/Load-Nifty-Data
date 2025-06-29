@@ -298,7 +298,7 @@ if dashboard == "Stock Shortlist":
 ## -------------------------------------------------------------------------Dashboard 2 BACK TESTING----------------------------------------------------------------------------------------------------------------
 if dashboard == "Back Testing":
     # Select Stock for Backtesting the crossover strategy
-    fast = st.sidebar.slider("Fast Period", min_value=5, max_value=50, value=10, step=1)
+    fast = st.sidebar.slider("Fast Period", min_value=1, max_value=50, value=10, step=1)
     slow = st.sidebar.slider("Slow Period", min_value=10, max_value=200, value=50, step=1)
     symbol = st.selectbox("Select a stock to view thecumulative profits from trading moving average crossover strategy",tickers)
     ticker = symbol+'.NS'

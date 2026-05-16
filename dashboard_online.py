@@ -426,7 +426,7 @@ if dashboard == "Index Squeeze":
     df['interaction'] = np.where(squeeze, "Squeeze", "No Squeeze")
     df['squeeze_on'] = detect_individual_signals(df['interaction'].values, "Squeeze")
     squeeze_data = df[df['squeeze_on'] == 1]
-
+    st.write("Datapoint for Squeeze(Lower and upper bands are inside the Keltner band) 
     st.write(squeeze_data)
 
     fig = go.Figure()

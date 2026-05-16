@@ -409,7 +409,7 @@ if dashboard == "Index Squeeze":
     symbol = st.sidebar.selectbox("Select an Index",index)
     # df = yfinance.Ticker(symbol).history(period="5y")
  
-    df = yfinance.download(symbol,group_by="Ticker",start="2010-01-01", end=None)
+    df = yfinance.download(symbol,group_by="Ticker",start="2015-01-01", end=None)
     df = df.stack(level=0).rename_axis(['Date', 'Ticker']).reset_index(level=1)
     df.index = df.index.astype('datetime64[s]')
 
